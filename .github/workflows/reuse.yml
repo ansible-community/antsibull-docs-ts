@@ -15,7 +15,7 @@ on:
     - cron: '0 7 * * 5'
 
 jobs:
-  build:
+  reuse:
     runs-on: ubuntu-latest
 
     steps:

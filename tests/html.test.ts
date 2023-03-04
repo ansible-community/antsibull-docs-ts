@@ -17,6 +17,6 @@ describe('quoteHTML tests', (): void => {
 
 describe('toHTML tests', (): void => {
   it('no paragraphs', (): void => {
-    expect(toHTML([])).is.equal('');
+    expect(toHTML([[{ type: parser.PartType.TEXT, text: 'test' }]])).is.equal('<p>test</p>');
   });
 });

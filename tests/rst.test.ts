@@ -19,4 +19,7 @@ describe('toRST tests', (): void => {
   it('no paragraphs', (): void => {
     expect(toRST([])).is.equal('');
   });
+  it('single paragraph with simple text', (): void => {
+    expect(toRST([[{ type: parser.PartType.TEXT, text: 'test' }]])).is.equal('test');
+  });
 });
