@@ -1,0 +1,41 @@
+{
+  "name": "antsibull-docs",
+  "version": "0.0.1",
+  "description": "TypeScript library for processing Ansible documentation markup",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "files": [
+    "dist",
+    "src",
+    "LICENSE",
+    "LICENSES",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "npx tsc",
+    "format:check": "npx prettier --check .",
+    "format:write": "npx prettier --write .",
+    "lint": "npx eslint \"**/*.ts\"",
+    "test": "npx ts-mocha tests/**/*.test.ts",
+    "watch": "npx tsc -w"
+  },
+  "keywords": [
+    "ansible",
+    "antsibull-docs"
+  ],
+  "author": "Felix Fontein (@felixfontein)",
+  "license": "GPL-3.0-or-later",
+  "devDependencies": {
+    "@types/chai": "^4.3.4",
+    "@types/mocha": "^10.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.54.0",
+    "@typescript-eslint/parser": "^5.54.0",
+    "chai": "^4.3.7",
+    "eslint": "^8.35.0",
+    "mocha": "^10.2.0",
+    "prettier": "^2.8.4",
+    "ts-mocha": "^10.0.0",
+    "typescript": "^4.9.5"
+  }
+}

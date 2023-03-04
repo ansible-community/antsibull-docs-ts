@@ -1,0 +1,73 @@
+---
+# Copyright (c) Ansible Project
+# GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+name: TypeScript related checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  # Run once per week (Friday at 07:00 UTC)
+  schedule:
+    - cron: '0 7 * * 5'
+
+jobs:
+  test:
+    name: Unit tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+
+      - name: Install requirements
+        run: npm ci
+
+      - name: Run tests
+        run: |
+          npm test
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+
+      - name: Install requirements
+        run: npm ci
+
+      - name: Lint
+        run: |
+          npm run lint
+
+  format:
+    name: Check formatting
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+
+      - name: Install requirements
+        run: npm ci
+
+      - name: Check code formatting
+        run: |
+          npm run format:check
