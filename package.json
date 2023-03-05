@@ -16,7 +16,7 @@
     "build": "npx tsc",
     "format:check": "npx prettier --check .",
     "format:write": "npx prettier --write .",
-    "lint": "npx eslint \"**/*.ts\"",
+    "lint": "npx eslint \"src/**/*.ts\" \"tests/**/*.ts\"",
     "test": "npx ts-mocha tests/**/*.test.ts",
     "watch": "npx tsc -w"
   },
