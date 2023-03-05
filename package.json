@@ -25,7 +25,7 @@
     "antsibull-docs"
   ],
   "author": "Felix Fontein (@felixfontein)",
-  "license": "GPL-3.0-or-later",
+  "license": "BSD-2-Clause",
   "devDependencies": {
     "@types/chai": "^4.3.4",
     "@types/mocha": "^10.0.1",

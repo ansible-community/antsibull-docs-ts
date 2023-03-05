@@ -1,7 +1,7 @@
 /*
-  GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
+  Simplified BSD License (see LICENSES/BSD-2-Clause.txt or https://opensource.org/licenses/BSD-2-Clause)
   SPDX-FileCopyrightText: Ansible Project
-  SPDX-License-Identifier: GPL-3.0-or-later
+  SPDX-License-Identifier: BSD-2-Clause
 */
 
 // Parser
