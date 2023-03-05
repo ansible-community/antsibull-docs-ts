@@ -4,14 +4,17 @@
   SPDX-License-Identifier: BSD-2-Clause
 */
 
+import { HTMLOptions } from './opts';
 import { PartType, Paragraph } from './parser';
 
 export function quoteHTML(text: string): string {
-  // TODO
-  return text;
+  return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;');
 }
 
-export function toHTML(paragraphs: Paragraph[]): string {
+export function toHTML(paragraphs: Paragraph[], opts?: HTMLOptions): string {
+  if (!opts) {
+    opts = {};
+  }
   const result: string[] = [];
   for (const paragraph of paragraphs) {
     result.push('<p>');
