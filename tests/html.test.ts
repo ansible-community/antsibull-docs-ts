@@ -13,6 +13,14 @@ describe('quoteHTML tests', (): void => {
   it('empty string', (): void => {
     expect(quoteHTML('')).is.equal('');
   });
+  it('simple string', (): void => {
+    expect(quoteHTML('foo')).is.equal('foo');
+  });
+  it('more complex', (): void => {
+    expect(quoteHTML('<a href="a&b">&lt;&amp;&gt;</a>')).is.equal(
+      '&lt;a href="a&amp;b"&gt;&amp;lt;&amp;amp;&amp;gt;&lt;/a&gt;',
+    );
+  });
 });
 
 describe('toHTML tests', (): void => {

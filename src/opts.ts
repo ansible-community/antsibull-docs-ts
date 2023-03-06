@@ -34,7 +34,10 @@ interface CommonExportOptions extends ErrorHandlingOptions {
 }
 
 /* eslint-disable-next-line @typescript-eslint/no-empty-interface */
-export interface HTMLOptions extends CommonExportOptions {}
+export interface HTMLOptions extends CommonExportOptions {
+  /** Provides a link to a plugin. */
+  pluginLink?: (plugin: PluginIdentifier) => string | undefined;
+}
 
 /* eslint-disable-next-line @typescript-eslint/no-empty-interface */
 export interface RSTOptions extends CommonExportOptions {}

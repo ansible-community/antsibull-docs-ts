@@ -13,6 +13,21 @@ describe('quoteRST tests', (): void => {
   it('empty string', (): void => {
     expect(quoteRST('')).is.equal('');
   });
+  it('simple string', (): void => {
+    expect(quoteRST('  foo  ')).is.equal('  foo  ');
+  });
+  it('simple string, escape leading spacing', (): void => {
+    expect(quoteRST('  foo  ', true)).is.equal('\\   foo  ');
+  });
+  it('simple string, escape ending spacing', (): void => {
+    expect(quoteRST('  foo  ', false, true)).is.equal('  foo  \\ ');
+  });
+  it('simple string, escape spacing', (): void => {
+    expect(quoteRST('  foo  ', true, true)).is.equal('\\   foo  \\ ');
+  });
+  it('more complex', (): void => {
+    expect(quoteRST('\\<_>`*<_>*`\\')).is.equal('\\\\\\<\\_\\>\\`\\*\\<\\_\\>\\*\\`\\\\');
+  });
 });
 
 describe('toRST tests', (): void => {
