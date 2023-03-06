@@ -8,21 +8,21 @@ import { ParsingOptions, PluginIdentifier } from './opts';
 import { isFQCN } from './ansible';
 
 export enum PartType {
-  TEXT = 1,
-  ITALIC = 2,
-  BOLD = 3,
-  MODULE = 4,
-  PLUGIN = 5,
-  URL = 6,
-  LINK = 7,
-  RST_REF = 8,
-  CODE = 9,
-  OPTION_NAME = 10,
-  OPTION_VALUE = 11,
-  ENV_VARIABLE = 12,
-  RETURN_VALUE = 13,
-  HORIZONTAL_LINE = 14,
-  ERROR = 15,
+  ERROR = 0,
+  BOLD = 1,
+  CODE = 2,
+  HORIZONTAL_LINE = 3,
+  ITALIC = 4,
+  LINK = 5,
+  MODULE = 6,
+  RST_REF = 7,
+  URL = 8,
+  TEXT = 9,
+  ENV_VARIABLE = 10,
+  OPTION_NAME = 11,
+  OPTION_VALUE = 12,
+  PLUGIN = 13,
+  RETURN_VALUE = 14,
 }
 
 export interface Part {
