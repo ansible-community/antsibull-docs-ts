@@ -1,5 +1,5 @@
 {
-  "name": "antsibull-docs",
+  "name": "antsibull_docs",
   "version": "0.0.1",
   "description": "TypeScript library for processing Ansible documentation markup",
   "type": "module",
@@ -8,8 +8,11 @@
   "files": [
     "dist",
     "src",
+    "tests",
+    "tsconfig.json",
+    "CHANGELOG.rst",
     "LICENSE",
-    "LICENSES",
+    "LICENSES/*",
     "README.md"
   ],
   "scripts": {
@@ -26,6 +29,7 @@
   ],
   "author": "Felix Fontein (@felixfontein)",
   "license": "BSD-2-Clause",
+  "repository": "https://github.com/ansible-community/antsibull-docs-ts",
   "devDependencies": {
     "@types/chai": "^4.3.4",
     "@types/mocha": "^10.0.1",
