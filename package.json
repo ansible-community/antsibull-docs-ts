@@ -6,8 +6,13 @@
   "main": "dist/index.js",
   "module": "dist/index.js",
   "files": [
+    ".eslintrc.json",
+    ".prettierignore",
+    ".prettierrc.yml",
     "dist",
+    "jest.config.ts",
     "src",
+    "test-vectors.yaml",
     "tsconfig.json",
     "CHANGELOG.rst",
     "LICENSE",
