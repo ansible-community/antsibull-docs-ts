@@ -25,6 +25,9 @@ export interface PluginIdentifier {
 export interface ParsingOptions extends ErrorHandlingOptions {
   /** Should be provided if parsing documentation of a plugin/module/role. */
   current_plugin?: PluginIdentifier;
+
+  /** If set to 'true', only 'classic' Ansible docs markup is accepted. */
+  only_classic_markup?: boolean;
 }
 
 /* eslint-disable-next-line @typescript-eslint/no-empty-interface */

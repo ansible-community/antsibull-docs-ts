@@ -4,7 +4,7 @@
   SPDX-License-Identifier: BSD-2-Clause
 */
 
-import { ParsingOptions } from './opts';
+import { ParsingOptions, PluginIdentifier } from './opts';
 import { isFQCN } from './ansible';
 
 export enum PartType {
@@ -18,6 +18,11 @@ export enum PartType {
   RST_REF = 7,
   URL = 8,
   TEXT = 9,
+  ENV_VARIABLE = 10,
+  OPTION_NAME = 11,
+  OPTION_VALUE = 12,
+  PLUGIN = 13,
+  RETURN_VALUE = 14,
 }
 
 export interface Part {
@@ -44,6 +49,11 @@ export interface ModulePart extends Part {
   fqcn: string;
 }
 
+export interface PluginPart extends Part {
+  type: PartType.PLUGIN;
+  plugin: PluginIdentifier;
+}
+
 export interface URLPart extends Part {
   type: PartType.URL;
   url: string;
@@ -66,6 +76,34 @@ export interface CodePart extends Part {
   text: string;
 }
 
+export interface OptionNamePart extends Part {
+  type: PartType.OPTION_NAME;
+  ignore: boolean;
+  plugin: PluginIdentifier | undefined;
+  option_link: string;
+  option: string;
+  value: string | undefined;
+}
+
+export interface OptionValuePart extends Part {
+  type: PartType.OPTION_VALUE;
+  value: string;
+}
+
+export interface EnvVariablePart extends Part {
+  type: PartType.ENV_VARIABLE;
+  name: string;
+}
+
+export interface ReturnValuePart extends Part {
+  type: PartType.RETURN_VALUE;
+  ignore: boolean;
+  plugin: PluginIdentifier | undefined;
+  return_value_link: string;
+  return_value: string;
+  value: string | undefined;
+}
+
 export interface HorizontalLinePart extends Part {
   type: PartType.HORIZONTAL_LINE;
 }
@@ -80,10 +118,15 @@ export type AnyPart =
   | ItalicPart
   | BoldPart
   | ModulePart
+  | PluginPart
   | URLPart
   | LinkPart
   | RSTRefPart
   | CodePart
+  | OptionNamePart
+  | OptionValuePart
+  | EnvVariablePart
+  | ReturnValuePart
   | HorizontalLinePart
   | ErrorPart;
 
@@ -92,6 +135,8 @@ export type Paragraph = AnyPart[];
 interface CommandParser {
   command: string;
   parameters: number;
+  old_markup?: boolean;
+  escaped_arguments?: boolean;
   process: (args: string[], opts: ParsingOptions) => AnyPart;
 }
 
@@ -100,6 +145,7 @@ const PARSER: CommandParser[] = [
   {
     command: 'I',
     parameters: 1,
+    old_markup: true,
     process: (args) => {
       const text = args[0] as string;
       return <ItalicPart>{ type: PartType.ITALIC, text: text };
@@ -108,6 +154,7 @@ const PARSER: CommandParser[] = [
   {
     command: 'B',
     parameters: 1,
+    old_markup: true,
     process: (args) => {
       const text = args[0] as string;
       return <BoldPart>{ type: PartType.BOLD, text: text };
@@ -116,6 +163,7 @@ const PARSER: CommandParser[] = [
   {
     command: 'M',
     parameters: 1,
+    old_markup: true,
     process: (args) => {
       const fqcn = args[0] as string;
       if (!isFQCN(fqcn)) {
@@ -127,6 +175,7 @@ const PARSER: CommandParser[] = [
   {
     command: 'U',
     parameters: 1,
+    old_markup: true,
     process: (args) => {
       const url = args[0] as string;
       return <URLPart>{ type: PartType.URL, url: url };
@@ -135,6 +184,7 @@ const PARSER: CommandParser[] = [
   {
     command: 'L',
     parameters: 2,
+    old_markup: true,
     process: (args) => {
       const text = args[0] as string;
       const url = args[1] as string;
@@ -144,6 +194,7 @@ const PARSER: CommandParser[] = [
   {
     command: 'R',
     parameters: 2,
+    old_markup: true,
     process: (args) => {
       const text = args[0] as string;
       const ref = args[1] as string;
@@ -153,6 +204,7 @@ const PARSER: CommandParser[] = [
   {
     command: 'C',
     parameters: 1,
+    old_markup: true,
     process: (args) => {
       const text = args[0] as string;
       return <CodePart>{ type: PartType.CODE, text: text };
@@ -165,6 +217,8 @@ const PARSER: CommandParser[] = [
       return <HorizontalLinePart>{ type: PartType.HORIZONTAL_LINE };
     },
   },
+  // Semantic Ansible docs markup:
+  // TODO
 ];
 
 const PARSER_COMMANDS: Map<string, CommandParser> = (() => {
@@ -178,6 +232,14 @@ function commandRE(command: CommandParser): string {
 }
 
 const COMMAND_RE = new RegExp('(' + PARSER.map(commandRE).join('|') + ')', 'g');
+const CLASSIC_COMMAND_RE = new RegExp(
+  '(' +
+    PARSER.filter((cmd) => cmd.old_markup)
+      .map(commandRE)
+      .join('|') +
+    ')',
+  'g',
+);
 
 function lstripSpace(input: string): string {
   let index = 0;
@@ -195,6 +257,12 @@ function rstripSpace(input: string) {
     index -= 1;
   }
   return index < length ? input.slice(0, index) : input;
+}
+
+/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+function parseEscapedArgs(input: string, index: number, count: number): [string[], number, string | undefined] {
+  // TODO
+  return [[], index, 'Internal error: escaped arguments unsupported'];
 }
 
 function parseUnescapedArgs(input: string, index: number, count: number): [string[], number, string | undefined] {
@@ -231,7 +299,7 @@ function parseUnescapedArgs(input: string, index: number, count: number): [strin
 
 function parseString(input: string, opts: ParsingOptions): Paragraph {
   const result: AnyPart[] = [];
-  const commandRE = COMMAND_RE;
+  const commandRE = opts.only_classic_markup ? CLASSIC_COMMAND_RE : COMMAND_RE;
   const length = input.length;
   let index = 0;
   while (index < length) {
@@ -266,6 +334,8 @@ function parseString(input: string, opts: ParsingOptions): Paragraph {
     let error: string | undefined;
     if (command.parameters === 0) {
       args = [];
+    } else if (command.escaped_arguments) {
+      [args, endIndex, error] = parseEscapedArgs(input, endIndex, command.parameters);
     } else {
       [args, endIndex, error] = parseUnescapedArgs(input, endIndex, command.parameters);
     }
