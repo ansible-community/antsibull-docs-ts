@@ -5,8 +5,9 @@
 */
 
 // Parser
+export { parse } from './parser';
 export * as parser from './parser';
 
 // Output
-export * as rst from './rst';
-export * as html from './html';
+export { quoteRST, toRST } from './rst';
+export { quoteHTML, toHTML } from './html';
