@@ -4,19 +4,17 @@
   SPDX-License-Identifier: BSD-2-Clause
 */
 
-import { expect } from 'chai';
-
 import { readFileSync } from 'fs';
 
 import { parse as parse_yaml } from 'yaml';
 
-import { parse } from '../src/parser';
-import { toHTML } from '../src/html';
-import { toRST } from '../src/rst';
+import { parse } from './parser';
+import { toHTML } from './html';
+import { toRST } from './rst';
 
 describe('vectors', (): void => {
-  const data = readFileSync('tests/vectors.yaml', 'utf8');
-  const vectors: Any = parse_yaml(data).test_vectors;
+  const data = readFileSync('test-vectors.yaml', 'utf8');
+  const vectors = parse_yaml(data).test_vectors;
   for (const test_name of Object.keys(vectors)) {
     const test_data = vectors[test_name];
     if (test_data.html_opts) {
@@ -26,14 +24,12 @@ describe('vectors', (): void => {
     }
     if (test_data.source !== undefined && test_data.html !== undefined) {
       it(`${test_name} (Ansible doc => HTML)`, (): void => {
-        expect(toHTML(parse(test_data.source, test_data.parse_opts), test_data.html_opts)).to.deep.equal(
-          test_data.html,
-        );
+        expect(toHTML(parse(test_data.source, test_data.parse_opts), test_data.html_opts)).toEqual(test_data.html);
       });
     }
     if (test_data.source !== undefined && test_data.rst !== undefined) {
       it(`${test_name} (Ansible doc => RST)`, (): void => {
-        expect(toRST(parse(test_data.source, test_data.parse_opts), test_data.rst_opts)).to.deep.equal(test_data.rst);
+        expect(toRST(parse(test_data.source, test_data.parse_opts), test_data.rst_opts)).toEqual(test_data.rst);
       });
     }
   }

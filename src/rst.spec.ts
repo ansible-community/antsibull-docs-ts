@@ -4,37 +4,35 @@
   SPDX-License-Identifier: BSD-2-Clause
 */
 
-import { expect } from 'chai';
-
-import * as parser from '../src/parser';
-import { quoteRST, toRST } from '../src/rst';
+import * as parser from './parser';
+import { quoteRST, toRST } from './rst';
 
 describe('quoteRST tests', (): void => {
   it('empty string', (): void => {
-    expect(quoteRST('')).is.equal('');
+    expect(quoteRST('')).toBe('');
   });
   it('simple string', (): void => {
-    expect(quoteRST('  foo  ')).is.equal('  foo  ');
+    expect(quoteRST('  foo  ')).toBe('  foo  ');
   });
   it('simple string, escape leading spacing', (): void => {
-    expect(quoteRST('  foo  ', true)).is.equal('\\   foo  ');
+    expect(quoteRST('  foo  ', true)).toBe('\\   foo  ');
   });
   it('simple string, escape ending spacing', (): void => {
-    expect(quoteRST('  foo  ', false, true)).is.equal('  foo  \\ ');
+    expect(quoteRST('  foo  ', false, true)).toBe('  foo  \\ ');
   });
   it('simple string, escape spacing', (): void => {
-    expect(quoteRST('  foo  ', true, true)).is.equal('\\   foo  \\ ');
+    expect(quoteRST('  foo  ', true, true)).toBe('\\   foo  \\ ');
   });
   it('more complex', (): void => {
-    expect(quoteRST('\\<_>`*<_>*`\\')).is.equal('\\\\\\<\\_\\>\\`\\*\\<\\_\\>\\*\\`\\\\');
+    expect(quoteRST('\\<_>`*<_>*`\\')).toBe('\\\\\\<\\_\\>\\`\\*\\<\\_\\>\\*\\`\\\\');
   });
 });
 
 describe('toRST tests', (): void => {
   it('no paragraphs', (): void => {
-    expect(toRST([])).is.equal('');
+    expect(toRST([])).toBe('');
   });
   it('single paragraph with simple text', (): void => {
-    expect(toRST([[{ type: parser.PartType.TEXT, text: 'test' }]])).is.equal('test');
+    expect(toRST([[{ type: parser.PartType.TEXT, text: 'test' }]])).toBe('test');
   });
 });

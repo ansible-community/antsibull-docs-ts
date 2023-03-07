@@ -4,20 +4,18 @@
   SPDX-License-Identifier: BSD-2-Clause
 */
 
-import { expect } from 'chai';
-
-import * as parser from '../src/parser';
-import { quoteHTML, toHTML } from '../src/html';
+import * as parser from './parser';
+import { quoteHTML, toHTML } from './html';
 
 describe('quoteHTML tests', (): void => {
   it('empty string', (): void => {
-    expect(quoteHTML('')).is.equal('');
+    expect(quoteHTML('')).toBe('');
   });
   it('simple string', (): void => {
-    expect(quoteHTML('foo')).is.equal('foo');
+    expect(quoteHTML('foo')).toBe('foo');
   });
   it('more complex', (): void => {
-    expect(quoteHTML('<a href="a&b">&lt;&amp;&gt;</a>')).is.equal(
+    expect(quoteHTML('<a href="a&b">&lt;&amp;&gt;</a>')).toBe(
       '&lt;a href="a&amp;b"&gt;&amp;lt;&amp;amp;&amp;gt;&lt;/a&gt;',
     );
   });
@@ -25,6 +23,6 @@ describe('quoteHTML tests', (): void => {
 
 describe('toHTML tests', (): void => {
   it('no paragraphs', (): void => {
-    expect(toHTML([[{ type: parser.PartType.TEXT, text: 'test' }]])).is.equal('<p>test</p>');
+    expect(toHTML([[{ type: parser.PartType.TEXT, text: 'test' }]])).toBe('<p>test</p>');
   });
 });

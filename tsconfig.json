@@ -43,5 +43,6 @@
     /* Completeness */
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
-  "exclude": ["tests", "dist", "node_modules"]
+  "include": ["src/**/*"],
+  "exclude": ["src/**/*.spec.ts"]
 }
