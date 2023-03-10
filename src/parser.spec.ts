@@ -16,10 +16,10 @@ describe('parser tests', (): void => {
   it('simple string', (): void => {
     expect(parse('test')).toEqual([[{ type: PartType.TEXT, text: 'test' }]]);
   });
-  it('basic markup test', (): void => {
+  it('classic markup test', (): void => {
     expect(
       parse(
-        'foo I(bar) baz C( bam ) B( ( boo ) ) U(https://example.com/?foo=bar)L(foo ,  https://bar.com) R( a , b )M(foo.bar.baz)x M(foo.bar.baz.bam)',
+        'foo I(bar) baz C( bam ) B( ( boo ) ) U(https://example.com/?foo=bar)HORIZONTALLINE L(foo ,  https://bar.com) R( a , b )M(foo.bar.baz)HORIZONTALLINEx M(foo.bar.baz.bam)',
       ),
     ).toEqual([
       [
@@ -31,48 +31,50 @@ describe('parser tests', (): void => {
         { type: PartType.BOLD, text: ' ( boo ' },
         { type: PartType.TEXT, text: ' ) ' },
         { type: PartType.URL, url: 'https://example.com/?foo=bar' },
+        { type: PartType.HORIZONTAL_LINE },
+        { type: PartType.TEXT, text: ' ' },
         { type: PartType.LINK, text: 'foo', url: 'https://bar.com' },
         { type: PartType.TEXT, text: ' ' },
         { type: PartType.RST_REF, text: ' a', ref: 'b ' },
         { type: PartType.MODULE, fqcn: 'foo.bar.baz' },
-        { type: PartType.TEXT, text: 'x ' },
+        { type: PartType.TEXT, text: 'HORIZONTALLINEx ' },
         { type: PartType.MODULE, fqcn: 'foo.bar.baz.bam' },
       ],
     ]);
   });
   it('bad parameter parsing (no escaping, throw error)', (): void => {
-    expect(async () => parse('M(')).rejects.toThrow(
+    expect(async () => parse('M(', { errors: 'exception' })).rejects.toThrow(
       'While parsing M() at index 1: Cannot find closing ")" after last parameter',
     );
-    expect(async () => parse('M(foo')).rejects.toThrow(
+    expect(async () => parse('M(foo', { errors: 'exception' })).rejects.toThrow(
       'While parsing M() at index 1: Cannot find closing ")" after last parameter',
     );
-    expect(async () => parse('L(foo)')).rejects.toThrow(
+    expect(async () => parse('L(foo)', { errors: 'exception' })).rejects.toThrow(
       'While parsing L() at index 1: Cannot find comma separating parameter 1 from the next one',
     );
-    expect(async () => parse('L(foo,bar')).rejects.toThrow(
+    expect(async () => parse('L(foo,bar', { errors: 'exception' })).rejects.toThrow(
       'While parsing L() at index 1: Cannot find closing ")" after last parameter',
     );
-    expect(async () => parse('L(foo), bar')).rejects.toThrow(
+    expect(async () => parse('L(foo), bar', { errors: 'exception' })).rejects.toThrow(
       'While parsing L() at index 1: Cannot find closing ")" after last parameter',
     );
   });
   it('bad module ref (throw error)', (): void => {
-    expect(async () => parse('M(foo)')).rejects.toThrow(
+    expect(async () => parse('M(foo)', { errors: 'exception' })).rejects.toThrow(
       'While parsing M() at index 1: Error: Module name "foo" is not a FQCN',
     );
-    expect(async () => parse(' M(foo.bar)')).rejects.toThrow(
+    expect(async () => parse(' M(foo.bar)', { errors: 'exception' })).rejects.toThrow(
       'While parsing M() at index 2: Error: Module name "foo.bar" is not a FQCN',
     );
-    expect(async () => parse('  M(foo. bar.baz)')).rejects.toThrow(
+    expect(async () => parse('  M(foo. bar.baz)', { errors: 'exception' })).rejects.toThrow(
       'While parsing M() at index 3: Error: Module name "foo. bar.baz" is not a FQCN',
     );
-    expect(async () => parse('   M(foo)')).rejects.toThrow(
+    expect(async () => parse('   M(foo)', { errors: 'exception' })).rejects.toThrow(
       'While parsing M() at index 4: Error: Module name "foo" is not a FQCN',
     );
   });
   it('bad parameter parsing (no escaping, error message)', (): void => {
-    expect(parse('M(', { errors: 'message' })).toEqual([
+    expect(parse('M(')).toEqual([
       [{ type: PartType.ERROR, message: 'While parsing M() at index 1: Cannot find closing ")" after last parameter' }],
     ]);
     expect(parse('M(foo', { errors: 'message' })).toEqual([
@@ -94,7 +96,7 @@ describe('parser tests', (): void => {
     ]);
   });
   it('bad module ref (error message)', (): void => {
-    expect(parse('M(foo)', { errors: 'message' })).toEqual([
+    expect(parse('M(foo)')).toEqual([
       [{ type: PartType.ERROR, message: 'While parsing M() at index 1: Error: Module name "foo" is not a FQCN' }],
     ]);
     expect(parse(' M(foo.bar)', { errors: 'message' })).toEqual([
