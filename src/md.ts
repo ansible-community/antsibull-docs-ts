@@ -4,6 +4,8 @@
   SPDX-License-Identifier: BSD-2-Clause
 */
 
+// CommonMark spec: https://spec.commonmark.org/current/
+
 import { MDOptions } from './opts';
 import { PartType, Paragraph } from './parser';
 
