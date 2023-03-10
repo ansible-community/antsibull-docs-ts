@@ -70,7 +70,7 @@ describe('parser tests', (): void => {
     ]);
   });
   it('semantic markup test', (): void => {
-    expect(parse('foo E(a\\),b) P(foo.bar.baz  ,  bam) baz V( b\\,\\na\\)\\\\m\\, ) ')).toEqual([
+    expect(parse('foo E(a\\),b) P(foo.bar.baz  ,  bam) baz V( b\\,\\na\\)\\\\m\\, ) O(foo) ')).toEqual([
       [
         { type: PartType.TEXT, text: 'foo ' },
         { type: PartType.ENV_VARIABLE, name: 'a),b' },
@@ -79,6 +79,188 @@ describe('parser tests', (): void => {
         { type: PartType.TEXT, text: ' baz ' },
         { type: PartType.OPTION_VALUE, value: ' b,na)\\m, ' },
         { type: PartType.TEXT, text: ' ' },
+        { type: PartType.OPTION_NAME, plugin: undefined, link: ['foo'], name: 'foo', value: undefined },
+        { type: PartType.TEXT, text: ' ' },
+      ],
+    ]);
+  });
+  it('semantic markup option name', (): void => {
+    expect(parse('O(foo)')).toEqual([
+      [
+        {
+          type: PartType.OPTION_NAME,
+          plugin: undefined,
+          link: ['foo'],
+          name: 'foo',
+          value: undefined,
+        },
+      ],
+    ]);
+    expect(parse('O(ignore:foo)', { current_plugin: { fqcn: 'foo.bar.baz', type: 'bam' } })).toEqual([
+      [
+        {
+          type: PartType.OPTION_NAME,
+          plugin: undefined,
+          link: ['foo'],
+          name: 'foo',
+          value: undefined,
+        },
+      ],
+    ]);
+    expect(parse('O(foo)', { current_plugin: { fqcn: 'foo.bar.baz', type: 'bam' } })).toEqual([
+      [
+        {
+          type: PartType.OPTION_NAME,
+          plugin: { fqcn: 'foo.bar.baz', type: 'bam' },
+          link: ['foo'],
+          name: 'foo',
+          value: undefined,
+        },
+      ],
+    ]);
+    expect(parse('O(foo.bar.baz#bam:foo)')).toEqual([
+      [
+        {
+          type: PartType.OPTION_NAME,
+          plugin: { fqcn: 'foo.bar.baz', type: 'bam' },
+          link: ['foo'],
+          name: 'foo',
+          value: undefined,
+        },
+      ],
+    ]);
+    expect(parse('O(foo=bar)')).toEqual([
+      [
+        {
+          type: PartType.OPTION_NAME,
+          plugin: undefined,
+          link: ['foo'],
+          name: 'foo',
+          value: 'bar',
+        },
+      ],
+    ]);
+    expect(parse('O(foo.baz=bam)')).toEqual([
+      [
+        {
+          type: PartType.OPTION_NAME,
+          plugin: undefined,
+          link: ['foo', 'baz'],
+          name: 'foo.baz',
+          value: 'bam',
+        },
+      ],
+    ]);
+    expect(parse('O(foo[1].baz[bam.bar.boing].boo)')).toEqual([
+      [
+        {
+          type: PartType.OPTION_NAME,
+          plugin: undefined,
+          link: ['foo', 'baz', 'boo'],
+          name: 'foo[1].baz[bam.bar.boing].boo',
+          value: undefined,
+        },
+      ],
+    ]);
+    expect(parse('O(bar.baz.bam.boo#lookup:foo[1].baz[bam.bar.boing].boo)')).toEqual([
+      [
+        {
+          type: PartType.OPTION_NAME,
+          plugin: { fqcn: 'bar.baz.bam.boo', type: 'lookup' },
+          link: ['foo', 'baz', 'boo'],
+          name: 'foo[1].baz[bam.bar.boing].boo',
+          value: undefined,
+        },
+      ],
+    ]);
+  });
+  it('semantic markup return value name', (): void => {
+    expect(parse('RV(foo)')).toEqual([
+      [
+        {
+          type: PartType.RETURN_VALUE,
+          plugin: undefined,
+          link: ['foo'],
+          name: 'foo',
+          value: undefined,
+        },
+      ],
+    ]);
+    expect(parse('RV(ignore:foo)', { current_plugin: { fqcn: 'foo.bar.baz', type: 'bam' } })).toEqual([
+      [
+        {
+          type: PartType.RETURN_VALUE,
+          plugin: undefined,
+          link: ['foo'],
+          name: 'foo',
+          value: undefined,
+        },
+      ],
+    ]);
+    expect(parse('RV(foo)', { current_plugin: { fqcn: 'foo.bar.baz', type: 'bam' } })).toEqual([
+      [
+        {
+          type: PartType.RETURN_VALUE,
+          plugin: { fqcn: 'foo.bar.baz', type: 'bam' },
+          link: ['foo'],
+          name: 'foo',
+          value: undefined,
+        },
+      ],
+    ]);
+    expect(parse('RV(foo.bar.baz#bam:foo)')).toEqual([
+      [
+        {
+          type: PartType.RETURN_VALUE,
+          plugin: { fqcn: 'foo.bar.baz', type: 'bam' },
+          link: ['foo'],
+          name: 'foo',
+          value: undefined,
+        },
+      ],
+    ]);
+    expect(parse('RV(foo=bar)')).toEqual([
+      [
+        {
+          type: PartType.RETURN_VALUE,
+          plugin: undefined,
+          link: ['foo'],
+          name: 'foo',
+          value: 'bar',
+        },
+      ],
+    ]);
+    expect(parse('RV(foo.baz=bam)')).toEqual([
+      [
+        {
+          type: PartType.RETURN_VALUE,
+          plugin: undefined,
+          link: ['foo', 'baz'],
+          name: 'foo.baz',
+          value: 'bam',
+        },
+      ],
+    ]);
+    expect(parse('RV(foo[1].baz[bam.bar.boing].boo)')).toEqual([
+      [
+        {
+          type: PartType.RETURN_VALUE,
+          plugin: undefined,
+          link: ['foo', 'baz', 'boo'],
+          name: 'foo[1].baz[bam.bar.boing].boo',
+          value: undefined,
+        },
+      ],
+    ]);
+    expect(parse('RV(bar.baz.bam.boo#lookup:foo[1].baz[bam.bar.boing].boo)')).toEqual([
+      [
+        {
+          type: PartType.RETURN_VALUE,
+          plugin: { fqcn: 'bar.baz.bam.boo', type: 'lookup' },
+          link: ['foo', 'baz', 'boo'],
+          name: 'foo[1].baz[bam.bar.boing].boo',
+          value: undefined,
+        },
       ],
     ]);
   });

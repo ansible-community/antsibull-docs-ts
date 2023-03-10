@@ -78,10 +78,9 @@ export interface CodePart extends Part {
 
 export interface OptionNamePart extends Part {
   type: PartType.OPTION_NAME;
-  ignore: boolean;
   plugin: PluginIdentifier | undefined;
-  option_link: string;
-  option: string;
+  link: string[];
+  name: string;
   value: string | undefined;
 }
 
@@ -97,10 +96,9 @@ export interface EnvVariablePart extends Part {
 
 export interface ReturnValuePart extends Part {
   type: PartType.RETURN_VALUE;
-  ignore: boolean;
   plugin: PluginIdentifier | undefined;
-  return_value_link: string;
-  return_value: string;
+  link: string[];
+  name: string;
   value: string | undefined;
 }
 
@@ -132,13 +130,48 @@ export type AnyPart =
 
 export type Paragraph = AnyPart[];
 
+const IGNORE_MARKER = 'ignore:';
+
 function parseOptionLike(
-  value: string,
+  text: string,
   opts: ParsingOptions,
   type: PartType.OPTION_NAME | PartType.RETURN_VALUE,
 ): OptionNamePart | ReturnValuePart {
-  // TODO
-  throw Error('Not yet supported');
+  let value: string | undefined;
+  const eq = text.indexOf('=');
+  if (eq >= 0) {
+    value = text.substring(eq + 1, text.length);
+    text = text.substring(0, eq);
+  }
+  const m = /^([^.]+\.[^.]+\.[^#]+)#([a-z]+):(.*)$/.exec(text);
+  let plugin: PluginIdentifier | undefined;
+  if (m) {
+    const pluginFqcn = m[1] as string;
+    const pluginType = m[2] as string;
+    if (!isFQCN(pluginFqcn)) {
+      throw Error(`Plugin name "${pluginFqcn}" is not a FQCN`);
+    }
+    if (!isPluginType(pluginType)) {
+      throw Error(`Plugin type "${pluginType}" is not valid`);
+    }
+    plugin = { fqcn: pluginFqcn, type: pluginType };
+    text = m[3] as string;
+  } else if (text.startsWith(IGNORE_MARKER)) {
+    plugin = undefined;
+    text = text.substring(IGNORE_MARKER.length, text.length);
+  } else {
+    plugin = opts.current_plugin;
+  }
+  if (/[:#]/.test(text)) {
+    throw Error(`Invalid option/return value name "${text}"`);
+  }
+  return {
+    type: type,
+    plugin: plugin,
+    link: text.replace(/\[([^\]]*)\]/g, '').split('.'),
+    name: text,
+    value: value,
+  };
 }
 
 interface CommandParser {
