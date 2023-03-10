@@ -213,6 +213,7 @@ const PARSER: CommandParser[] = [
   {
     command: 'HORIZONTALLINE',
     parameters: 0,
+    old_markup: true,
     process: () => {
       return <HorizontalLinePart>{ type: PartType.HORIZONTAL_LINE };
     },
