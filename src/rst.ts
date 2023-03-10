@@ -8,13 +8,7 @@ import { RSTOptions } from './opts';
 import { PartType, Paragraph } from './parser';
 
 export function quoteRST(text: string, escape_starting_whitespace = false, escape_ending_whitespace = false): string {
-  text = text
-    .replace(/\\/g, '\\\\')
-    .replace(/</g, '\\<')
-    .replace(/>/g, '\\>')
-    .replace(/_/g, '\\_')
-    .replace(/\*/g, '\\*')
-    .replace(/`/g, '\\`');
+  text = text.replace(/([\\<>_*`])/g, '\\$1');
 
   if (escape_ending_whitespace && text.endsWith(' ')) {
     text = text + '\\ ';

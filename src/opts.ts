@@ -41,3 +41,9 @@ export interface HTMLOptions extends CommonExportOptions {
 
 /* eslint-disable-next-line @typescript-eslint/no-empty-interface */
 export interface RSTOptions extends CommonExportOptions {}
+
+/* eslint-disable-next-line @typescript-eslint/no-empty-interface */
+export interface MDOptions extends CommonExportOptions {
+  /** Provides a link to a plugin. */
+  pluginLink?: (plugin: PluginIdentifier) => string | undefined;
+}
