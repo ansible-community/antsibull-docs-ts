@@ -9,5 +9,6 @@ export { parse } from './parser';
 export * as parser from './parser';
 
 // Output
-export { quoteRST, toRST } from './rst';
 export { quoteHTML, toHTML } from './html';
+export { quoteMD, toMD } from './md';
+export { quoteRST, toRST } from './rst';
