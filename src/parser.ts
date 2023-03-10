@@ -161,8 +161,7 @@ const PARSER: CommandParser[] = [
   {
     command: 'HORIZONTALLINE',
     parameters: 0,
-    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-    process: (args) => {
+    process: () => {
       return <HorizontalLinePart>{ type: PartType.HORIZONTAL_LINE };
     },
   },
@@ -175,7 +174,7 @@ const PARSER_COMMANDS: Map<string, CommandParser> = (() => {
 })();
 
 function commandRE(command: CommandParser): string {
-  return '\\b' + command.command + (command.parameters == 0 ? '\\b' : '\\(');
+  return '\\b' + command.command + (command.parameters === 0 ? '\\b' : '\\(');
 }
 
 const COMMAND_RE = new RegExp('(' + PARSER.map(commandRE).join('|') + ')', 'g');
@@ -279,7 +278,7 @@ function parseString(input: string, opts: ParsingOptions): Paragraph {
     }
     if (error !== undefined) {
       error = `While parsing ${cmd}${command.parameters > 0 ? '()' : ''} at index ${match.index + 1}: ${error}`;
-      switch (opts.errors || 'exception') {
+      switch (opts.errors || 'message') {
         case 'ignore':
           break;
         case 'message':
