@@ -42,6 +42,46 @@ describe('parser tests', (): void => {
       ],
     ]);
   });
+  it('classic markup test II', (): void => {
+    expect(
+      parse(
+        'foo I(bar) baz C( bam ) B( ( boo ) ) U(https://example.com/?foo=bar)HORIZONTALLINE L(foo ,  https://bar.com) R( a , b )M(foo.bar.baz)HORIZONTALLINEx M(foo.bar.baz.bam)',
+        { only_classic_markup: true },
+      ),
+    ).toEqual([
+      [
+        { type: PartType.TEXT, text: 'foo ' },
+        { type: PartType.ITALIC, text: 'bar' },
+        { type: PartType.TEXT, text: ' baz ' },
+        { type: PartType.CODE, text: ' bam ' },
+        { type: PartType.TEXT, text: ' ' },
+        { type: PartType.BOLD, text: ' ( boo ' },
+        { type: PartType.TEXT, text: ' ) ' },
+        { type: PartType.URL, url: 'https://example.com/?foo=bar' },
+        { type: PartType.HORIZONTAL_LINE },
+        { type: PartType.TEXT, text: ' ' },
+        { type: PartType.LINK, text: 'foo', url: 'https://bar.com' },
+        { type: PartType.TEXT, text: ' ' },
+        { type: PartType.RST_REF, text: ' a', ref: 'b ' },
+        { type: PartType.MODULE, fqcn: 'foo.bar.baz' },
+        { type: PartType.TEXT, text: 'HORIZONTALLINEx ' },
+        { type: PartType.MODULE, fqcn: 'foo.bar.baz.bam' },
+      ],
+    ]);
+  });
+  it('semantic markup test', (): void => {
+    expect(parse('foo E(a\\),b) P(foo.bar.baz  ,  bam) baz V( b\\,\\na\\)\\\\m\\, ) ')).toEqual([
+      [
+        { type: PartType.TEXT, text: 'foo ' },
+        { type: PartType.ENV_VARIABLE, name: 'a),b' },
+        { type: PartType.TEXT, text: ' ' },
+        { type: PartType.PLUGIN, plugin: { fqcn: 'foo.bar.baz', type: 'bam' } },
+        { type: PartType.TEXT, text: ' baz ' },
+        { type: PartType.OPTION_VALUE, value: ' b,na)\\m, ' },
+        { type: PartType.TEXT, text: ' ' },
+      ],
+    ]);
+  });
   it('bad parameter parsing (no escaping, throw error)', (): void => {
     expect(async () => parse('M(', { errors: 'exception' })).rejects.toThrow(
       'While parsing M() at index 1: Cannot find closing ")" after last parameter',

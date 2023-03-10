@@ -5,7 +5,7 @@
 */
 
 import { ParsingOptions, PluginIdentifier } from './opts';
-import { isFQCN } from './ansible';
+import { isFQCN, isPluginType } from './ansible';
 
 export enum PartType {
   ERROR = 0,
@@ -132,6 +132,15 @@ export type AnyPart =
 
 export type Paragraph = AnyPart[];
 
+function parseOptionLike(
+  value: string,
+  opts: ParsingOptions,
+  type: PartType.OPTION_NAME | PartType.RETURN_VALUE,
+): OptionNamePart | ReturnValuePart {
+  // TODO
+  throw Error('Not yet supported');
+}
+
 interface CommandParser {
   command: string;
   parameters: number;
@@ -219,7 +228,58 @@ const PARSER: CommandParser[] = [
     },
   },
   // Semantic Ansible docs markup:
-  // TODO
+  {
+    command: 'P',
+    parameters: 2,
+    escaped_arguments: true,
+    process: (args) => {
+      const fqcn = args[0] as string;
+      if (!isFQCN(fqcn)) {
+        throw Error(`Plugin name "${fqcn}" is not a FQCN`);
+      }
+      const type = args[1] as string;
+      if (!isPluginType(type)) {
+        throw Error(`Plugin type "${type}" is not valid`);
+      }
+      return <PluginPart>{ type: PartType.PLUGIN, plugin: { fqcn: fqcn, type: type } };
+    },
+  },
+  {
+    command: 'E',
+    parameters: 1,
+    escaped_arguments: true,
+    process: (args) => {
+      const env = args[0] as string;
+      return <EnvVariablePart>{ type: PartType.ENV_VARIABLE, name: env };
+    },
+  },
+  {
+    command: 'V',
+    parameters: 1,
+    escaped_arguments: true,
+    process: (args) => {
+      const value = args[0] as string;
+      return <OptionValuePart>{ type: PartType.OPTION_VALUE, value: value };
+    },
+  },
+  {
+    command: 'O',
+    parameters: 1,
+    escaped_arguments: true,
+    process: (args, opts) => {
+      const value = args[0] as string;
+      return parseOptionLike(value, opts, PartType.OPTION_NAME);
+    },
+  },
+  {
+    command: 'RV',
+    parameters: 1,
+    escaped_arguments: true,
+    process: (args, opts) => {
+      const value = args[0] as string;
+      return parseOptionLike(value, opts, PartType.RETURN_VALUE);
+    },
+  },
 ];
 
 const PARSER_COMMANDS: Map<string, CommandParser> = (() => {
