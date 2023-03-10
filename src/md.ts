@@ -10,7 +10,7 @@ import { MDOptions } from './opts';
 import { PartType, Paragraph } from './parser';
 
 export function quoteMD(text: string): string {
-  return text.replace(/([!"#$%&'()*+,:;<=>?@\[\\\]^_`{|}~-])/g, '\\$1');
+  return text.replace(/([!"#$%&'()*+,:;<=>?@[\\\]^_`{|}~-])/g, '\\$1');
 }
 
 export function toMD(paragraphs: Paragraph[], opts?: MDOptions): string {
@@ -40,7 +40,7 @@ export function toMD(paragraphs: Paragraph[], opts?: MDOptions): string {
         case PartType.LINK:
           line.push(`[${quoteMD(part.text)}](${quoteMD(encodeURI(part.url))})`);
           break;
-        case PartType.MODULE:
+        case PartType.MODULE: {
           let url: string | undefined;
           if (opts.pluginLink) {
             url = opts.pluginLink({ fqcn: part.fqcn, type: 'module' });
@@ -51,6 +51,7 @@ export function toMD(paragraphs: Paragraph[], opts?: MDOptions): string {
             line.push(`${quoteMD(part.fqcn)}`);
           }
           break;
+        }
         case PartType.RST_REF:
           line.push(`${quoteMD(part.text)}`);
           break;
