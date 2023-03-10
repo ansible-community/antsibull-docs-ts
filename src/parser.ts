@@ -262,8 +262,52 @@ function rstripSpace(input: string) {
 
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 function parseEscapedArgs(input: string, index: number, count: number): [string[], number, string | undefined] {
-  // TODO
-  return [[], index, 'Internal error: escaped arguments unsupported'];
+  const result: string[] = [];
+  let parameter_count = count;
+  const escapeOrComma = /\\(.)| *(,) */g;
+  while (parameter_count > 1) {
+    parameter_count -= 1;
+    const value: string[] = [];
+    /* eslint-disable-next-line no-constant-condition */
+    while (true) {
+      escapeOrComma.lastIndex = index;
+      const match = escapeOrComma.exec(input);
+      if (!match) {
+        result.push(value.join(''));
+        return [result, index, `Cannot find comma separating parameter ${count - parameter_count} from the next one`];
+      }
+      if (match.index > index) {
+        value.push(input.substring(index, match.index));
+      }
+      index = match.index + match[0].length;
+      if (match[1] === undefined) {
+        break;
+      }
+      value.push(match[1]);
+    }
+    result.push(value.join(''));
+  }
+  const escapeOrClosing = /\\(.)|([)])/g;
+  const value: string[] = [];
+  /* eslint-disable-next-line no-constant-condition */
+  while (true) {
+    escapeOrClosing.lastIndex = index;
+    const match = escapeOrClosing.exec(input);
+    if (!match) {
+      result.push(value.join(''));
+      return [result, index, 'Cannot find ")" closing after the last parameter'];
+    }
+    if (match.index > index) {
+      value.push(input.substring(index, match.index));
+    }
+    index = match.index + match[0].length;
+    if (match[1] === undefined) {
+      break;
+    }
+    value.push(match[1]);
+  }
+  result.push(value.join(''));
+  return [result, index, undefined];
 }
 
 function parseUnescapedArgs(input: string, index: number, count: number): [string[], number, string | undefined] {
