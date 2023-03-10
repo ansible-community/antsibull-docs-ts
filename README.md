@@ -28,7 +28,7 @@ $ npm build
 to build the package,
 
 ```shell
-$ npm watch
+$ npm build:watch
 ```
 
 to start a watch process which builds the package every time a file is modified,
@@ -38,6 +38,12 @@ $ npm test
 ```
 
 to run the unit tests,
+
+```shell
+$ npm test:watch
+```
+
+to start a watch process which run tests every time a file is modified,
 
 ```shell
 $ npm run lint
