@@ -301,6 +301,22 @@ describe('parser tests', (): void => {
       'While parsing M() at index 4: Error: Module name "foo" is not a FQCN',
     );
   });
+  it('bad plugin ref (throw error)', (): void => {
+    expect(async () => parse('P(foo#bar)', { errors: 'exception' })).rejects.toThrow(
+      'While parsing P() at index 1: Error: Parameter "foo#bar" is not of the form FQCN#type',
+    );
+    expect(async () => parse('P(f o.b r.b z#bar)', { errors: 'exception' })).rejects.toThrow(
+      'While parsing P() at index 1: Error: Plugin name "f o.b r.b z" is not a FQCN',
+    );
+  });
+  it('bad option name/return value (throw error)', (): void => {
+    expect(async () => parse('O(f o.b r.b z#bam:foobar)', { errors: 'exception' })).rejects.toThrow(
+      'While parsing O() at index 1: Error: Plugin name "f o.b r.b z" is not a FQCN',
+    );
+    expect(async () => parse('O(foo:bar:baz)', { errors: 'exception' })).rejects.toThrow(
+      'While parsing O() at index 1: Error: Invalid option/return value name "foo:bar:baz"',
+    );
+  });
   it('bad parameter parsing (no escaping, error message)', (): void => {
     expect(parse('M(')).toEqual([
       [{ type: PartType.ERROR, message: 'While parsing M() at index 1: Cannot find closing ")" after last parameter' }],
@@ -356,6 +372,24 @@ describe('parser tests', (): void => {
       ],
     ]);
   });
+  it('bad plugin ref (error message)', (): void => {
+    expect(parse('P(foo#bar)')).toEqual([
+      [
+        {
+          type: PartType.ERROR,
+          message: 'While parsing P() at index 1: Error: Parameter "foo#bar" is not of the form FQCN#type',
+        },
+      ],
+    ]);
+    expect(parse('P(f o.b r.b z#bar)', { errors: 'message' })).toEqual([
+      [
+        {
+          type: PartType.ERROR,
+          message: 'While parsing P() at index 1: Error: Plugin name "f o.b r.b z" is not a FQCN',
+        },
+      ],
+    ]);
+  });
   it('bad parameter parsing (no escaping, ignore error)', (): void => {
     expect(parse('M(', { errors: 'ignore' })).toEqual([[]]);
     expect(parse('M(foo', { errors: 'ignore' })).toEqual([[]]);
@@ -375,5 +409,9 @@ describe('parser tests', (): void => {
         { type: PartType.TEXT, text: ' baz' },
       ],
     ]);
+  });
+  it('bad plugin ref (ignore error)', (): void => {
+    expect(parse('P(foo#bar)', { errors: 'ignore' })).toEqual([[]]);
+    expect(parse('P(f o.b r.b z#bar)', { errors: 'ignore' })).toEqual([[]]);
   });
 });

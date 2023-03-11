@@ -2,5 +2,6 @@
 # SPDX-FileCopyrightText: Ansible Project
 # SPDX-License-Identifier: BSD-2-Clause
 
+/coverage/
 /dist/
 /node_modules/
