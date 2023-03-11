@@ -22,10 +22,16 @@ describe('vectors', (): void => {
       if (test_data.html_opts.pluginLink) {
         test_data.html_opts.pluginLink = eval(test_data.html_opts.pluginLink);
       }
+      if (test_data.html_opts.pluginOptionLikeLink) {
+        test_data.html_opts.pluginOptionLikeLink = eval(test_data.html_opts.pluginOptionLikeLink);
+      }
     }
     if (test_data.md_opts) {
       if (test_data.md_opts.pluginLink) {
         test_data.md_opts.pluginLink = eval(test_data.md_opts.pluginLink);
+      }
+      if (test_data.md_opts.pluginOptionLikeLink) {
+        test_data.md_opts.pluginOptionLikeLink = eval(test_data.md_opts.pluginOptionLikeLink);
       }
     }
     if (test_data.source !== undefined && test_data.html !== undefined) {
