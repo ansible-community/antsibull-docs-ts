@@ -8,6 +8,7 @@ SPDX-License-Identifier: BSD-2-Clause
 
 [![REUSE badge](https://github.com/ansible-community/antsibull-docs-ts/actions/workflows/reuse.yml/badge.svg)](https://github.com/ansible-community/antsibull-docs-ts/actions/workflows/reuse.yml)
 [![TypeScript badge](https://github.com/ansible-community/antsibull-docs-ts/actions/workflows/typescript.yml/badge.svg)](https://github.com/ansible-community/antsibull-docs-ts/actions/workflows/typescript.yml)
+[![Codecov badge](https://img.shields.io/codecov/c/github/ansible-community/antsibull-docs-ts)](https://codecov.io/gh/ansible-community/antsibull-docs-ts)
 
 This is a TypeScript library for processing Ansible documentation markup. It is named after [the Python package of the same name](https://github.com/ansible-community/antsibull-docs/).
 
