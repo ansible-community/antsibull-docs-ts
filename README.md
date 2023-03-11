@@ -41,10 +41,22 @@ $ npm test
 to run the unit tests,
 
 ```shell
-$ npm test:watch
+$ npm run test:coverage
+```
+
+to run the unit tests and output coverage stats,
+
+```shell
+$ npm run test:watch
 ```
 
 to start a watch process which run tests every time a file is modified,
+
+```shell
+$ npm run test:coverage:watch
+```
+
+to start a watch process which run tests every time a file is modified and outputs coverage stats,
 
 ```shell
 $ npm run lint
