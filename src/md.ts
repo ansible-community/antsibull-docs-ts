@@ -51,7 +51,7 @@ export function toMD(paragraphs: Paragraph[], opts?: MDOptions): string {
     for (const part of paragraph) {
       switch (part.type) {
         case PartType.ERROR:
-          line.push(`\\ :strong:\`ERROR while parsing\`\\ : ${part.message}\\ `);
+          line.push(`<b>ERROR while parsing</b>: ${quoteMD(part.message)}`);
           break;
         case PartType.BOLD:
           line.push(`<b>${quoteMD(part.text)}</b>`);

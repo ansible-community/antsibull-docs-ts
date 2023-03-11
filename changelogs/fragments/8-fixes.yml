@@ -1,0 +1,2 @@
+bugfixes:
+  - "Fix error message output for MarkDown. Make sure error message is escaped in RST. Fix error messages when parsing escaped parameters (https://github.com/ansible-community/antsibull-docs-ts/pull/8)."

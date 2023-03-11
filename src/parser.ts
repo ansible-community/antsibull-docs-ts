@@ -371,7 +371,11 @@ function parseEscapedArgs(input: string, index: number, count: number): [string[
       const match = escapeOrComma.exec(input);
       if (!match) {
         result.push(value.join(''));
-        return [result, index, `Cannot find comma separating parameter ${count - parameter_count} from the next one`];
+        return [
+          result,
+          input.length,
+          `Cannot find comma separating parameter ${count - parameter_count} from the next one`,
+        ];
       }
       if (match.index > index) {
         value.push(input.substring(index, match.index));
@@ -392,7 +396,7 @@ function parseEscapedArgs(input: string, index: number, count: number): [string[
     const match = escapeOrClosing.exec(input);
     if (!match) {
       result.push(value.join(''));
-      return [result, index, 'Cannot find ")" closing after the last parameter'];
+      return [result, input.length, 'Cannot find closing ")" after last parameter'];
     }
     if (match.index > index) {
       value.push(input.substring(index, match.index));
