@@ -24,19 +24,13 @@ function formatOptionLike(part: OptionNamePart | ReturnValuePart, what: 'option'
     link_start = `<a href="${quoteMD(encodeURI(url))}">`;
     link_end = '</a>';
   }
-  let cls: string;
   let strong_start = '';
   let strong_end = '';
   if (what === 'option') {
     if (part.value === undefined) {
-      cls = 'ansible-option';
       strong_start = '<strong>';
       strong_end = '</strong>';
-    } else {
-      cls = 'ansible-option-value';
     }
-  } else {
-    cls = 'ansible-return-value';
   }
   let text: string;
   if (part.value === undefined) {
@@ -44,7 +38,7 @@ function formatOptionLike(part: OptionNamePart | ReturnValuePart, what: 'option'
   } else {
     text = `${part.name}=${part.value}`;
   }
-  return `<code class="${cls}">${strong_start}${link_start}${quoteMD(text)}${link_end}${strong_end}</code>`;
+  return `<code>${strong_start}${link_start}${quoteMD(text)}${link_end}${strong_end}</code>`;
 }
 
 export function toMD(paragraphs: Paragraph[], opts?: MDOptions): string {
