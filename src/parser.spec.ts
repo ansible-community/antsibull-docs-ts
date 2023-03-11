@@ -280,6 +280,12 @@ describe('parser tests', (): void => {
     expect(async () => parse('L(foo), bar', { errors: 'exception' })).rejects.toThrow(
       'While parsing L() at index 1: Cannot find closing ")" after last parameter',
     );
+    expect(async () => parse('P(', { errors: 'exception' })).rejects.toThrow(
+      'While parsing P() at index 1: Cannot find closing ")" after last parameter',
+    );
+    expect(async () => parse('P(foo', { errors: 'exception' })).rejects.toThrow(
+      'While parsing P() at index 1: Cannot find closing ")" after last parameter',
+    );
   });
   it('bad module ref (throw error)', (): void => {
     expect(async () => parse('M(foo)', { errors: 'exception' })).rejects.toThrow(
@@ -316,6 +322,12 @@ describe('parser tests', (): void => {
     expect(parse('L(foo), bar', { errors: 'message' })).toEqual([
       [{ type: PartType.ERROR, message: 'While parsing L() at index 1: Cannot find closing ")" after last parameter' }],
     ]);
+    expect(parse('P(')).toEqual([
+      [{ type: PartType.ERROR, message: 'While parsing P() at index 1: Cannot find closing ")" after last parameter' }],
+    ]);
+    expect(parse('P(foo', { errors: 'message' })).toEqual([
+      [{ type: PartType.ERROR, message: 'While parsing P() at index 1: Cannot find closing ")" after last parameter' }],
+    ]);
   });
   it('bad module ref (error message)', (): void => {
     expect(parse('M(foo)')).toEqual([
@@ -350,6 +362,8 @@ describe('parser tests', (): void => {
     expect(parse('L(foo)', { errors: 'ignore' })).toEqual([[]]);
     expect(parse('L(foo,bar', { errors: 'ignore' })).toEqual([[]]);
     expect(parse('L(foo), bar', { errors: 'ignore' })).toEqual([[]]);
+    expect(parse('P(', { errors: 'ignore' })).toEqual([[]]);
+    expect(parse('P(foo', { errors: 'ignore' })).toEqual([[]]);
   });
   it('bad module ref (ignore error)', (): void => {
     expect(parse('M(foo)', { errors: 'ignore' })).toEqual([[]]);

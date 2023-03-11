@@ -45,7 +45,7 @@ export function toRST(paragraphs: Paragraph[], opts?: RSTOptions): string {
     for (const part of paragraph) {
       switch (part.type) {
         case PartType.ERROR:
-          line.push(`\\ :strong:\`ERROR while parsing\`\\ : ${part.message}\\ `);
+          line.push(`\\ :strong:\`ERROR while parsing\`\\ : ${quoteRST(part.message, true, true)}\\ `);
           break;
         case PartType.BOLD:
           line.push(`\\ :strong:\`${quoteRST(part.text, true, true)}\`\\ `);
