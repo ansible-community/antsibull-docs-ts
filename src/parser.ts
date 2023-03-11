@@ -263,14 +263,18 @@ const PARSER: CommandParser[] = [
   // Semantic Ansible docs markup:
   {
     command: 'P',
-    parameters: 2,
+    parameters: 1,
     escaped_arguments: true,
     process: (args) => {
-      const fqcn = args[0] as string;
+      const m = /^([^).]+\.[^).]+\.[^)]+)#([a-z]+)$/.exec(args[0] as string);
+      if (!m) {
+        throw Error(`Parameter "${args[0]}" is not of the form FQCN#type`);
+      }
+      const fqcn = m[1] as string;
       if (!isFQCN(fqcn)) {
         throw Error(`Plugin name "${fqcn}" is not a FQCN`);
       }
-      const type = args[1] as string;
+      const type = m[2] as string;
       if (!isPluginType(type)) {
         throw Error(`Plugin type "${type}" is not valid`);
       }

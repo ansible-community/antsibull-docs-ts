@@ -70,7 +70,7 @@ describe('parser tests', (): void => {
     ]);
   });
   it('semantic markup test', (): void => {
-    expect(parse('foo E(a\\),b) P(foo.bar.baz  ,  bam) baz V( b\\,\\na\\)\\\\m\\, ) O(foo) ')).toEqual([
+    expect(parse('foo E(a\\),b) P(foo.bar.baz#bam) baz V( b\\,\\na\\)\\\\m\\, ) O(foo) ')).toEqual([
       [
         { type: PartType.TEXT, text: 'foo ' },
         { type: PartType.ENV_VARIABLE, name: 'a),b' },
