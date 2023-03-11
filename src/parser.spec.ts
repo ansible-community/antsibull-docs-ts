@@ -42,6 +42,228 @@ describe('parser tests', (): void => {
       ],
     ]);
   });
+  it('classic markup test II', (): void => {
+    expect(
+      parse(
+        'foo I(bar) baz C( bam ) B( ( boo ) ) U(https://example.com/?foo=bar)HORIZONTALLINE L(foo ,  https://bar.com) R( a , b )M(foo.bar.baz)HORIZONTALLINEx M(foo.bar.baz.bam)',
+        { only_classic_markup: true },
+      ),
+    ).toEqual([
+      [
+        { type: PartType.TEXT, text: 'foo ' },
+        { type: PartType.ITALIC, text: 'bar' },
+        { type: PartType.TEXT, text: ' baz ' },
+        { type: PartType.CODE, text: ' bam ' },
+        { type: PartType.TEXT, text: ' ' },
+        { type: PartType.BOLD, text: ' ( boo ' },
+        { type: PartType.TEXT, text: ' ) ' },
+        { type: PartType.URL, url: 'https://example.com/?foo=bar' },
+        { type: PartType.HORIZONTAL_LINE },
+        { type: PartType.TEXT, text: ' ' },
+        { type: PartType.LINK, text: 'foo', url: 'https://bar.com' },
+        { type: PartType.TEXT, text: ' ' },
+        { type: PartType.RST_REF, text: ' a', ref: 'b ' },
+        { type: PartType.MODULE, fqcn: 'foo.bar.baz' },
+        { type: PartType.TEXT, text: 'HORIZONTALLINEx ' },
+        { type: PartType.MODULE, fqcn: 'foo.bar.baz.bam' },
+      ],
+    ]);
+  });
+  it('semantic markup test', (): void => {
+    expect(parse('foo E(a\\),b) P(foo.bar.baz#bam) baz V( b\\,\\na\\)\\\\m\\, ) O(foo) ')).toEqual([
+      [
+        { type: PartType.TEXT, text: 'foo ' },
+        { type: PartType.ENV_VARIABLE, name: 'a),b' },
+        { type: PartType.TEXT, text: ' ' },
+        { type: PartType.PLUGIN, plugin: { fqcn: 'foo.bar.baz', type: 'bam' } },
+        { type: PartType.TEXT, text: ' baz ' },
+        { type: PartType.OPTION_VALUE, value: ' b,na)\\m, ' },
+        { type: PartType.TEXT, text: ' ' },
+        { type: PartType.OPTION_NAME, plugin: undefined, link: ['foo'], name: 'foo', value: undefined },
+        { type: PartType.TEXT, text: ' ' },
+      ],
+    ]);
+  });
+  it('semantic markup option name', (): void => {
+    expect(parse('O(foo)')).toEqual([
+      [
+        {
+          type: PartType.OPTION_NAME,
+          plugin: undefined,
+          link: ['foo'],
+          name: 'foo',
+          value: undefined,
+        },
+      ],
+    ]);
+    expect(parse('O(ignore:foo)', { current_plugin: { fqcn: 'foo.bar.baz', type: 'bam' } })).toEqual([
+      [
+        {
+          type: PartType.OPTION_NAME,
+          plugin: undefined,
+          link: ['foo'],
+          name: 'foo',
+          value: undefined,
+        },
+      ],
+    ]);
+    expect(parse('O(foo)', { current_plugin: { fqcn: 'foo.bar.baz', type: 'bam' } })).toEqual([
+      [
+        {
+          type: PartType.OPTION_NAME,
+          plugin: { fqcn: 'foo.bar.baz', type: 'bam' },
+          link: ['foo'],
+          name: 'foo',
+          value: undefined,
+        },
+      ],
+    ]);
+    expect(parse('O(foo.bar.baz#bam:foo)')).toEqual([
+      [
+        {
+          type: PartType.OPTION_NAME,
+          plugin: { fqcn: 'foo.bar.baz', type: 'bam' },
+          link: ['foo'],
+          name: 'foo',
+          value: undefined,
+        },
+      ],
+    ]);
+    expect(parse('O(foo=bar)')).toEqual([
+      [
+        {
+          type: PartType.OPTION_NAME,
+          plugin: undefined,
+          link: ['foo'],
+          name: 'foo',
+          value: 'bar',
+        },
+      ],
+    ]);
+    expect(parse('O(foo.baz=bam)')).toEqual([
+      [
+        {
+          type: PartType.OPTION_NAME,
+          plugin: undefined,
+          link: ['foo', 'baz'],
+          name: 'foo.baz',
+          value: 'bam',
+        },
+      ],
+    ]);
+    expect(parse('O(foo[1].baz[bam.bar.boing].boo)')).toEqual([
+      [
+        {
+          type: PartType.OPTION_NAME,
+          plugin: undefined,
+          link: ['foo', 'baz', 'boo'],
+          name: 'foo[1].baz[bam.bar.boing].boo',
+          value: undefined,
+        },
+      ],
+    ]);
+    expect(parse('O(bar.baz.bam.boo#lookup:foo[1].baz[bam.bar.boing].boo)')).toEqual([
+      [
+        {
+          type: PartType.OPTION_NAME,
+          plugin: { fqcn: 'bar.baz.bam.boo', type: 'lookup' },
+          link: ['foo', 'baz', 'boo'],
+          name: 'foo[1].baz[bam.bar.boing].boo',
+          value: undefined,
+        },
+      ],
+    ]);
+  });
+  it('semantic markup return value name', (): void => {
+    expect(parse('RV(foo)')).toEqual([
+      [
+        {
+          type: PartType.RETURN_VALUE,
+          plugin: undefined,
+          link: ['foo'],
+          name: 'foo',
+          value: undefined,
+        },
+      ],
+    ]);
+    expect(parse('RV(ignore:foo)', { current_plugin: { fqcn: 'foo.bar.baz', type: 'bam' } })).toEqual([
+      [
+        {
+          type: PartType.RETURN_VALUE,
+          plugin: undefined,
+          link: ['foo'],
+          name: 'foo',
+          value: undefined,
+        },
+      ],
+    ]);
+    expect(parse('RV(foo)', { current_plugin: { fqcn: 'foo.bar.baz', type: 'bam' } })).toEqual([
+      [
+        {
+          type: PartType.RETURN_VALUE,
+          plugin: { fqcn: 'foo.bar.baz', type: 'bam' },
+          link: ['foo'],
+          name: 'foo',
+          value: undefined,
+        },
+      ],
+    ]);
+    expect(parse('RV(foo.bar.baz#bam:foo)')).toEqual([
+      [
+        {
+          type: PartType.RETURN_VALUE,
+          plugin: { fqcn: 'foo.bar.baz', type: 'bam' },
+          link: ['foo'],
+          name: 'foo',
+          value: undefined,
+        },
+      ],
+    ]);
+    expect(parse('RV(foo=bar)')).toEqual([
+      [
+        {
+          type: PartType.RETURN_VALUE,
+          plugin: undefined,
+          link: ['foo'],
+          name: 'foo',
+          value: 'bar',
+        },
+      ],
+    ]);
+    expect(parse('RV(foo.baz=bam)')).toEqual([
+      [
+        {
+          type: PartType.RETURN_VALUE,
+          plugin: undefined,
+          link: ['foo', 'baz'],
+          name: 'foo.baz',
+          value: 'bam',
+        },
+      ],
+    ]);
+    expect(parse('RV(foo[1].baz[bam.bar.boing].boo)')).toEqual([
+      [
+        {
+          type: PartType.RETURN_VALUE,
+          plugin: undefined,
+          link: ['foo', 'baz', 'boo'],
+          name: 'foo[1].baz[bam.bar.boing].boo',
+          value: undefined,
+        },
+      ],
+    ]);
+    expect(parse('RV(bar.baz.bam.boo#lookup:foo[1].baz[bam.bar.boing].boo)')).toEqual([
+      [
+        {
+          type: PartType.RETURN_VALUE,
+          plugin: { fqcn: 'bar.baz.bam.boo', type: 'lookup' },
+          link: ['foo', 'baz', 'boo'],
+          name: 'foo[1].baz[bam.bar.boing].boo',
+          value: undefined,
+        },
+      ],
+    ]);
+  });
   it('bad parameter parsing (no escaping, throw error)', (): void => {
     expect(async () => parse('M(', { errors: 'exception' })).rejects.toThrow(
       'While parsing M() at index 1: Cannot find closing ")" after last parameter',

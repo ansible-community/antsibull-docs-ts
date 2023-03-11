@@ -1,0 +1,2 @@
+minor_changes:
+  - "Add support for semantic markup (https://github.com/ansible-community/antsibull-docs-ts/pull/1)."

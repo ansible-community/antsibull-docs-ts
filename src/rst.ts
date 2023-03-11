@@ -5,7 +5,7 @@
 */
 
 import { RSTOptions } from './opts';
-import { PartType, Paragraph } from './parser';
+import { OptionNamePart, PartType, Paragraph, ReturnValuePart } from './parser';
 
 export function quoteRST(text: string, escape_starting_whitespace = false, escape_ending_whitespace = false): string {
   text = text.replace(/([\\<>_*`])/g, '\\$1');
@@ -17,6 +17,22 @@ export function quoteRST(text: string, escape_starting_whitespace = false, escap
     text = '\\ ' + text;
   }
   return text;
+}
+
+function formatOptionLike(part: OptionNamePart | ReturnValuePart, role: string): string {
+  const result: string[] = [];
+  if (part.plugin) {
+    result.push(part.plugin.fqcn);
+    result.push('#');
+    result.push(part.plugin.type);
+    result.push(':');
+  }
+  result.push(part.name);
+  if (part.value !== undefined) {
+    result.push('=');
+    result.push(part.value);
+  }
+  return `\\ :${role}:\`${quoteRST(result.join(''), true, true)}\`\\ `;
 }
 
 export function toRST(paragraphs: Paragraph[], opts?: RSTOptions): string {
@@ -57,6 +73,25 @@ export function toRST(paragraphs: Paragraph[], opts?: RSTOptions): string {
           break;
         case PartType.TEXT:
           line.push(quoteRST(part.text));
+          break;
+        case PartType.ENV_VARIABLE:
+          line.push(`\\ :envvar:\`${quoteRST(part.name, true, true)}\`\\ `);
+          break;
+        case PartType.OPTION_NAME:
+          line.push(formatOptionLike(part, 'ansopt'));
+          break;
+        case PartType.OPTION_VALUE:
+          line.push(`\\ :ansval:\`${quoteRST(part.value, true, true)}\`\\ `);
+          break;
+        case PartType.PLUGIN:
+          line.push(
+            `\\ :ref:\`${quoteRST(part.plugin.fqcn)} <ansible_collections.${part.plugin.fqcn}_${
+              part.plugin.type
+            }>\`\\ `,
+          );
+          break;
+        case PartType.RETURN_VALUE:
+          line.push(formatOptionLike(part, 'ansretval'));
           break;
       }
     }
