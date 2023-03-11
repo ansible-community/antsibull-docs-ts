@@ -26,6 +26,7 @@
     "format:write": "npx prettier --write .",
     "lint": "npx eslint \"src/**/*.ts\"",
     "test": "npx jest",
+    "test:coverage": "npx jest --coverage",
     "test:watch": "npx jest --watchAll",
     "watch": "npx tsc -w"
   },
