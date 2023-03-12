@@ -308,10 +308,16 @@ describe('parser tests', (): void => {
     expect(async () => parse('P(f o.b r.b z#bar)', { errors: 'exception' })).rejects.toThrow(
       'While parsing P() at index 1: Error: Plugin name "f o.b r.b z" is not a FQCN',
     );
+    expect(async () => parse('P(foo.bar.baz#b m)', { errors: 'exception' })).rejects.toThrow(
+      'While parsing P() at index 1: Error: Plugin type "b m" is not valid',
+    );
   });
   it('bad option name/return value (throw error)', (): void => {
     expect(async () => parse('O(f o.b r.b z#bam:foobar)', { errors: 'exception' })).rejects.toThrow(
       'While parsing O() at index 1: Error: Plugin name "f o.b r.b z" is not a FQCN',
+    );
+    expect(async () => parse('O(foo.bar.baz#b m:foobar)', { errors: 'exception' })).rejects.toThrow(
+      'While parsing O() at index 1: Error: Plugin type "b m" is not valid',
     );
     expect(async () => parse('O(foo:bar:baz)', { errors: 'exception' })).rejects.toThrow(
       'While parsing O() at index 1: Error: Invalid option/return value name "foo:bar:baz"',
@@ -389,6 +395,40 @@ describe('parser tests', (): void => {
         },
       ],
     ]);
+    expect(parse('P(foo.bar.baz#b m)', { errors: 'message' })).toEqual([
+      [
+        {
+          type: PartType.ERROR,
+          message: 'While parsing P() at index 1: Error: Plugin type "b m" is not valid',
+        },
+      ],
+    ]);
+  });
+  it('bad option name/return value (error message)', (): void => {
+    expect(parse('O(f o.b r.b z#bam:foobar)')).toEqual([
+      [
+        {
+          type: PartType.ERROR,
+          message: 'While parsing O() at index 1: Error: Plugin name "f o.b r.b z" is not a FQCN',
+        },
+      ],
+    ]);
+    expect(parse('O(foo.bar.baz#b m:foobar)', { errors: 'message' })).toEqual([
+      [
+        {
+          type: PartType.ERROR,
+          message: 'While parsing O() at index 1: Error: Plugin type "b m" is not valid',
+        },
+      ],
+    ]);
+    expect(parse('O(foo:bar:baz)', { errors: 'message' })).toEqual([
+      [
+        {
+          type: PartType.ERROR,
+          message: 'While parsing O() at index 1: Error: Invalid option/return value name "foo:bar:baz"',
+        },
+      ],
+    ]);
   });
   it('bad parameter parsing (no escaping, ignore error)', (): void => {
     expect(parse('M(', { errors: 'ignore' })).toEqual([[]]);
@@ -413,5 +453,11 @@ describe('parser tests', (): void => {
   it('bad plugin ref (ignore error)', (): void => {
     expect(parse('P(foo#bar)', { errors: 'ignore' })).toEqual([[]]);
     expect(parse('P(f o.b r.b z#bar)', { errors: 'ignore' })).toEqual([[]]);
+    expect(parse('P(foo.bar.baz#b m)', { errors: 'ignore' })).toEqual([[]]);
+  });
+  it('bad option name/return value (ignore error)', (): void => {
+    expect(parse('O(f o.b r.b z#bam:foobar)', { errors: 'ignore' })).toEqual([[]]);
+    expect(parse('O(foo.bar.baz#b m:foobar)', { errors: 'ignore' })).toEqual([[]]);
+    expect(parse('O(foo:bar:baz)', { errors: 'ignore' })).toEqual([[]]);
   });
 });

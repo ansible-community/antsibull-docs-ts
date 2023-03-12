@@ -143,7 +143,7 @@ function parseOptionLike(
     value = text.substring(eq + 1, text.length);
     text = text.substring(0, eq);
   }
-  const m = /^([^.]+\.[^.]+\.[^#]+)#([a-z]+):(.*)$/.exec(text);
+  const m = /^([^.]+\.[^.]+\.[^#]+)#([^:]+):(.*)$/.exec(text);
   let plugin: PluginIdentifier | undefined;
   if (m) {
     const pluginFqcn = m[1] as string;
@@ -266,7 +266,7 @@ const PARSER: CommandParser[] = [
     parameters: 1,
     escaped_arguments: true,
     process: (args) => {
-      const m = /^([^).]+\.[^).]+\.[^)]+)#([a-z]+)$/.exec(args[0] as string);
+      const m = /^([^).]+\.[^).]+\.[^#]+)#(.+)$/.exec(args[0] as string);
       if (!m) {
         throw Error(`Parameter "${args[0]}" is not of the form FQCN#type`);
       }
