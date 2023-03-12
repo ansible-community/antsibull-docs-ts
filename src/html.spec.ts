@@ -4,8 +4,8 @@
   SPDX-License-Identifier: BSD-2-Clause
 */
 
-import * as parser from './parser';
 import { quoteHTML, toHTML } from './html';
+import { PartType } from './dom';
 
 describe('quoteHTML tests', (): void => {
   it('empty string', (): void => {
@@ -23,6 +23,14 @@ describe('quoteHTML tests', (): void => {
 
 describe('toHTML tests', (): void => {
   it('no paragraphs', (): void => {
-    expect(toHTML([[{ type: parser.PartType.TEXT, text: 'test' }]])).toBe('<p>test</p>');
+    expect(toHTML([])).toBe('');
+  });
+  it('single paragraphs', (): void => {
+    expect(toHTML([[{ type: PartType.TEXT, text: 'test' }]])).toBe('<p>test</p>');
+  });
+  it('different paragraph start/end', (): void => {
+    expect(toHTML([[{ type: PartType.TEXT, text: 'test' }]], { parStart: '<div>', parEnd: '</div>' })).toBe(
+      '<div>test</div>',
+    );
   });
 });

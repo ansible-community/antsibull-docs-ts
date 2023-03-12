@@ -39,6 +39,13 @@ describe('vectors', (): void => {
         expect(toHTML(parse(test_data.source, test_data.parse_opts), test_data.html_opts)).toEqual(test_data.html);
       });
     }
+    if (test_data.source !== undefined && test_data.html_plain !== undefined) {
+      it(`${test_name} (Ansible doc => plain HTML)`, (): void => {
+        expect(
+          toHTML(parse(test_data.source, test_data.parse_opts), Object.assign({ style: 'plain' }, test_data.html_opts)),
+        ).toEqual(test_data.html_plain);
+      });
+    }
     if (test_data.source !== undefined && test_data.md !== undefined) {
       it(`${test_name} (Ansible doc => MD)`, (): void => {
         expect(toMD(parse(test_data.source, test_data.parse_opts), test_data.md_opts)).toEqual(test_data.md);

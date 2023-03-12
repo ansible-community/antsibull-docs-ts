@@ -4,8 +4,8 @@
   SPDX-License-Identifier: BSD-2-Clause
 */
 
-import * as parser from './parser';
 import { quoteRST, toRST } from './rst';
+import { PartType } from './dom';
 
 describe('quoteRST tests', (): void => {
   it('empty string', (): void => {
@@ -33,6 +33,6 @@ describe('toRST tests', (): void => {
     expect(toRST([])).toBe('');
   });
   it('single paragraph with simple text', (): void => {
-    expect(toRST([[{ type: parser.PartType.TEXT, text: 'test' }]])).toBe('test');
+    expect(toRST([[{ type: PartType.TEXT, text: 'test' }]])).toBe('test');
   });
 });

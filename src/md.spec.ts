@@ -4,8 +4,8 @@
   SPDX-License-Identifier: BSD-2-Clause
 */
 
-import * as parser from './parser';
 import { quoteMD, toMD } from './md';
+import { PartType } from './dom';
 
 describe('quoteMD tests', (): void => {
   it('empty string', (): void => {
@@ -26,6 +26,6 @@ describe('toMD tests', (): void => {
     expect(toMD([])).toBe('');
   });
   it('single paragraph with simple text', (): void => {
-    expect(toMD([[{ type: parser.PartType.TEXT, text: 'test' }]])).toBe('test');
+    expect(toMD([[{ type: PartType.TEXT, text: 'test' }]])).toBe('test');
   });
 });

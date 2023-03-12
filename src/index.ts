@@ -6,7 +6,7 @@
 
 // Parser
 export { parse } from './parser';
-export * as parser from './parser';
+export * as dom from './dom';
 
 // Output
 export { quoteHTML, toHTML } from './html';

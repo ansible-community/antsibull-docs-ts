@@ -6,18 +6,19 @@
 
 // CommonMark spec: https://spec.commonmark.org/current/
 
-import { MDOptions } from './opts';
-import { OptionNamePart, PartType, Paragraph, ReturnValuePart } from './parser';
+import { MDOptions, AllFormatOptions, mergeOpts } from './opts';
+import { OptionNamePart, Paragraph, ReturnValuePart } from './dom';
+import { addToDestination } from './format';
 
 export function quoteMD(text: string): string {
   return text.replace(/([!"#$%&'()*+,:;<=>?@[\\\]^_`{|}~-])/g, '\\$1');
 }
 
-function formatOptionLike(part: OptionNamePart | ReturnValuePart, what: 'option' | 'retval', opts: MDOptions): string {
-  let url: string | undefined;
-  if (part.plugin && opts.pluginOptionLikeLink) {
-    url = opts.pluginOptionLikeLink(part.plugin, what, part.link, part.plugin === opts.current_plugin);
-  }
+function formatOptionLike(
+  part: OptionNamePart | ReturnValuePart,
+  url: string | undefined,
+  what: 'option' | 'retval',
+): string {
   let link_start = '';
   let link_end = '';
   if (url) {
@@ -41,80 +42,31 @@ function formatOptionLike(part: OptionNamePart | ReturnValuePart, what: 'option'
   return `<code>${strong_start}${link_start}${quoteMD(text)}${link_end}${strong_end}</code>`;
 }
 
+const DEFAULT_FORMATTER: AllFormatOptions = {
+  formatError: (part) => `<b>ERROR while parsing</b>: ${quoteMD(part.message)}`,
+  formatBold: (part) => `<b>${quoteMD(part.text)}</b>`,
+  formatCode: (part) => `<code>${quoteMD(part.text)}</code>`,
+  formatHorizontalLine: () => '<hr>',
+  formatItalic: (part) => `<em>${quoteMD(part.text)}</em>`,
+  formatLink: (part) => `[${quoteMD(part.text)}](${quoteMD(encodeURI(part.url))})`,
+  formatModule: (part, url) => (url ? `[${quoteMD(part.fqcn)}](${quoteMD(encodeURI(url))})` : `${quoteMD(part.fqcn)}`),
+  formatRSTRef: (part) => `${quoteMD(part.text)}`,
+  formatURL: (part) => `[${quoteMD(encodeURI(part.url))}](${quoteMD(encodeURI(part.url))})`,
+  formatText: (part) => quoteMD(part.text),
+  formatEnvVariable: (part) => `<code>${quoteMD(part.name)}</code>`,
+  formatOptionName: (part, url) => formatOptionLike(part, url, 'option'),
+  formatOptionValue: (part) => `<code>${quoteMD(part.value)}</code>`,
+  formatPlugin: (part, url) =>
+    url ? `[${quoteMD(part.plugin.fqcn)}](${quoteMD(encodeURI(url))})` : `${quoteMD(part.plugin.fqcn)}`,
+  formatReturnValue: (part, url) => formatOptionLike(part, url, 'retval'),
+};
+
 export function toMD(paragraphs: Paragraph[], opts?: MDOptions): string {
-  if (!opts) {
-    opts = {};
-  }
+  const mergedOpts = mergeOpts(opts ?? {}, DEFAULT_FORMATTER);
   const result: string[] = [];
   for (const paragraph of paragraphs) {
     const line: string[] = [];
-    for (const part of paragraph) {
-      switch (part.type) {
-        case PartType.ERROR:
-          line.push(`<b>ERROR while parsing</b>: ${quoteMD(part.message)}`);
-          break;
-        case PartType.BOLD:
-          line.push(`<b>${quoteMD(part.text)}</b>`);
-          break;
-        case PartType.CODE:
-          line.push(`<code>${quoteMD(part.text)}</code>`);
-          break;
-        case PartType.HORIZONTAL_LINE:
-          line.push('<hr>');
-          break;
-        case PartType.ITALIC:
-          line.push(`<em>${quoteMD(part.text)}</em>`);
-          break;
-        case PartType.LINK:
-          line.push(`[${quoteMD(part.text)}](${quoteMD(encodeURI(part.url))})`);
-          break;
-        case PartType.MODULE: {
-          let url: string | undefined;
-          if (opts.pluginLink) {
-            url = opts.pluginLink({ fqcn: part.fqcn, type: 'module' });
-          }
-          if (url) {
-            line.push(`[${quoteMD(part.fqcn)}](${quoteMD(encodeURI(url))})`);
-          } else {
-            line.push(`${quoteMD(part.fqcn)}`);
-          }
-          break;
-        }
-        case PartType.RST_REF:
-          line.push(`${quoteMD(part.text)}`);
-          break;
-        case PartType.URL:
-          line.push(`[${quoteMD(encodeURI(part.url))}](${quoteMD(encodeURI(part.url))})`);
-          break;
-        case PartType.TEXT:
-          line.push(quoteMD(part.text));
-          break;
-        case PartType.ENV_VARIABLE:
-          line.push(`<code>${quoteMD(part.name)}</code>`);
-          break;
-        case PartType.OPTION_NAME:
-          line.push(formatOptionLike(part, 'option', opts));
-          break;
-        case PartType.OPTION_VALUE:
-          line.push(`<code>${quoteMD(part.value)}</code>`);
-          break;
-        case PartType.PLUGIN: {
-          let url: string | undefined;
-          if (opts.pluginLink) {
-            url = opts.pluginLink(part.plugin);
-          }
-          if (url) {
-            line.push(`[${quoteMD(part.plugin.fqcn)}](${quoteMD(encodeURI(url))})`);
-          } else {
-            line.push(`${quoteMD(part.plugin.fqcn)}`);
-          }
-          break;
-        }
-        case PartType.RETURN_VALUE:
-          line.push(formatOptionLike(part, 'retval', opts));
-          break;
-      }
-    }
+    addToDestination(line, paragraph, mergedOpts);
     if (!line.length) {
       line.push(' ');
     }
