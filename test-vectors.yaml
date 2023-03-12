@@ -623,16 +623,16 @@ test_vectors:
       - C(foo
       - R(foo,bar
     html: |-
-      <p><span class="error">ERROR while parsing: While parsing P() at index 1: Error: Parameter "foo" is not of the form FQCN#type</span></p><p><span class="error">ERROR while parsing: While parsing C() at index 1: Cannot find closing ")" after last parameter</span></p><p><span class="error">ERROR while parsing: While parsing R() at index 1: Cannot find closing ")" after last parameter</span></p>
+      <p><span class="error">ERROR while parsing: While parsing P() at index 1 of paragraph 1: Error: Parameter "foo" is not of the form FQCN#type</span></p><p><span class="error">ERROR while parsing: While parsing C() at index 1 of paragraph 2: Cannot find closing ")" after last parameter</span></p><p><span class="error">ERROR while parsing: While parsing R() at index 1 of paragraph 3: Cannot find closing ")" after last parameter</span></p>
     md: |-
-      <b>ERROR while parsing</b>: While parsing P\(\) at index 1\: Error\: Parameter \"foo\" is not of the form FQCN\#type
+      <b>ERROR while parsing</b>: While parsing P\(\) at index 1 of paragraph 1\: Error\: Parameter \"foo\" is not of the form FQCN\#type
 
-      <b>ERROR while parsing</b>: While parsing C\(\) at index 1\: Cannot find closing \"\)\" after last parameter
+      <b>ERROR while parsing</b>: While parsing C\(\) at index 1 of paragraph 2\: Cannot find closing \"\)\" after last parameter
 
-      <b>ERROR while parsing</b>: While parsing R\(\) at index 1\: Cannot find closing \"\)\" after last parameter
+      <b>ERROR while parsing</b>: While parsing R\(\) at index 1 of paragraph 3\: Cannot find closing \"\)\" after last parameter
     rst: |-
-      \ :strong:`ERROR while parsing`\ : While parsing P() at index 1: Error: Parameter "foo" is not of the form FQCN#type\ 
+      \ :strong:`ERROR while parsing`\ : While parsing P() at index 1 of paragraph 1: Error: Parameter "foo" is not of the form FQCN#type\ 
 
-      \ :strong:`ERROR while parsing`\ : While parsing C() at index 1: Cannot find closing ")" after last parameter\ 
+      \ :strong:`ERROR while parsing`\ : While parsing C() at index 1 of paragraph 2: Cannot find closing ")" after last parameter\ 
 
-      \ :strong:`ERROR while parsing`\ : While parsing R() at index 1: Cannot find closing ")" after last parameter\ 
+      \ :strong:`ERROR while parsing`\ : While parsing R() at index 1 of paragraph 3: Cannot find closing ")" after last parameter\ 
