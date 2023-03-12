@@ -23,6 +23,14 @@ describe('quoteHTML tests', (): void => {
 
 describe('toHTML tests', (): void => {
   it('no paragraphs', (): void => {
+    expect(toHTML([])).toBe('');
+  });
+  it('single paragraphs', (): void => {
     expect(toHTML([[{ type: PartType.TEXT, text: 'test' }]])).toBe('<p>test</p>');
+  });
+  it('different paragraph start/end', (): void => {
+    expect(toHTML([[{ type: PartType.TEXT, text: 'test' }]], { parStart: '<div>', parEnd: '</div>' })).toBe(
+      '<div>test</div>',
+    );
   });
 });

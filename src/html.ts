@@ -120,10 +120,12 @@ export function toHTML(paragraphs: Paragraph[], opts?: HTMLOptions): string {
   const style = opts.style || 'antsibull-docs';
   const mergedOpts = mergeOpts(opts, style === 'antsibull-docs' ? ANTSIBULL_DOCS_FORMATTER : PLAIN_FORMATTER);
   const result: string[] = [];
+  const parStart = opts.parStart ?? '<p>';
+  const parEnd = opts.parEnd ?? '</p>';
   for (const paragraph of paragraphs) {
-    result.push('<p>');
+    result.push(parStart);
     addToDestination(result, paragraph, mergedOpts);
-    result.push('</p>');
+    result.push(parEnd);
   }
   return result.join('');
 }

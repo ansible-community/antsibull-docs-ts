@@ -104,6 +104,12 @@ export interface LinkProviders {
 export interface HTMLOptions extends CommonExportOptions, CommonFormatOptions, LinkProviders {
   /** Whether the HTML should be formatted as in antsibull-docs (for use with Sphinx) or with plain HTML. Default: 'antsibull-docs'. */
   style?: 'antsibull-docs' | 'plain';
+
+  /** String to start a new paragraph with. Default: `<p>`. */
+  parStart?: string;
+
+  /** String to end a new paragraph with. Default: `</p>`. */
+  parEnd?: string;
 }
 
 export interface MDOptions extends CommonExportOptions, CommonFormatOptions, LinkProviders {}
