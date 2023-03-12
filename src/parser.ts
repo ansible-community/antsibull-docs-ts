@@ -340,7 +340,7 @@ const CLASSIC_COMMAND_RE = new RegExp(
   'g',
 );
 
-function parseString(input: string, opts: ParsingOptions): Paragraph {
+function parseString(input: string, opts: ParsingOptions, where: string): Paragraph {
   const result: AnyPart[] = [];
   const commandRE = opts.only_classic_markup ? CLASSIC_COMMAND_RE : COMMAND_RE;
   const length = input.length;
@@ -370,6 +370,7 @@ function parseString(input: string, opts: ParsingOptions): Paragraph {
       cmd = cmd.slice(0, cmd.length - 1);
     }
     const command = PARSER_COMMANDS.get(cmd);
+    /* istanbul ignore if */
     if (!command) {
       throw Error(`Internal error: unknown command "${cmd}"`);
     }
@@ -390,7 +391,7 @@ function parseString(input: string, opts: ParsingOptions): Paragraph {
       }
     }
     if (error !== undefined) {
-      error = `While parsing ${cmd}${command.parameters > 0 ? '()' : ''} at index ${match.index + 1}: ${error}`;
+      error = `While parsing ${cmd}${command.parameters > 0 ? '()' : ''} at index ${match.index + 1}${where}: ${error}`;
       switch (opts.errors || 'message') {
         case 'ignore':
           break;
@@ -413,9 +414,11 @@ function parseString(input: string, opts: ParsingOptions): Paragraph {
   Parses a string or a list of strings to a list of paragraphs.
  */
 export function parse(input: string | string[], opts?: ParsingOptions): Paragraph[] {
+  let hasParagraphs = true;
   if (!Array.isArray(input)) {
     input = input ? [input] : [];
+    hasParagraphs = false;
   }
   const opts_ = opts || {};
-  return input.map((par) => parseString('' + par, opts_));
+  return input.map((par, index) => parseString('' + par, opts_, hasParagraphs ? ` of paragraph ${index + 1}` : ''));
 }
