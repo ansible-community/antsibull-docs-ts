@@ -49,7 +49,7 @@ test_vectors:
       The M(a.b.c) module.
     html: |-
       <p>The <span class='module'>a.b.c</span> module.</p>
-    planin_html: |-
+    html_plain: |-
       <p>The <span>a.b.c</span> module.</p>
     md: |-
       The a.b.c module.
