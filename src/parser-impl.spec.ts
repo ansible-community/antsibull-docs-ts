@@ -18,7 +18,11 @@ describe('parse escaped args', (): void => {
   });
   it('error tests)', (): void => {
     expect(parseEscapedArgs('(a', 1, 1)).toEqual([[''], 2, 'Cannot find closing ")" after last parameter']);
-    expect(parseEscapedArgs('(a', 1, 2)).toEqual([[''], 2, 'Cannot find comma separating parameter 1 from the next one']);
+    expect(parseEscapedArgs('(a', 1, 2)).toEqual([
+      [''],
+      2,
+      'Cannot find comma separating parameter 1 from the next one',
+    ]);
     expect(parseEscapedArgs('(a,b', 1, 2)).toEqual([['a', ''], 4, 'Cannot find closing ")" after last parameter']);
   });
 });
@@ -34,7 +38,11 @@ describe('parse unescaped args', (): void => {
   });
   it('error tests)', (): void => {
     expect(parseUnescapedArgs('(a', 1, 1)).toEqual([[], 2, 'Cannot find closing ")" after last parameter']);
-    expect(parseUnescapedArgs('(a', 1, 2)).toEqual([[], 2, 'Cannot find comma separating parameter 1 from the next one']);
+    expect(parseUnescapedArgs('(a', 1, 2)).toEqual([
+      [],
+      2,
+      'Cannot find comma separating parameter 1 from the next one',
+    ]);
     expect(parseUnescapedArgs('(a,b', 1, 2)).toEqual([['a'], 4, 'Cannot find closing ")" after last parameter']);
   });
 });

@@ -75,7 +75,11 @@ export function parseEscapedArgs(input: string, index: number, count: number): [
   return [result, index, undefined];
 }
 
-export function parseUnescapedArgs(input: string, index: number, count: number): [string[], number, string | undefined] {
+export function parseUnescapedArgs(
+  input: string,
+  index: number,
+  count: number,
+): [string[], number, string | undefined] {
   const result: string[] = [];
   let first = true;
   let paramsLeft = count;
