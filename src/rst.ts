@@ -4,8 +4,9 @@
   SPDX-License-Identifier: BSD-2-Clause
 */
 
-import { RSTOptions } from './opts';
-import { OptionNamePart, PartType, Paragraph, ReturnValuePart } from './dom';
+import { RSTOptions, AllFormatOptions, mergeOpts, LinkProviders } from './opts';
+import { OptionNamePart, Paragraph, ReturnValuePart } from './dom';
+import { addToDestination } from './format';
 
 export function quoteRST(text: string, escape_starting_whitespace = false, escape_ending_whitespace = false): string {
   text = text.replace(/([\\<>_*`])/g, '\\$1');
@@ -35,66 +36,31 @@ function formatOptionLike(part: OptionNamePart | ReturnValuePart, role: string):
   return `\\ :${role}:\`${quoteRST(result.join(''), true, true)}\`\\ `;
 }
 
+const DEFAULT_FORMATTER: AllFormatOptions = {
+  formatError: (part) => `\\ :strong:\`ERROR while parsing\`\\ : ${quoteRST(part.message, true, true)}\\ `,
+  formatBold: (part) => `\\ :strong:\`${quoteRST(part.text, true, true)}\`\\ `,
+  formatCode: (part) => `\\ :literal:\`${quoteRST(part.text, true, true)}\`\\ `,
+  formatHorizontalLine: () => '\n\n.. raw:: html\n\n  <hr>\n\n',
+  formatItalic: (part) => `\\ :emphasis:\`${quoteRST(part.text, true, true)}\`\\ `,
+  formatLink: (part) => `\\ \`${quoteRST(part.text)} <${encodeURI(part.url)}>\`__\\ `,
+  formatModule: (part) => `\\ :ref:\`${quoteRST(part.fqcn)} <ansible_collections.${part.fqcn}_module>\`\\ `,
+  formatRSTRef: (part) => `\\ :ref:\`${quoteRST(part.text)} <${part.ref}>\`\\ `,
+  formatURL: (part) => `\\ ${encodeURI(part.url)}\\ `,
+  formatText: (part) => quoteRST(part.text),
+  formatEnvVariable: (part) => `\\ :envvar:\`${quoteRST(part.name, true, true)}\`\\ `,
+  formatOptionName: (part) => formatOptionLike(part, 'ansopt'),
+  formatOptionValue: (part) => `\\ :ansval:\`${quoteRST(part.value, true, true)}\`\\ `,
+  formatPlugin: (part) =>
+    `\\ :ref:\`${quoteRST(part.plugin.fqcn)} <ansible_collections.${part.plugin.fqcn}_${part.plugin.type}>\`\\ `,
+  formatReturnValue: (part) => formatOptionLike(part, 'ansretval'),
+};
+
 export function toRST(paragraphs: Paragraph[], opts?: RSTOptions): string {
-  if (!opts) {
-    opts = {};
-  }
+  const mergedOpts = mergeOpts(Object.assign({} as LinkProviders, opts), DEFAULT_FORMATTER);
   const result: string[] = [];
   for (const paragraph of paragraphs) {
     const line: string[] = [];
-    for (const part of paragraph) {
-      switch (part.type) {
-        case PartType.ERROR:
-          line.push(`\\ :strong:\`ERROR while parsing\`\\ : ${quoteRST(part.message, true, true)}\\ `);
-          break;
-        case PartType.BOLD:
-          line.push(`\\ :strong:\`${quoteRST(part.text, true, true)}\`\\ `);
-          break;
-        case PartType.CODE:
-          line.push(`\\ :literal:\`${quoteRST(part.text, true, true)}\`\\ `);
-          break;
-        case PartType.HORIZONTAL_LINE:
-          line.push('\n\n.. raw:: html\n\n  <hr>\n\n');
-          break;
-        case PartType.ITALIC:
-          line.push(`\\ :emphasis:\`${quoteRST(part.text, true, true)}\`\\ `);
-          break;
-        case PartType.LINK:
-          line.push(`\\ \`${quoteRST(part.text)} <${encodeURI(part.url)}>\`__\\ `);
-          break;
-        case PartType.MODULE:
-          line.push(`\\ :ref:\`${quoteRST(part.fqcn)} <ansible_collections.${part.fqcn}_module>\`\\ `);
-          break;
-        case PartType.RST_REF:
-          line.push(`\\ :ref:\`${quoteRST(part.text)} <${part.ref}>\`\\ `);
-          break;
-        case PartType.URL:
-          line.push(`\\ ${encodeURI(part.url)}\\ `);
-          break;
-        case PartType.TEXT:
-          line.push(quoteRST(part.text));
-          break;
-        case PartType.ENV_VARIABLE:
-          line.push(`\\ :envvar:\`${quoteRST(part.name, true, true)}\`\\ `);
-          break;
-        case PartType.OPTION_NAME:
-          line.push(formatOptionLike(part, 'ansopt'));
-          break;
-        case PartType.OPTION_VALUE:
-          line.push(`\\ :ansval:\`${quoteRST(part.value, true, true)}\`\\ `);
-          break;
-        case PartType.PLUGIN:
-          line.push(
-            `\\ :ref:\`${quoteRST(part.plugin.fqcn)} <ansible_collections.${part.plugin.fqcn}_${
-              part.plugin.type
-            }>\`\\ `,
-          );
-          break;
-        case PartType.RETURN_VALUE:
-          line.push(formatOptionLike(part, 'ansretval'));
-          break;
-      }
-    }
+    addToDestination(line, paragraph, mergedOpts);
     if (!line.length) {
       line.push('\\ ');
     }
