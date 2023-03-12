@@ -7,7 +7,7 @@
 // CommonMark spec: https://spec.commonmark.org/current/
 
 import { MDOptions } from './opts';
-import { OptionNamePart, PartType, Paragraph, ReturnValuePart } from './parser';
+import { OptionNamePart, PartType, Paragraph, ReturnValuePart } from './dom';
 
 export function quoteMD(text: string): string {
   return text.replace(/([!"#$%&'()*+,:;<=>?@[\\\]^_`{|}~-])/g, '\\$1');

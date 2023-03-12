@@ -4,7 +4,8 @@
   SPDX-License-Identifier: BSD-2-Clause
 */
 
-import { parse, PartType } from './parser';
+import { parse } from './parser';
+import { PartType } from './dom';
 
 describe('parser tests', (): void => {
   it('empty string', (): void => {

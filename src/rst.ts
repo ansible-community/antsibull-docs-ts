@@ -5,7 +5,7 @@
 */
 
 import { RSTOptions } from './opts';
-import { OptionNamePart, PartType, Paragraph, ReturnValuePart } from './parser';
+import { OptionNamePart, PartType, Paragraph, ReturnValuePart } from './dom';
 
 export function quoteRST(text: string, escape_starting_whitespace = false, escape_ending_whitespace = false): string {
   text = text.replace(/([\\<>_*`])/g, '\\$1');

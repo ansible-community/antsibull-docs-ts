@@ -5,7 +5,7 @@
 */
 
 import { HTMLOptions } from './opts';
-import { OptionNamePart, PartType, Paragraph, ReturnValuePart } from './parser';
+import { OptionNamePart, PartType, Paragraph, ReturnValuePart } from './dom';
 
 export function quoteHTML(text: string): string {
   return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
