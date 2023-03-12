@@ -72,15 +72,18 @@ function parseOptionLike(
   };
 }
 
-interface CommandParser {
+export interface CommandParser {
   command: string;
   parameters: number;
-  old_markup?: boolean;
   escaped_arguments?: boolean;
   process: (args: string[], opts: ParsingOptions) => AnyPart;
 }
 
-const PARSER: CommandParser[] = [
+interface CommandParserEx extends CommandParser {
+  old_markup?: boolean;
+}
+
+const PARSER: CommandParserEx[] = [
   // Classic Ansible docs markup:
   {
     command: 'I',
@@ -217,29 +220,32 @@ const PARSER: CommandParser[] = [
   },
 ];
 
-const PARSER_COMMANDS: Map<string, CommandParser> = (() => {
+export function composeCommandMap(commands: CommandParser[]): Map<string, CommandParser> {
   const result = new Map<string, CommandParser>();
-  PARSER.forEach((cmd) => result.set(cmd.command, cmd));
+  commands.forEach((cmd) => result.set(cmd.command, cmd));
   return result;
-})();
+}
 
 function commandRE(command: CommandParser): string {
   return '\\b' + command.command + (command.parameters === 0 ? '\\b' : '\\(');
 }
 
-const COMMAND_RE = new RegExp('(' + PARSER.map(commandRE).join('|') + ')', 'g');
-const CLASSIC_COMMAND_RE = new RegExp(
-  '(' +
-    PARSER.filter((cmd) => cmd.old_markup)
-      .map(commandRE)
-      .join('|') +
-    ')',
-  'g',
-);
+export function composeCommandRE(commands: CommandParser[]): RegExp {
+  return new RegExp('(' + commands.map(commandRE).join('|') + ')', 'g');
+}
 
-function parseString(input: string, opts: ParsingOptions, where: string): Paragraph {
+const PARSER_COMMANDS: Map<string, CommandParser> = composeCommandMap(PARSER);
+const COMMAND_RE = composeCommandRE(PARSER);
+const CLASSIC_COMMAND_RE = composeCommandRE(PARSER.filter((cmd) => cmd.old_markup));
+
+export function parseString(
+  input: string,
+  commandRE: RegExp,
+  commands: Map<string, CommandParser>,
+  opts: ParsingOptions,
+  where: string,
+): Paragraph {
   const result: AnyPart[] = [];
-  const commandRE = opts.only_classic_markup ? CLASSIC_COMMAND_RE : COMMAND_RE;
   const length = input.length;
   let index = 0;
   while (index < length) {
@@ -266,8 +272,7 @@ function parseString(input: string, opts: ParsingOptions, where: string): Paragr
     if (cmd.endsWith('(')) {
       cmd = cmd.slice(0, cmd.length - 1);
     }
-    const command = PARSER_COMMANDS.get(cmd);
-    /* istanbul ignore if */
+    const command = commands.get(cmd);
     if (!command) {
       throw Error(`Internal error: unknown command "${cmd}"`);
     }
@@ -317,5 +322,8 @@ export function parse(input: string | string[], opts?: ParsingOptions): Paragrap
     hasParagraphs = false;
   }
   const opts_ = opts || {};
-  return input.map((par, index) => parseString('' + par, opts_, hasParagraphs ? ` of paragraph ${index + 1}` : ''));
+  const commandRE = opts_.only_classic_markup ? CLASSIC_COMMAND_RE : COMMAND_RE;
+  return input.map((par, index) =>
+    parseString('' + par, commandRE, PARSER_COMMANDS, opts_, hasParagraphs ? ` of paragraph ${index + 1}` : ''),
+  );
 }

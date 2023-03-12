@@ -4,10 +4,10 @@
   SPDX-License-Identifier: BSD-2-Clause
 */
 
-import { parse } from './parser';
+import { parse, composeCommandMap, composeCommandRE, CommandParser, parseString } from './parser';
 import { PartType } from './dom';
 
-describe('parser tests', (): void => {
+describe('parser', (): void => {
   it('empty string', (): void => {
     expect(parse('')).toEqual([]);
   });
@@ -460,5 +460,51 @@ describe('parser tests', (): void => {
     expect(parse('O(f o.b r.b z#bam:foobar)', { errors: 'ignore' })).toEqual([[]]);
     expect(parse('O(foo.bar.baz#b m:foobar)', { errors: 'ignore' })).toEqual([[]]);
     expect(parse('O(foo:bar:baz)', { errors: 'ignore' })).toEqual([[]]);
+  });
+});
+
+describe('parser engine', (): void => {
+  const commandsA: CommandParser[] = [
+    {
+      command: 'A',
+      parameters: 0,
+      process: () => {
+        throw Error('boo!');
+      },
+    },
+  ];
+  const commandsMapA = composeCommandMap(commandsA);
+  const commandsReA = composeCommandRE(commandsA);
+  const commandsB: CommandParser[] = [
+    {
+      command: 'B',
+      parameters: 3,
+      process: (args) => {
+        return {
+          type: PartType.TEXT,
+          text: `<B:${args.join(':')}>`,
+        };
+      },
+    },
+  ];
+  const commandsMapB = composeCommandMap(commandsB);
+  const commandsReB = composeCommandRE(commandsB);
+
+  it('combine wrong regexp with command map', (): void => {
+    expect(async () => parseString('A B()', commandsReA, commandsMapB, {}, '')).rejects.toThrow(
+      'Internal error: unknown command "A"',
+    );
+  });
+  it('combine wrong regexp with command map', (): void => {
+    expect(parseString('A B()', commandsReA, commandsMapA, {}, '')).toEqual([
+      { message: 'While parsing A at index 1: Error: boo!', type: PartType.ERROR },
+      { text: ' B()', type: PartType.TEXT },
+    ]);
+  });
+  it('combine wrong regexp with command map', (): void => {
+    expect(parseString('A B(a, b, c)', commandsReB, commandsMapB, {}, '')).toEqual([
+      { text: 'A ', type: PartType.TEXT },
+      { text: '<B:a:b:c>', type: PartType.TEXT },
+    ]);
   });
 });
