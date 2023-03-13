@@ -1,3 +1,0 @@
-minor_changes:
-  - "Allow to adjust formatting for HTML, RST, and MarkDown output by allowing to provide formatting functions for every part type (https://github.com/ansible-community/antsibull-docs-ts/pull/12)."
-  - "Allow to chose between antsibull-docs like formatting (for Sphinx targets) and plain formatting for HTML (https://github.com/ansible-community/antsibull-docs-ts/pull/12)."

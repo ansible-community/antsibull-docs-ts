@@ -1,2 +1,0 @@
-minor_changes:
-  - "Mention paragraph number in error messages when not processing single strings (https://github.com/ansible-community/antsibull-docs-ts/pull/11)."

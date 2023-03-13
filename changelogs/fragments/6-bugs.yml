@@ -1,2 +1,0 @@
-bugfixes:
-  - "The ``parse()`` option ``errors``'s default was ``exception``, and not ``message`` as documented. The default is now ``message`` (https://github.com/ansible-community/antsibull-docs-ts/pull/6)."

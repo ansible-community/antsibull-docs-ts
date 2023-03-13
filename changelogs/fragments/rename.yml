@@ -1,2 +1,0 @@
-breaking_changes:
-  - "The package was renamed on npmjs.com from ``antsibull_docs`` to ``antsibull-docs`` (https://github.com/ansible-community/antsibull-docs-ts/pull/15)."
