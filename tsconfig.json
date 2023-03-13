@@ -39,7 +39,7 @@
     "noPropertyAccessFromIndexSignature": true,
 
     /* Completeness */
-    "skipLibCheck": true,
+    "skipLibCheck": true
   },
   "include": ["src/**/*"],
   "exclude": ["src/**/*.spec.ts"]

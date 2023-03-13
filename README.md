@@ -17,7 +17,7 @@ This is a TypeScript library for processing Ansible documentation markup. It is 
 ### Node.js (CommonJS modules)
 
 ```js
-const { parse, toHTML } = require("antsibull_docs");
+const { parse, toHTML } = require('antsibull_docs');
 
 function convert() {
   return toHTML(parse(['First paragraph.', 'Second B(paragraph).']));
