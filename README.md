@@ -111,5 +111,5 @@ to re-format the source files.
 6. Commit with message `Release <version>.` and run `git tag <version>`.
 7. Run `git push upstream main && git push`.
 8. Once CI passes on GitHub, run `npm publish`.
-9. On success, do `git push upstream --tags`.
+9. On success, do `git push upstream --tags` and create a GitHub release.
 10. Add `.post0` to the version in `package.json`, commit as `Post-release version bump.`, and push to GitHub.
