@@ -98,3 +98,16 @@ $ npm run format:write
 ```
 
 to re-format the source files.
+
+### Release
+
+1. Update package version in `package.json`.
+2. Create `changelogs/fragments/<version>.yml` with a `release_summary` section.
+3. Run `rm -rf build && npm run build`.
+4. Run `npm publish --dry-run` and check the output.
+5. Run `antsibull-changelog release` and add the updated files to git.
+6. Commit with message `Release <version>.` and run `git tag <version>`.
+7. Run `git push upstream main && git push`.
+8. Once CI passes on GitHub, run `npm publish`.
+9. On success, do `git push upstream --tags`.
+10. Add `.post0` to the version in `package.json`, commit as `Post-release version bump.`, and push to GitHub.
