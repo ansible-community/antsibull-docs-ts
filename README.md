@@ -12,6 +12,28 @@ SPDX-License-Identifier: BSD-2-Clause
 
 This is a TypeScript library for processing Ansible documentation markup. It is named after [the Python package of the same name](https://github.com/ansible-community/antsibull-docs/).
 
+## How to use this
+
+### Node.js (CommonJS modules)
+
+```js
+const { parse, toHTML } = require("antsibull_docs");
+
+function convert() {
+  return toHTML(parse(['First paragraph.', 'Second B(paragraph).']));
+}
+```
+
+### Webpack (EcmaScript modules)
+
+```ts
+import { parse, toHTML } from 'antsibull_docs';
+
+function convert(): string {
+  return toHTML(parse(['First paragraph.', 'Second B(paragraph).']));
+}
+```
+
 ## How to develop on this
 
 After checking out the repository, run
@@ -26,13 +48,14 @@ to install all required node packages. Afterwards you can run
 $ npm build
 ```
 
-to build the package,
+to build the package as both ESM and CJS,
 
 ```shell
-$ npm build:watch
+$ npm build:cjs:watch
+$ npm build:esm:watch
 ```
 
-to start a watch process which builds the package every time a file is modified,
+to start a watch process which builds the package (as CJS or ESM) every time a file is modified,
 
 ```shell
 $ npm test

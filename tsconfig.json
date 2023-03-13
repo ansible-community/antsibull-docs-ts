@@ -3,23 +3,21 @@
     /* Visit https://aka.ms/tsconfig to read more about this file */
 
     /* Language and Environment */
-    "target": "es2016" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
-    // "lib": [],                                        /* Specify a set of bundled library declaration files that describe the target runtime environment. */
-    // "noLib": true,                                    /* Disable including any library files, including the default lib.d.ts. */
+    "target": "es2016",
 
     /* Modules */
-    "module": "commonjs" /* Specify what module code is generated. */,
     "rootDir": "src",
+    "module": "esnext",
 
     /* Emit */
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "outDir": "dist",
+    "outDir": "dist/esm",
 
     /* Interop Constraints */
-    "esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */,
-    "forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
 
     /* Type Checking */
     "strict": true,
@@ -32,8 +30,8 @@
     "useUnknownInCatchVariables": true,
     "alwaysStrict": true,
     "noUnusedLocals": true,
-    // "noUnusedParameters": true,                       /* Raise an error when a function parameter isn't read. */
-    // "exactOptionalPropertyTypes": true,               /* Interpret optional property types as written, rather than adding 'undefined'. */
+    "noUnusedParameters": true,
+    "exactOptionalPropertyTypes": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
@@ -41,7 +39,7 @@
     "noPropertyAccessFromIndexSignature": true,
 
     /* Completeness */
-    "skipLibCheck": true /* Skip type checking all .d.ts files. */
+    "skipLibCheck": true,
   },
   "include": ["src/**/*"],
   "exclude": ["src/**/*.spec.ts"]

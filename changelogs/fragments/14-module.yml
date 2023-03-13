@@ -1,0 +1,2 @@
+minor_changes:
+  - "Build both ESM and CommonJS modules for easier consumption in both webpack and node.js projects (https://github.com/ansible-community/antsibull-docs-ts/pull/14)."
