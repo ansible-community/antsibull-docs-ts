@@ -14,10 +14,12 @@ This is a TypeScript library for processing Ansible documentation markup. It is 
 
 ## How to use this
 
+The package is available on [npm](https://www.npmjs.com/package/antsibull-docs).
+
 ### Node.js (CommonJS modules)
 
 ```js
-const { parse, toHTML } = require('antsibull_docs');
+const { parse, toHTML } = require('antsibull-docs');
 
 function convert() {
   return toHTML(parse(['First paragraph.', 'Second B(paragraph).']));
@@ -27,7 +29,7 @@ function convert() {
 ### Webpack (EcmaScript modules)
 
 ```ts
-import { parse, toHTML } from 'antsibull_docs';
+import { parse, toHTML } from 'antsibull-docs';
 
 function convert(): string {
   return toHTML(parse(['First paragraph.', 'Second B(paragraph).']));
