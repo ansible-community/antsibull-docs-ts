@@ -2,9 +2,9 @@
   "name": "antsibull_docs",
   "version": "0.1.0",
   "description": "TypeScript library for processing Ansible documentation markup",
-  "type": "module",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
   "files": [
     ".eslintrc.json",
     ".prettierignore",
@@ -20,16 +20,18 @@
     "README.md"
   ],
   "scripts": {
-    "build": "npx tsc",
-    "build:watch": "npx tsc -w",
+    "build": "npx tsc -p tsconfig-cjs.json && npx tsc -p tsconfig-esm.json",
+    "build:cjs": "npx tsc -p tsconfig-cjs.json",
+    "build:cjs:watch": "npx tsc -p tsconfig-cjs.json -w",
+    "build:esm": "npx tsc -p tsconfig-esm.json",
+    "build:esm:watch": "npx tsc -p tsconfig-esm.json -w",
     "format:check": "npx prettier --check .",
     "format:write": "npx prettier --write .",
     "lint": "npx eslint \"src/**/*.ts\"",
     "test": "npx jest",
     "test:coverage": "npx jest --coverage",
     "test:coverage:watch": "npx jest --coverage --watchAll",
-    "test:watch": "npx jest --watchAll",
-    "watch": "npx tsc -w"
+    "test:watch": "npx jest --watchAll"
   },
   "keywords": [
     "ansible",
