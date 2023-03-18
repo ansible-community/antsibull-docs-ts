@@ -8,6 +8,7 @@
 
 import { MDOptions, AllFormatOptions, mergeOpts } from './opts';
 import { OptionNamePart, Paragraph, ReturnValuePart } from './dom';
+import { quoteHTMLArg } from './html';
 import { addToDestination } from './format';
 
 export function quoteMD(text: string): string {
@@ -22,7 +23,7 @@ function formatOptionLike(
   let link_start = '';
   let link_end = '';
   if (url) {
-    link_start = `<a href="${quoteMD(encodeURI(url))}">`;
+    link_start = `<a href="${quoteMD(quoteHTMLArg(encodeURI(url)))}">`;
     link_end = '</a>';
   }
   let strong_start = '';

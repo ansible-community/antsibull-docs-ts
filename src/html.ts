@@ -12,6 +12,10 @@ export function quoteHTML(text: string): string {
   return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
+export function quoteHTMLArg(text: string): string {
+  return quoteHTML(text).replace(/"/g, '&quot;');
+}
+
 function formatOptionLikePlain(
   part: OptionNamePart | ReturnValuePart,
   url: string | undefined,
@@ -20,7 +24,7 @@ function formatOptionLikePlain(
   let link_start = '';
   let link_end = '';
   if (url) {
-    link_start = `<a href="${quoteHTML(encodeURI(url))}">`;
+    link_start = `<a href="${quoteHTMLArg(encodeURI(url))}">`;
     link_end = '</a>';
   }
   let strong_start = '';
@@ -39,17 +43,21 @@ const PLAIN_FORMATTER: AllFormatOptions = {
   formatCode: (part) => `<code>${quoteHTML(part.text)}</code>`,
   formatHorizontalLine: () => '<hr>',
   formatItalic: (part) => `<em>${quoteHTML(part.text)}</em>`,
-  formatLink: (part) => `<a href='${quoteHTML(encodeURI(part.url))}'>${quoteHTML(part.text)}</a>`,
+  formatLink: (part) => `<a href='${quoteHTMLArg(encodeURI(part.url))}'>${quoteHTML(part.text)}</a>`,
   formatModule: (part, url) =>
-    url ? `<a href='${url}'>${quoteHTML(part.fqcn)}</a>` : `<span>${quoteHTML(part.fqcn)}</span>`,
+    url
+      ? `<a href='${quoteHTMLArg(encodeURI(url))}'>${quoteHTML(part.fqcn)}</a>`
+      : `<span>${quoteHTML(part.fqcn)}</span>`,
   formatRSTRef: (part) => `<span>${quoteHTML(part.text)}</span>`,
-  formatURL: (part) => `<a href='${quoteHTML(encodeURI(part.url))}'>${quoteHTML(encodeURI(part.url))}</a>`,
+  formatURL: (part) => `<a href='${quoteHTMLArg(encodeURI(part.url))}'>${quoteHTML(encodeURI(part.url))}</a>`,
   formatText: (part) => quoteHTML(part.text),
   formatEnvVariable: (part) => `<code>${quoteHTML(part.name)}</code>`,
   formatOptionName: (part, url) => formatOptionLikePlain(part, url, 'option'),
   formatOptionValue: (part) => `<code>${quoteHTML(part.value)}</code>`,
   formatPlugin: (part, url) =>
-    url ? `<a href='${url}'>${quoteHTML(part.plugin.fqcn)}</a>` : `<span>${quoteHTML(part.plugin.fqcn)}</span>`,
+    url
+      ? `<a href='${quoteHTMLArg(encodeURI(url))}'>${quoteHTML(part.plugin.fqcn)}</a>`
+      : `<span>${quoteHTML(part.plugin.fqcn)}</span>`,
   formatReturnValue: (part, url) => formatOptionLikePlain(part, url, 'retval'),
 };
 
@@ -61,7 +69,7 @@ function formatOptionLikeAntsibullDocs(
   let link_start = '';
   let link_end = '';
   if (url) {
-    link_start = `<a class="reference internal" href="${quoteHTML(
+    link_start = `<a class="reference internal" href="${quoteHTMLArg(
       encodeURI(url),
     )}"><span class="std std-ref"><span class="pre">`;
     link_end = '</span></span></a>';
@@ -97,20 +105,20 @@ const ANTSIBULL_DOCS_FORMATTER: AllFormatOptions = {
   formatCode: (part) => `<code class='docutils literal notranslate'>${quoteHTML(part.text)}</code>`,
   formatHorizontalLine: () => '<hr/>',
   formatItalic: (part) => `<em>${quoteHTML(part.text)}</em>`,
-  formatLink: (part) => `<a href='${quoteHTML(encodeURI(part.url))}'>${quoteHTML(part.text)}</a>`,
+  formatLink: (part) => `<a href='${quoteHTMLArg(encodeURI(part.url))}'>${quoteHTML(part.text)}</a>`,
   formatModule: (part, url) =>
     url
-      ? `<a href='${url}' class='module'>${quoteHTML(part.fqcn)}</a>`
+      ? `<a href='${quoteHTMLArg(encodeURI(url))}' class='module'>${quoteHTML(part.fqcn)}</a>`
       : `<span class='module'>${quoteHTML(part.fqcn)}</span>`,
   formatRSTRef: (part) => `<span class='module'>${quoteHTML(part.text)}</span>`,
-  formatURL: (part) => `<a href='${quoteHTML(encodeURI(part.url))}'>${quoteHTML(encodeURI(part.url))}</a>`,
+  formatURL: (part) => `<a href='${quoteHTMLArg(encodeURI(part.url))}'>${quoteHTML(encodeURI(part.url))}</a>`,
   formatText: (part) => quoteHTML(part.text),
   formatEnvVariable: (part) => `<code class="xref std std-envvar literal notranslate">${quoteHTML(part.name)}</code>`,
   formatOptionName: (part, url) => formatOptionLikeAntsibullDocs(part, url, 'option'),
   formatOptionValue: (part) => `<code class="ansible-value literal notranslate">${quoteHTML(part.value)}</code>`,
   formatPlugin: (part, url) =>
     url
-      ? `<a href='${url}' class='module'>${quoteHTML(part.plugin.fqcn)}</a>`
+      ? `<a href='${quoteHTMLArg(encodeURI(url))}' class='module'>${quoteHTML(part.plugin.fqcn)}</a>`
       : `<span class='module'>${quoteHTML(part.plugin.fqcn)}</span>`,
   formatReturnValue: (part, url) => formatOptionLikeAntsibullDocs(part, url, 'retval'),
 };
