@@ -47,7 +47,7 @@ describe('parser', (): void => {
     expect(
       parse(
         'foo I(bar) baz C( bam ) B( ( boo ) ) U(https://example.com/?foo=bar)HORIZONTALLINE L(foo ,  https://bar.com) R( a , b )M(foo.bar.baz)HORIZONTALLINEx M(foo.bar.baz.bam)',
-        { only_classic_markup: true },
+        { onlyClassicMarkup: true },
       ),
     ).toEqual([
       [

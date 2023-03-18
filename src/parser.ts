@@ -75,7 +75,7 @@ function parseOptionLike(
 export interface CommandParser {
   command: string;
   parameters: number;
-  escaped_arguments?: boolean;
+  escapedArguments?: boolean;
   process: (args: string[], opts: ParsingOptions) => AnyPart;
 }
 
@@ -165,7 +165,7 @@ const PARSER: CommandParserEx[] = [
   {
     command: 'P',
     parameters: 1,
-    escaped_arguments: true,
+    escapedArguments: true,
     process: (args) => {
       const m = /^([^).]+\.[^).]+\.[^#]+)#(.+)$/.exec(args[0] as string);
       if (!m) {
@@ -185,7 +185,7 @@ const PARSER: CommandParserEx[] = [
   {
     command: 'E',
     parameters: 1,
-    escaped_arguments: true,
+    escapedArguments: true,
     process: (args) => {
       const env = args[0] as string;
       return <EnvVariablePart>{ type: PartType.ENV_VARIABLE, name: env };
@@ -194,7 +194,7 @@ const PARSER: CommandParserEx[] = [
   {
     command: 'V',
     parameters: 1,
-    escaped_arguments: true,
+    escapedArguments: true,
     process: (args) => {
       const value = args[0] as string;
       return <OptionValuePart>{ type: PartType.OPTION_VALUE, value: value };
@@ -203,7 +203,7 @@ const PARSER: CommandParserEx[] = [
   {
     command: 'O',
     parameters: 1,
-    escaped_arguments: true,
+    escapedArguments: true,
     process: (args, opts) => {
       const value = args[0] as string;
       return parseOptionLike(value, opts, PartType.OPTION_NAME);
@@ -212,7 +212,7 @@ const PARSER: CommandParserEx[] = [
   {
     command: 'RV',
     parameters: 1,
-    escaped_arguments: true,
+    escapedArguments: true,
     process: (args, opts) => {
       const value = args[0] as string;
       return parseOptionLike(value, opts, PartType.RETURN_VALUE);
@@ -280,7 +280,7 @@ export function parseString(
     let error: string | undefined;
     if (command.parameters === 0) {
       args = [];
-    } else if (command.escaped_arguments) {
+    } else if (command.escapedArguments) {
       [args, endIndex, error] = parseEscapedArgs(input, endIndex, command.parameters);
     } else {
       [args, endIndex, error] = parseUnescapedArgs(input, endIndex, command.parameters);
@@ -322,7 +322,7 @@ export function parse(input: string | string[], opts?: ParsingOptions): Paragrap
     hasParagraphs = false;
   }
   const opts_ = opts || {};
-  const commandRE = opts_.only_classic_markup ? CLASSIC_COMMAND_RE : COMMAND_RE;
+  const commandRE = opts_.onlyClassicMarkup ? CLASSIC_COMMAND_RE : COMMAND_RE;
   return input.map((par, index) =>
     parseString('' + par, commandRE, PARSER_COMMANDS, opts_, hasParagraphs ? ` of paragraph ${index + 1}` : ''),
   );
