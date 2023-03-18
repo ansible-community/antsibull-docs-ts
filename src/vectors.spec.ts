@@ -19,19 +19,20 @@ describe('vectors', (): void => {
   for (const test_name of Object.keys(vectors)) {
     const test_data = vectors[test_name];
     if (test_data.html_opts) {
-      if (test_data.html_opts.pluginLink) {
-        test_data.html_opts.pluginLink = eval(test_data.html_opts.pluginLink);
+      if (test_data.html_opts['pluginLink.js']) {
+        test_data.html_opts.pluginLink = eval(test_data.html_opts['pluginLink.js']);
       }
-      if (test_data.html_opts.pluginOptionLikeLink) {
-        test_data.html_opts.pluginOptionLikeLink = eval(test_data.html_opts.pluginOptionLikeLink);
+      if (test_data.html_opts['pluginOptionLikeLink.js']) {
+        test_data.html_opts.pluginOptionLikeLink = eval(test_data.html_opts['pluginOptionLikeLink.js']);
       }
     }
     if (test_data.md_opts) {
-      if (test_data.md_opts.pluginLink) {
-        test_data.md_opts.pluginLink = eval(test_data.md_opts.pluginLink);
+      if (test_data.md_opts['pluginLink.js']) {
+        test_data.md_opts.pluginLink = eval(test_data.md_opts['pluginLink.js']);
+        console.log(test_data.md_opts.pluginLink);
       }
-      if (test_data.md_opts.pluginOptionLikeLink) {
-        test_data.md_opts.pluginOptionLikeLink = eval(test_data.md_opts.pluginOptionLikeLink);
+      if (test_data.md_opts['pluginOptionLikeLink.js']) {
+        test_data.md_opts.pluginOptionLikeLink = eval(test_data.md_opts['pluginOptionLikeLink.js']);
       }
     }
     if (test_data.source !== undefined && test_data.html !== undefined) {

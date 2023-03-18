@@ -44,7 +44,7 @@ export interface ParsingOptions extends ErrorHandlingOptions {
   current_plugin?: PluginIdentifier;
 
   /** If set to 'true', only 'classic' Ansible docs markup is accepted. */
-  only_classic_markup?: boolean;
+  onlyClassicMarkup?: boolean;
 }
 
 export interface CommonExportOptions extends ErrorHandlingOptions {
