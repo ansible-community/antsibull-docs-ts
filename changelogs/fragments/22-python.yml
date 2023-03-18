@@ -1,0 +1,7 @@
+bugfixes:
+  - "HTML and MarkDown code: quote HTML command arguments correctly; make sure URLs are correctly quoted (https://github.com/ansible-community/antsibull-docs-ts/pull/22)."
+minor_changes:
+  - "Improve error messages by removing superfluous second ``Error:`` (https://github.com/ansible-community/antsibull-docs-ts/pull/22)."
+  - "Make parsing of ``P(...)`` more similar to Python code with respect to error reporting (https://github.com/ansible-community/antsibull-docs-ts/pull/22)."
+breaking_changes:
+  - "Rename ``only_classic_markup`` parser option to ``onlyClassicMarkup`` (https://github.com/ansible-community/antsibull-docs-ts/pull/22)."
