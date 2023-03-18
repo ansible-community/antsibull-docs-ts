@@ -288,8 +288,11 @@ export function parseString(
     if (error === undefined) {
       try {
         result.push(command.process(args, opts));
-      } catch (exc) {
+      } catch (exc: any) {
         error = `${exc}`;
+        if (exc?.message !== undefined) {
+          error = `${exc.message}`;
+        }
       }
     }
     if (error !== undefined) {

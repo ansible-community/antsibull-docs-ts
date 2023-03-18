@@ -290,38 +290,38 @@ describe('parser', (): void => {
   });
   it('bad module ref (throw error)', (): void => {
     expect(async () => parse('M(foo)', { errors: 'exception' })).rejects.toThrow(
-      'While parsing M() at index 1: Error: Module name "foo" is not a FQCN',
+      'While parsing M() at index 1: Module name "foo" is not a FQCN',
     );
     expect(async () => parse(' M(foo.bar)', { errors: 'exception' })).rejects.toThrow(
-      'While parsing M() at index 2: Error: Module name "foo.bar" is not a FQCN',
+      'While parsing M() at index 2: Module name "foo.bar" is not a FQCN',
     );
     expect(async () => parse('  M(foo. bar.baz)', { errors: 'exception' })).rejects.toThrow(
-      'While parsing M() at index 3: Error: Module name "foo. bar.baz" is not a FQCN',
+      'While parsing M() at index 3: Module name "foo. bar.baz" is not a FQCN',
     );
     expect(async () => parse('   M(foo)', { errors: 'exception' })).rejects.toThrow(
-      'While parsing M() at index 4: Error: Module name "foo" is not a FQCN',
+      'While parsing M() at index 4: Module name "foo" is not a FQCN',
     );
   });
   it('bad plugin ref (throw error)', (): void => {
-    expect(async () => parse('P(foo#bar)', { errors: 'exception' })).rejects.toThrow(
-      'While parsing P() at index 1: Error: Parameter "foo#bar" is not of the form FQCN#type',
+    expect(async () => parse('P(foo)', { errors: 'exception' })).rejects.toThrow(
+      'While parsing P() at index 1: Parameter "foo" is not of the form FQCN#type',
     );
     expect(async () => parse('P(f o.b r.b z#bar)', { errors: 'exception' })).rejects.toThrow(
-      'While parsing P() at index 1: Error: Plugin name "f o.b r.b z" is not a FQCN',
+      'While parsing P() at index 1: Plugin name "f o.b r.b z" is not a FQCN',
     );
     expect(async () => parse('P(foo.bar.baz#b m)', { errors: 'exception' })).rejects.toThrow(
-      'While parsing P() at index 1: Error: Plugin type "b m" is not valid',
+      'While parsing P() at index 1: Plugin type "b m" is not valid',
     );
   });
   it('bad option name/return value (throw error)', (): void => {
     expect(async () => parse('O(f o.b r.b z#bam:foobar)', { errors: 'exception' })).rejects.toThrow(
-      'While parsing O() at index 1: Error: Plugin name "f o.b r.b z" is not a FQCN',
+      'While parsing O() at index 1: Plugin name "f o.b r.b z" is not a FQCN',
     );
     expect(async () => parse('O(foo.bar.baz#b m:foobar)', { errors: 'exception' })).rejects.toThrow(
-      'While parsing O() at index 1: Error: Plugin type "b m" is not valid',
+      'While parsing O() at index 1: Plugin type "b m" is not valid',
     );
     expect(async () => parse('O(foo:bar:baz)', { errors: 'exception' })).rejects.toThrow(
-      'While parsing O() at index 1: Error: Invalid option/return value name "foo:bar:baz"',
+      'While parsing O() at index 1: Invalid option/return value name "foo:bar:baz"',
     );
   });
   it('bad parameter parsing (no escaping, error message)', (): void => {
@@ -354,12 +354,12 @@ describe('parser', (): void => {
   });
   it('bad module ref (error message)', (): void => {
     expect(parse('M(foo)')).toEqual([
-      [{ type: PartType.ERROR, message: 'While parsing M() at index 1: Error: Module name "foo" is not a FQCN' }],
+      [{ type: PartType.ERROR, message: 'While parsing M() at index 1: Module name "foo" is not a FQCN' }],
     ]);
     expect(parse(' M(foo.bar)', { errors: 'message' })).toEqual([
       [
         { type: PartType.TEXT, text: ' ' },
-        { type: PartType.ERROR, message: 'While parsing M() at index 2: Error: Module name "foo.bar" is not a FQCN' },
+        { type: PartType.ERROR, message: 'While parsing M() at index 2: Module name "foo.bar" is not a FQCN' },
       ],
     ]);
     expect(parse('  M(foo. bar.baz)', { errors: 'message' })).toEqual([
@@ -367,14 +367,14 @@ describe('parser', (): void => {
         { type: PartType.TEXT, text: '  ' },
         {
           type: PartType.ERROR,
-          message: 'While parsing M() at index 3: Error: Module name "foo. bar.baz" is not a FQCN',
+          message: 'While parsing M() at index 3: Module name "foo. bar.baz" is not a FQCN',
         },
       ],
     ]);
     expect(parse('   M(foo) baz', { errors: 'message' })).toEqual([
       [
         { type: PartType.TEXT, text: '   ' },
-        { type: PartType.ERROR, message: 'While parsing M() at index 4: Error: Module name "foo" is not a FQCN' },
+        { type: PartType.ERROR, message: 'While parsing M() at index 4: Module name "foo" is not a FQCN' },
         { type: PartType.TEXT, text: ' baz' },
       ],
     ]);
@@ -384,7 +384,7 @@ describe('parser', (): void => {
       [
         {
           type: PartType.ERROR,
-          message: 'While parsing P() at index 1: Error: Parameter "foo#bar" is not of the form FQCN#type',
+          message: 'While parsing P() at index 1: Parameter "foo" is not of the form FQCN#type',
         },
       ],
     ]);
@@ -392,7 +392,7 @@ describe('parser', (): void => {
       [
         {
           type: PartType.ERROR,
-          message: 'While parsing P() at index 1: Error: Plugin name "f o.b r.b z" is not a FQCN',
+          message: 'While parsing P() at index 1: Plugin name "f o.b r.b z" is not a FQCN',
         },
       ],
     ]);
@@ -400,7 +400,7 @@ describe('parser', (): void => {
       [
         {
           type: PartType.ERROR,
-          message: 'While parsing P() at index 1: Error: Plugin type "b m" is not valid',
+          message: 'While parsing P() at index 1: Plugin type "b m" is not valid',
         },
       ],
     ]);
@@ -410,7 +410,7 @@ describe('parser', (): void => {
       [
         {
           type: PartType.ERROR,
-          message: 'While parsing O() at index 1: Error: Plugin name "f o.b r.b z" is not a FQCN',
+          message: 'While parsing O() at index 1: Plugin name "f o.b r.b z" is not a FQCN',
         },
       ],
     ]);
@@ -418,7 +418,7 @@ describe('parser', (): void => {
       [
         {
           type: PartType.ERROR,
-          message: 'While parsing O() at index 1: Error: Plugin type "b m" is not valid',
+          message: 'While parsing O() at index 1: Plugin type "b m" is not valid',
         },
       ],
     ]);
@@ -426,7 +426,7 @@ describe('parser', (): void => {
       [
         {
           type: PartType.ERROR,
-          message: 'While parsing O() at index 1: Error: Invalid option/return value name "foo:bar:baz"',
+          message: 'While parsing O() at index 1: Invalid option/return value name "foo:bar:baz"',
         },
       ],
     ]);
@@ -497,7 +497,7 @@ describe('parser engine', (): void => {
   });
   it('combine wrong regexp with command map', (): void => {
     expect(parseString('A B()', commandsReA, commandsMapA, {}, '')).toEqual([
-      { message: 'While parsing A at index 1: Error: boo!', type: PartType.ERROR },
+      { message: 'While parsing A at index 1: boo!', type: PartType.ERROR },
       { text: ' B()', type: PartType.TEXT },
     ]);
   });
