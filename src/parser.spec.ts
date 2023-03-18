@@ -380,7 +380,7 @@ describe('parser', (): void => {
     ]);
   });
   it('bad plugin ref (error message)', (): void => {
-    expect(parse('P(foo#bar)')).toEqual([
+    expect(parse('P(foo)')).toEqual([
       [
         {
           type: PartType.ERROR,

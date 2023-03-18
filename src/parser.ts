@@ -167,7 +167,7 @@ const PARSER: CommandParserEx[] = [
     parameters: 1,
     escapedArguments: true,
     process: (args) => {
-      const m = /^([^).]+\.[^).]+\.[^#]+)#(.+)$/.exec(args[0] as string);
+      const m = /^([^#]*)#(.*)$/.exec(args[0] as string);
       if (!m) {
         throw Error(`Parameter "${args[0]}" is not of the form FQCN#type`);
       }
