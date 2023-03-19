@@ -3,7 +3,9 @@
 # SPDX-FileCopyrightText: Ansible Project
 # SPDX-License-Identifier: BSD-2-Clause
 
-comment: {}
+comment:
+  behavior: default
+  require_changes: false
 coverage:
   status:
     patch:
