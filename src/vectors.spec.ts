@@ -29,7 +29,6 @@ describe('vectors', (): void => {
     if (test_data.md_opts) {
       if (test_data.md_opts['pluginLink.js']) {
         test_data.md_opts.pluginLink = eval(test_data.md_opts['pluginLink.js']);
-        console.log(test_data.md_opts.pluginLink);
       }
       if (test_data.md_opts['pluginOptionLikeLink.js']) {
         test_data.md_opts.pluginOptionLikeLink = eval(test_data.md_opts['pluginOptionLikeLink.js']);
