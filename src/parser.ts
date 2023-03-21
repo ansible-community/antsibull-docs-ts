@@ -324,7 +324,7 @@ export function parse(input: string | string[], opts?: ParsingOptions): Paragrap
     input = input ? [input] : [];
     hasParagraphs = false;
   }
-  if (0 === 1) {
+  if (input === 'foobarbaz') {
     console.log('test');
   }
   const opts_ = opts || {};
