@@ -324,6 +324,9 @@ export function parse(input: string | string[], opts?: ParsingOptions): Paragrap
     input = input ? [input] : [];
     hasParagraphs = false;
   }
+  if (0 === 1) {
+    console.log('test');
+  }
   const opts_ = opts || {};
   const commandRE = opts_.onlyClassicMarkup ? CLASSIC_COMMAND_RE : COMMAND_RE;
   return input.map((par, index) =>
