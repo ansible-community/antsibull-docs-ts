@@ -346,6 +346,9 @@ describe('parser', (): void => {
     expect(async () => parse('O(foo:bar:baz)', { errors: 'exception' })).rejects.toThrow(
       'While parsing O() at index 1: Invalid option/return value name "foo:bar:baz"',
     );
+    expect(async () => parse('O(foo.bar.baz#role:bam)', { errors: 'exception' })).rejects.toThrow(
+      'While parsing O() at index 1: Role reference is missing entrypoint',
+    );
   });
   it('bad parameter parsing (no escaping, error message)', (): void => {
     expect(parse('M(')).toEqual([
@@ -453,6 +456,14 @@ describe('parser', (): void => {
         },
       ],
     ]);
+    expect(parse('O(foo.bar.baz#role:bam)', { errors: 'message' })).toEqual([
+      [
+        {
+          type: PartType.ERROR,
+          message: 'While parsing O() at index 1: Role reference is missing entrypoint',
+        },
+      ],
+    ]);
   });
   it('bad parameter parsing (no escaping, ignore error)', (): void => {
     expect(parse('M(', { errors: 'ignore' })).toEqual([[]]);
@@ -483,6 +494,7 @@ describe('parser', (): void => {
     expect(parse('O(f o.b r.b z#bam:foobar)', { errors: 'ignore' })).toEqual([[]]);
     expect(parse('O(foo.bar.baz#b m:foobar)', { errors: 'ignore' })).toEqual([[]]);
     expect(parse('O(foo:bar:baz)', { errors: 'ignore' })).toEqual([[]]);
+    expect(parse('O(foo.bar.baz#role:bam)', { errors: 'ignore' })).toEqual([[]]);
   });
 });
 
