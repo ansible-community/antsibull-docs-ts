@@ -43,6 +43,7 @@ function parseOptionLike(
   }
   const m = /^([^.]+\.[^.]+\.[^#]+)#([^:]+):(.*)$/.exec(text);
   let plugin: PluginIdentifier | undefined;
+  let entrypoint: string | undefined;
   if (m) {
     const pluginFqcn = m[1] as string;
     const pluginType = m[2] as string;
@@ -59,6 +60,17 @@ function parseOptionLike(
     text = text.substring(IGNORE_MARKER.length, text.length);
   } else {
     plugin = opts.current_plugin;
+    entrypoint = opts.role_entrypoint;
+  }
+  if (plugin?.type === 'role') {
+    const idx = text.indexOf(':');
+    if (idx >= 0) {
+      entrypoint = text.substr(0, idx);
+      text = text.substr(idx + 1);
+    }
+    if (entrypoint === undefined) {
+      throw Error('Role reference is missing entrypoint');
+    }
   }
   if (/[:#]/.test(text)) {
     throw Error(`Invalid option/return value name "${text}"`);
@@ -66,6 +78,7 @@ function parseOptionLike(
   return {
     type: type,
     plugin: plugin,
+    entrypoint: entrypoint,
     link: text.replace(/\[([^\]]*)\]/g, '').split('.'),
     name: text,
     value: value,

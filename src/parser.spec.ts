@@ -80,7 +80,7 @@ describe('parser', (): void => {
         { type: PartType.TEXT, text: ' baz ' },
         { type: PartType.OPTION_VALUE, value: ' b,na)\\m, ' },
         { type: PartType.TEXT, text: ' ' },
-        { type: PartType.OPTION_NAME, plugin: undefined, link: ['foo'], name: 'foo', value: undefined },
+        { type: PartType.OPTION_NAME, plugin: undefined, entrypoint: undefined, link: ['foo'], name: 'foo', value: undefined },
         { type: PartType.TEXT, text: ' ' },
       ],
     ]);
@@ -91,6 +91,7 @@ describe('parser', (): void => {
         {
           type: PartType.OPTION_NAME,
           plugin: undefined,
+          entrypoint: undefined,
           link: ['foo'],
           name: 'foo',
           value: undefined,
@@ -102,6 +103,7 @@ describe('parser', (): void => {
         {
           type: PartType.OPTION_NAME,
           plugin: undefined,
+          entrypoint: undefined, 
           link: ['foo'],
           name: 'foo',
           value: undefined,
@@ -113,6 +115,7 @@ describe('parser', (): void => {
         {
           type: PartType.OPTION_NAME,
           plugin: { fqcn: 'foo.bar.baz', type: 'bam' },
+          entrypoint: undefined,
           link: ['foo'],
           name: 'foo',
           value: undefined,
@@ -124,6 +127,7 @@ describe('parser', (): void => {
         {
           type: PartType.OPTION_NAME,
           plugin: { fqcn: 'foo.bar.baz', type: 'bam' },
+          entrypoint: undefined,
           link: ['foo'],
           name: 'foo',
           value: undefined,
@@ -135,6 +139,7 @@ describe('parser', (): void => {
         {
           type: PartType.OPTION_NAME,
           plugin: undefined,
+          entrypoint: undefined,
           link: ['foo'],
           name: 'foo',
           value: 'bar',
@@ -146,6 +151,7 @@ describe('parser', (): void => {
         {
           type: PartType.OPTION_NAME,
           plugin: undefined,
+          entrypoint: undefined,
           link: ['foo', 'baz'],
           name: 'foo.baz',
           value: 'bam',
@@ -157,6 +163,7 @@ describe('parser', (): void => {
         {
           type: PartType.OPTION_NAME,
           plugin: undefined,
+          entrypoint: undefined,
           link: ['foo', 'baz', 'boo'],
           name: 'foo[1].baz[bam.bar.boing].boo',
           value: undefined,
@@ -168,6 +175,7 @@ describe('parser', (): void => {
         {
           type: PartType.OPTION_NAME,
           plugin: { fqcn: 'bar.baz.bam.boo', type: 'lookup' },
+          entrypoint: undefined,
           link: ['foo', 'baz', 'boo'],
           name: 'foo[1].baz[bam.bar.boing].boo',
           value: undefined,
@@ -181,6 +189,7 @@ describe('parser', (): void => {
         {
           type: PartType.RETURN_VALUE,
           plugin: undefined,
+          entrypoint: undefined,
           link: ['foo'],
           name: 'foo',
           value: undefined,
@@ -192,6 +201,7 @@ describe('parser', (): void => {
         {
           type: PartType.RETURN_VALUE,
           plugin: undefined,
+          entrypoint: undefined,
           link: ['foo'],
           name: 'foo',
           value: undefined,
@@ -203,6 +213,7 @@ describe('parser', (): void => {
         {
           type: PartType.RETURN_VALUE,
           plugin: { fqcn: 'foo.bar.baz', type: 'bam' },
+          entrypoint: undefined,
           link: ['foo'],
           name: 'foo',
           value: undefined,
@@ -214,6 +225,7 @@ describe('parser', (): void => {
         {
           type: PartType.RETURN_VALUE,
           plugin: { fqcn: 'foo.bar.baz', type: 'bam' },
+          entrypoint: undefined,
           link: ['foo'],
           name: 'foo',
           value: undefined,
@@ -225,6 +237,7 @@ describe('parser', (): void => {
         {
           type: PartType.RETURN_VALUE,
           plugin: undefined,
+          entrypoint: undefined,
           link: ['foo'],
           name: 'foo',
           value: 'bar',
@@ -236,6 +249,7 @@ describe('parser', (): void => {
         {
           type: PartType.RETURN_VALUE,
           plugin: undefined,
+          entrypoint: undefined,
           link: ['foo', 'baz'],
           name: 'foo.baz',
           value: 'bam',
@@ -247,6 +261,7 @@ describe('parser', (): void => {
         {
           type: PartType.RETURN_VALUE,
           plugin: undefined,
+          entrypoint: undefined,
           link: ['foo', 'baz', 'boo'],
           name: 'foo[1].baz[bam.bar.boing].boo',
           value: undefined,
@@ -258,6 +273,7 @@ describe('parser', (): void => {
         {
           type: PartType.RETURN_VALUE,
           plugin: { fqcn: 'bar.baz.bam.boo', type: 'lookup' },
+          entrypoint: undefined,
           link: ['foo', 'baz', 'boo'],
           name: 'foo[1].baz[bam.bar.boing].boo',
           value: undefined,

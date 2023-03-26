@@ -55,7 +55,7 @@ export function addToDestination(
       case PartType.OPTION_NAME: {
         let url: string | undefined;
         if (part.plugin && opts.pluginOptionLikeLink) {
-          url = opts.pluginOptionLikeLink(part.plugin, 'option', part.link, part.plugin === opts.current_plugin);
+          url = opts.pluginOptionLikeLink(part.plugin, part.entrypoint, 'option', part.link, part.plugin === opts.current_plugin);
         }
         destination.push(opts.formatOptionName(part, url));
         break;
@@ -74,7 +74,7 @@ export function addToDestination(
       case PartType.RETURN_VALUE: {
         let url: string | undefined;
         if (part.plugin && opts.pluginOptionLikeLink) {
-          url = opts.pluginOptionLikeLink(part.plugin, 'retval', part.link, part.plugin === opts.current_plugin);
+          url = opts.pluginOptionLikeLink(part.plugin, part.entrypoint, 'retval', part.link, part.plugin === opts.current_plugin);
         }
         destination.push(opts.formatReturnValue(part, url));
         break;

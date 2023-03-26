@@ -43,6 +43,9 @@ export interface ParsingOptions extends ErrorHandlingOptions {
   /** Should be provided if parsing documentation of a plugin/module/role. */
   current_plugin?: PluginIdentifier;
 
+  /** Should be provided if parsing documentation of a specific role's entrypoint. */
+  role_entrypoint?: string;
+
   /** If set to 'true', only 'classic' Ansible docs markup is accepted. */
   onlyClassicMarkup?: boolean;
 }
@@ -95,6 +98,7 @@ export interface LinkProviders {
   /** Provides a link to a plugin's option or return value. */
   pluginOptionLikeLink?: (
     plugin: PluginIdentifier,
+    entrypoint: string | undefined,
     what: 'option' | 'retval',
     name: string[],
     current_plugin: boolean,

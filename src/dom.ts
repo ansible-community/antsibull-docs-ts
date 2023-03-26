@@ -78,6 +78,7 @@ export interface CodePart extends Part {
 export interface OptionNamePart extends Part {
   type: PartType.OPTION_NAME;
   plugin: PluginIdentifier | undefined;
+  entrypoint: string | undefined;  // provided iff plugin.type == 'role'
   link: string[];
   name: string;
   value: string | undefined;
@@ -96,6 +97,7 @@ export interface EnvVariablePart extends Part {
 export interface ReturnValuePart extends Part {
   type: PartType.RETURN_VALUE;
   plugin: PluginIdentifier | undefined;
+  entrypoint: string | undefined;  // provided iff plugin.type == 'role'
   link: string[];
   name: string;
   value: string | undefined;
