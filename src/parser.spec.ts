@@ -80,7 +80,14 @@ describe('parser', (): void => {
         { type: PartType.TEXT, text: ' baz ' },
         { type: PartType.OPTION_VALUE, value: ' b,na)\\m, ' },
         { type: PartType.TEXT, text: ' ' },
-        { type: PartType.OPTION_NAME, plugin: undefined, entrypoint: undefined, link: ['foo'], name: 'foo', value: undefined },
+        {
+          type: PartType.OPTION_NAME,
+          plugin: undefined,
+          entrypoint: undefined,
+          link: ['foo'],
+          name: 'foo',
+          value: undefined,
+        },
         { type: PartType.TEXT, text: ' ' },
       ],
     ]);
@@ -103,7 +110,7 @@ describe('parser', (): void => {
         {
           type: PartType.OPTION_NAME,
           plugin: undefined,
-          entrypoint: undefined, 
+          entrypoint: undefined,
           link: ['foo'],
           name: 'foo',
           value: undefined,
