@@ -28,6 +28,10 @@ function formatOptionLike(part: OptionNamePart | ReturnValuePart, role: string):
     result.push(part.plugin.type);
     result.push(':');
   }
+  if (part.entrypoint !== undefined) {
+    result.push(part.entrypoint);
+    result.push(':');
+  }
   result.push(part.name);
   if (part.value !== undefined) {
     result.push('=');

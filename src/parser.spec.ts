@@ -80,7 +80,14 @@ describe('parser', (): void => {
         { type: PartType.TEXT, text: ' baz ' },
         { type: PartType.OPTION_VALUE, value: ' b,na)\\m, ' },
         { type: PartType.TEXT, text: ' ' },
-        { type: PartType.OPTION_NAME, plugin: undefined, link: ['foo'], name: 'foo', value: undefined },
+        {
+          type: PartType.OPTION_NAME,
+          plugin: undefined,
+          entrypoint: undefined,
+          link: ['foo'],
+          name: 'foo',
+          value: undefined,
+        },
         { type: PartType.TEXT, text: ' ' },
       ],
     ]);
@@ -91,6 +98,7 @@ describe('parser', (): void => {
         {
           type: PartType.OPTION_NAME,
           plugin: undefined,
+          entrypoint: undefined,
           link: ['foo'],
           name: 'foo',
           value: undefined,
@@ -102,6 +110,7 @@ describe('parser', (): void => {
         {
           type: PartType.OPTION_NAME,
           plugin: undefined,
+          entrypoint: undefined,
           link: ['foo'],
           name: 'foo',
           value: undefined,
@@ -113,6 +122,7 @@ describe('parser', (): void => {
         {
           type: PartType.OPTION_NAME,
           plugin: { fqcn: 'foo.bar.baz', type: 'bam' },
+          entrypoint: undefined,
           link: ['foo'],
           name: 'foo',
           value: undefined,
@@ -124,6 +134,7 @@ describe('parser', (): void => {
         {
           type: PartType.OPTION_NAME,
           plugin: { fqcn: 'foo.bar.baz', type: 'bam' },
+          entrypoint: undefined,
           link: ['foo'],
           name: 'foo',
           value: undefined,
@@ -135,6 +146,7 @@ describe('parser', (): void => {
         {
           type: PartType.OPTION_NAME,
           plugin: undefined,
+          entrypoint: undefined,
           link: ['foo'],
           name: 'foo',
           value: 'bar',
@@ -146,6 +158,7 @@ describe('parser', (): void => {
         {
           type: PartType.OPTION_NAME,
           plugin: undefined,
+          entrypoint: undefined,
           link: ['foo', 'baz'],
           name: 'foo.baz',
           value: 'bam',
@@ -157,6 +170,7 @@ describe('parser', (): void => {
         {
           type: PartType.OPTION_NAME,
           plugin: undefined,
+          entrypoint: undefined,
           link: ['foo', 'baz', 'boo'],
           name: 'foo[1].baz[bam.bar.boing].boo',
           value: undefined,
@@ -168,6 +182,7 @@ describe('parser', (): void => {
         {
           type: PartType.OPTION_NAME,
           plugin: { fqcn: 'bar.baz.bam.boo', type: 'lookup' },
+          entrypoint: undefined,
           link: ['foo', 'baz', 'boo'],
           name: 'foo[1].baz[bam.bar.boing].boo',
           value: undefined,
@@ -181,6 +196,7 @@ describe('parser', (): void => {
         {
           type: PartType.RETURN_VALUE,
           plugin: undefined,
+          entrypoint: undefined,
           link: ['foo'],
           name: 'foo',
           value: undefined,
@@ -192,6 +208,7 @@ describe('parser', (): void => {
         {
           type: PartType.RETURN_VALUE,
           plugin: undefined,
+          entrypoint: undefined,
           link: ['foo'],
           name: 'foo',
           value: undefined,
@@ -203,6 +220,7 @@ describe('parser', (): void => {
         {
           type: PartType.RETURN_VALUE,
           plugin: { fqcn: 'foo.bar.baz', type: 'bam' },
+          entrypoint: undefined,
           link: ['foo'],
           name: 'foo',
           value: undefined,
@@ -214,6 +232,7 @@ describe('parser', (): void => {
         {
           type: PartType.RETURN_VALUE,
           plugin: { fqcn: 'foo.bar.baz', type: 'bam' },
+          entrypoint: undefined,
           link: ['foo'],
           name: 'foo',
           value: undefined,
@@ -225,6 +244,7 @@ describe('parser', (): void => {
         {
           type: PartType.RETURN_VALUE,
           plugin: undefined,
+          entrypoint: undefined,
           link: ['foo'],
           name: 'foo',
           value: 'bar',
@@ -236,6 +256,7 @@ describe('parser', (): void => {
         {
           type: PartType.RETURN_VALUE,
           plugin: undefined,
+          entrypoint: undefined,
           link: ['foo', 'baz'],
           name: 'foo.baz',
           value: 'bam',
@@ -247,6 +268,7 @@ describe('parser', (): void => {
         {
           type: PartType.RETURN_VALUE,
           plugin: undefined,
+          entrypoint: undefined,
           link: ['foo', 'baz', 'boo'],
           name: 'foo[1].baz[bam.bar.boing].boo',
           value: undefined,
@@ -258,6 +280,7 @@ describe('parser', (): void => {
         {
           type: PartType.RETURN_VALUE,
           plugin: { fqcn: 'bar.baz.bam.boo', type: 'lookup' },
+          entrypoint: undefined,
           link: ['foo', 'baz', 'boo'],
           name: 'foo[1].baz[bam.bar.boing].boo',
           value: undefined,
@@ -322,6 +345,9 @@ describe('parser', (): void => {
     );
     expect(async () => parse('O(foo:bar:baz)', { errors: 'exception' })).rejects.toThrow(
       'While parsing O() at index 1: Invalid option/return value name "foo:bar:baz"',
+    );
+    expect(async () => parse('O(foo.bar.baz#role:bam)', { errors: 'exception' })).rejects.toThrow(
+      'While parsing O() at index 1: Role reference is missing entrypoint',
     );
   });
   it('bad parameter parsing (no escaping, error message)', (): void => {
@@ -430,6 +456,14 @@ describe('parser', (): void => {
         },
       ],
     ]);
+    expect(parse('O(foo.bar.baz#role:bam)', { errors: 'message' })).toEqual([
+      [
+        {
+          type: PartType.ERROR,
+          message: 'While parsing O() at index 1: Role reference is missing entrypoint',
+        },
+      ],
+    ]);
   });
   it('bad parameter parsing (no escaping, ignore error)', (): void => {
     expect(parse('M(', { errors: 'ignore' })).toEqual([[]]);
@@ -460,6 +494,7 @@ describe('parser', (): void => {
     expect(parse('O(f o.b r.b z#bam:foobar)', { errors: 'ignore' })).toEqual([[]]);
     expect(parse('O(foo.bar.baz#b m:foobar)', { errors: 'ignore' })).toEqual([[]]);
     expect(parse('O(foo:bar:baz)', { errors: 'ignore' })).toEqual([[]]);
+    expect(parse('O(foo.bar.baz#role:bam)', { errors: 'ignore' })).toEqual([[]]);
   });
 });
 
