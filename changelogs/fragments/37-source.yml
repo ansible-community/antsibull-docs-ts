@@ -1,0 +1,4 @@
+minor_changes:
+  - "Allow to add markup source to every paragraph part (https://github.com/ansible-community/antsibull-docs-ts/pull/37)."
+breaking_changes:
+  - "All DOM parts have a new ``source`` property, which must be a string or ``undefined`` (https://github.com/ansible-community/antsibull-docs-ts/pull/37)."

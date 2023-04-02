@@ -15,7 +15,10 @@ describe('parser', (): void => {
     expect(parse([''])).toEqual([[]]);
   });
   it('simple string', (): void => {
-    expect(parse('test')).toEqual([[{ type: PartType.TEXT, text: 'test' }]]);
+    expect(parse('test')).toEqual([[{ type: PartType.TEXT, text: 'test', source: undefined }]]);
+  });
+  it('simple string (with source)', (): void => {
+    expect(parse('test', { addSource: true })).toEqual([[{ type: PartType.TEXT, text: 'test', source: 'test' }]]);
   });
   it('classic markup test', (): void => {
     expect(
@@ -24,22 +27,49 @@ describe('parser', (): void => {
       ),
     ).toEqual([
       [
-        { type: PartType.TEXT, text: 'foo ' },
-        { type: PartType.ITALIC, text: 'bar' },
-        { type: PartType.TEXT, text: ' baz ' },
-        { type: PartType.CODE, text: ' bam ' },
-        { type: PartType.TEXT, text: ' ' },
-        { type: PartType.BOLD, text: ' ( boo ' },
-        { type: PartType.TEXT, text: ' ) ' },
-        { type: PartType.URL, url: 'https://example.com/?foo=bar' },
-        { type: PartType.HORIZONTAL_LINE },
-        { type: PartType.TEXT, text: ' ' },
-        { type: PartType.LINK, text: 'foo', url: 'https://bar.com' },
-        { type: PartType.TEXT, text: ' ' },
-        { type: PartType.RST_REF, text: ' a', ref: 'b ' },
-        { type: PartType.MODULE, fqcn: 'foo.bar.baz' },
-        { type: PartType.TEXT, text: 'HORIZONTALLINEx ' },
-        { type: PartType.MODULE, fqcn: 'foo.bar.baz.bam' },
+        { type: PartType.TEXT, text: 'foo ', source: undefined },
+        { type: PartType.ITALIC, text: 'bar', source: undefined },
+        { type: PartType.TEXT, text: ' baz ', source: undefined },
+        { type: PartType.CODE, text: ' bam ', source: undefined },
+        { type: PartType.TEXT, text: ' ', source: undefined },
+        { type: PartType.BOLD, text: ' ( boo ', source: undefined },
+        { type: PartType.TEXT, text: ' ) ', source: undefined },
+        { type: PartType.URL, url: 'https://example.com/?foo=bar', source: undefined },
+        { type: PartType.HORIZONTAL_LINE, source: undefined },
+        { type: PartType.TEXT, text: ' ', source: undefined },
+        { type: PartType.LINK, text: 'foo', url: 'https://bar.com', source: undefined },
+        { type: PartType.TEXT, text: ' ', source: undefined },
+        { type: PartType.RST_REF, text: ' a', ref: 'b ', source: undefined },
+        { type: PartType.MODULE, fqcn: 'foo.bar.baz', source: undefined },
+        { type: PartType.TEXT, text: 'HORIZONTALLINEx ', source: undefined },
+        { type: PartType.MODULE, fqcn: 'foo.bar.baz.bam', source: undefined },
+      ],
+    ]);
+  });
+  it('classic markup test (with source)', (): void => {
+    expect(
+      parse(
+        'foo I(bar) baz C( bam ) B( ( boo ) ) U(https://example.com/?foo=bar)HORIZONTALLINE L(foo ,  https://bar.com) R( a , b )M(foo.bar.baz)HORIZONTALLINEx M(foo.bar.baz.bam)',
+        { addSource: true },
+      ),
+    ).toEqual([
+      [
+        { type: PartType.TEXT, text: 'foo ', source: 'foo ' },
+        { type: PartType.ITALIC, text: 'bar', source: 'I(bar)' },
+        { type: PartType.TEXT, text: ' baz ', source: ' baz ' },
+        { type: PartType.CODE, text: ' bam ', source: 'C( bam )' },
+        { type: PartType.TEXT, text: ' ', source: ' ' },
+        { type: PartType.BOLD, text: ' ( boo ', source: 'B( ( boo )' },
+        { type: PartType.TEXT, text: ' ) ', source: ' ) ' },
+        { type: PartType.URL, url: 'https://example.com/?foo=bar', source: 'U(https://example.com/?foo=bar)' },
+        { type: PartType.HORIZONTAL_LINE, source: 'HORIZONTALLINE' },
+        { type: PartType.TEXT, text: ' ', source: ' ' },
+        { type: PartType.LINK, text: 'foo', url: 'https://bar.com', source: 'L(foo ,  https://bar.com)' },
+        { type: PartType.TEXT, text: ' ', source: ' ' },
+        { type: PartType.RST_REF, text: ' a', ref: 'b ', source: 'R( a , b )' },
+        { type: PartType.MODULE, fqcn: 'foo.bar.baz', source: 'M(foo.bar.baz)' },
+        { type: PartType.TEXT, text: 'HORIZONTALLINEx ', source: 'HORIZONTALLINEx ' },
+        { type: PartType.MODULE, fqcn: 'foo.bar.baz.bam', source: 'M(foo.bar.baz.bam)' },
       ],
     ]);
   });
@@ -51,35 +81,35 @@ describe('parser', (): void => {
       ),
     ).toEqual([
       [
-        { type: PartType.TEXT, text: 'foo ' },
-        { type: PartType.ITALIC, text: 'bar' },
-        { type: PartType.TEXT, text: ' baz ' },
-        { type: PartType.CODE, text: ' bam ' },
-        { type: PartType.TEXT, text: ' ' },
-        { type: PartType.BOLD, text: ' ( boo ' },
-        { type: PartType.TEXT, text: ' ) ' },
-        { type: PartType.URL, url: 'https://example.com/?foo=bar' },
-        { type: PartType.HORIZONTAL_LINE },
-        { type: PartType.TEXT, text: ' ' },
-        { type: PartType.LINK, text: 'foo', url: 'https://bar.com' },
-        { type: PartType.TEXT, text: ' ' },
-        { type: PartType.RST_REF, text: ' a', ref: 'b ' },
-        { type: PartType.MODULE, fqcn: 'foo.bar.baz' },
-        { type: PartType.TEXT, text: 'HORIZONTALLINEx ' },
-        { type: PartType.MODULE, fqcn: 'foo.bar.baz.bam' },
+        { type: PartType.TEXT, text: 'foo ', source: undefined },
+        { type: PartType.ITALIC, text: 'bar', source: undefined },
+        { type: PartType.TEXT, text: ' baz ', source: undefined },
+        { type: PartType.CODE, text: ' bam ', source: undefined },
+        { type: PartType.TEXT, text: ' ', source: undefined },
+        { type: PartType.BOLD, text: ' ( boo ', source: undefined },
+        { type: PartType.TEXT, text: ' ) ', source: undefined },
+        { type: PartType.URL, url: 'https://example.com/?foo=bar', source: undefined },
+        { type: PartType.HORIZONTAL_LINE, source: undefined },
+        { type: PartType.TEXT, text: ' ', source: undefined },
+        { type: PartType.LINK, text: 'foo', url: 'https://bar.com', source: undefined },
+        { type: PartType.TEXT, text: ' ', source: undefined },
+        { type: PartType.RST_REF, text: ' a', ref: 'b ', source: undefined },
+        { type: PartType.MODULE, fqcn: 'foo.bar.baz', source: undefined },
+        { type: PartType.TEXT, text: 'HORIZONTALLINEx ', source: undefined },
+        { type: PartType.MODULE, fqcn: 'foo.bar.baz.bam', source: undefined },
       ],
     ]);
   });
   it('semantic markup test', (): void => {
     expect(parse('foo E(a\\),b) P(foo.bar.baz#bam) baz V( b\\,\\na\\)\\\\m\\, ) O(foo) ')).toEqual([
       [
-        { type: PartType.TEXT, text: 'foo ' },
-        { type: PartType.ENV_VARIABLE, name: 'a),b' },
-        { type: PartType.TEXT, text: ' ' },
-        { type: PartType.PLUGIN, plugin: { fqcn: 'foo.bar.baz', type: 'bam' } },
-        { type: PartType.TEXT, text: ' baz ' },
-        { type: PartType.OPTION_VALUE, value: ' b,na)\\m, ' },
-        { type: PartType.TEXT, text: ' ' },
+        { type: PartType.TEXT, text: 'foo ', source: undefined },
+        { type: PartType.ENV_VARIABLE, name: 'a),b', source: undefined },
+        { type: PartType.TEXT, text: ' ', source: undefined },
+        { type: PartType.PLUGIN, plugin: { fqcn: 'foo.bar.baz', type: 'bam' }, source: undefined },
+        { type: PartType.TEXT, text: ' baz ', source: undefined },
+        { type: PartType.OPTION_VALUE, value: ' b,na)\\m, ', source: undefined },
+        { type: PartType.TEXT, text: ' ', source: undefined },
         {
           type: PartType.OPTION_NAME,
           plugin: undefined,
@@ -87,10 +117,36 @@ describe('parser', (): void => {
           link: ['foo'],
           name: 'foo',
           value: undefined,
+          source: undefined,
         },
-        { type: PartType.TEXT, text: ' ' },
+        { type: PartType.TEXT, text: ' ', source: undefined },
       ],
     ]);
+  });
+  it('semantic markup test (with source)', (): void => {
+    expect(parse('foo E(a\\),b) P(foo.bar.baz#bam) baz V( b\\,\\na\\)\\\\m\\, ) O(foo) ', { addSource: true })).toEqual(
+      [
+        [
+          { type: PartType.TEXT, text: 'foo ', source: 'foo ' },
+          { type: PartType.ENV_VARIABLE, name: 'a),b', source: 'E(a\\),b)' },
+          { type: PartType.TEXT, text: ' ', source: ' ' },
+          { type: PartType.PLUGIN, plugin: { fqcn: 'foo.bar.baz', type: 'bam' }, source: 'P(foo.bar.baz#bam)' },
+          { type: PartType.TEXT, text: ' baz ', source: ' baz ' },
+          { type: PartType.OPTION_VALUE, value: ' b,na)\\m, ', source: 'V( b\\,\\na\\)\\\\m\\, )' },
+          { type: PartType.TEXT, text: ' ', source: ' ' },
+          {
+            type: PartType.OPTION_NAME,
+            plugin: undefined,
+            entrypoint: undefined,
+            link: ['foo'],
+            name: 'foo',
+            value: undefined,
+            source: 'O(foo)',
+          },
+          { type: PartType.TEXT, text: ' ', source: ' ' },
+        ],
+      ],
+    );
   });
   it('semantic markup option name', (): void => {
     expect(parse('O(foo)')).toEqual([
@@ -102,6 +158,7 @@ describe('parser', (): void => {
           link: ['foo'],
           name: 'foo',
           value: undefined,
+          source: undefined,
         },
       ],
     ]);
@@ -114,6 +171,7 @@ describe('parser', (): void => {
           link: ['foo'],
           name: 'foo',
           value: undefined,
+          source: undefined,
         },
       ],
     ]);
@@ -126,6 +184,7 @@ describe('parser', (): void => {
           link: ['foo'],
           name: 'foo',
           value: undefined,
+          source: undefined,
         },
       ],
     ]);
@@ -138,6 +197,7 @@ describe('parser', (): void => {
           link: ['foo'],
           name: 'foo',
           value: undefined,
+          source: undefined,
         },
       ],
     ]);
@@ -150,6 +210,7 @@ describe('parser', (): void => {
           link: ['foo'],
           name: 'foo',
           value: 'bar',
+          source: undefined,
         },
       ],
     ]);
@@ -162,6 +223,7 @@ describe('parser', (): void => {
           link: ['foo', 'baz'],
           name: 'foo.baz',
           value: 'bam',
+          source: undefined,
         },
       ],
     ]);
@@ -174,6 +236,7 @@ describe('parser', (): void => {
           link: ['foo', 'baz', 'boo'],
           name: 'foo[1].baz[bam.bar.boing].boo',
           value: undefined,
+          source: undefined,
         },
       ],
     ]);
@@ -186,6 +249,7 @@ describe('parser', (): void => {
           link: ['foo', 'baz', 'boo'],
           name: 'foo[1].baz[bam.bar.boing].boo',
           value: undefined,
+          source: undefined,
         },
       ],
     ]);
@@ -200,6 +264,7 @@ describe('parser', (): void => {
           link: ['foo'],
           name: 'foo',
           value: undefined,
+          source: undefined,
         },
       ],
     ]);
@@ -212,6 +277,7 @@ describe('parser', (): void => {
           link: ['foo'],
           name: 'foo',
           value: undefined,
+          source: undefined,
         },
       ],
     ]);
@@ -224,6 +290,7 @@ describe('parser', (): void => {
           link: ['foo'],
           name: 'foo',
           value: undefined,
+          source: undefined,
         },
       ],
     ]);
@@ -236,6 +303,7 @@ describe('parser', (): void => {
           link: ['foo'],
           name: 'foo',
           value: undefined,
+          source: undefined,
         },
       ],
     ]);
@@ -248,6 +316,7 @@ describe('parser', (): void => {
           link: ['foo'],
           name: 'foo',
           value: 'bar',
+          source: undefined,
         },
       ],
     ]);
@@ -260,6 +329,7 @@ describe('parser', (): void => {
           link: ['foo', 'baz'],
           name: 'foo.baz',
           value: 'bam',
+          source: undefined,
         },
       ],
     ]);
@@ -272,6 +342,7 @@ describe('parser', (): void => {
           link: ['foo', 'baz', 'boo'],
           name: 'foo[1].baz[bam.bar.boing].boo',
           value: undefined,
+          source: undefined,
         },
       ],
     ]);
@@ -284,6 +355,7 @@ describe('parser', (): void => {
           link: ['foo', 'baz', 'boo'],
           name: 'foo[1].baz[bam.bar.boing].boo',
           value: undefined,
+          source: undefined,
         },
       ],
     ]);
