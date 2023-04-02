@@ -120,6 +120,8 @@ export interface MDOptions extends CommonExportOptions, CommonFormatOptions, Lin
 
 export interface RSTOptions extends CommonExportOptions, CommonFormatOptions {}
 
+export interface AnsibleDocTextOptions extends CommonExportOptions, CommonFormatOptions {}
+
 export function mergeOpts<T extends CommonFormatOptions>(options: T, fallback: AllFormatOptions): T & AllFormatOptions {
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   const result: any = Object.assign({}, fallback, options);
