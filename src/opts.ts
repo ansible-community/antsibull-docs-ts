@@ -49,8 +49,11 @@ export interface ParsingOptions extends ErrorHandlingOptions {
   /** If set to 'true', only 'classic' Ansible docs markup is accepted. */
   onlyClassicMarkup?: boolean;
 
-  /** If set to 'true', add source information to every part ('source' attribute). */
+  /** If set to 'true' (default is 'false'), add source information to every part ('source' attribute). */
   addSource?: boolean;
+
+  /** If set to 'true' (default is 'true'), include the faulty markup in error messages. */
+  helpfulErrors?: boolean;
 }
 
 export interface CommonExportOptions extends ErrorHandlingOptions {

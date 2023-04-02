@@ -361,75 +361,75 @@ describe('parser', (): void => {
     ]);
   });
   it('bad parameter parsing (no escaping, throw error)', (): void => {
-    expect(async () => parse('M(', { errors: 'exception' })).rejects.toThrow(
+    expect(async () => parse('M(', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
       'While parsing M() at index 1: Cannot find closing ")" after last parameter',
     );
-    expect(async () => parse('M(foo', { errors: 'exception' })).rejects.toThrow(
+    expect(async () => parse('M(foo', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
       'While parsing M() at index 1: Cannot find closing ")" after last parameter',
     );
-    expect(async () => parse('L(foo)', { errors: 'exception' })).rejects.toThrow(
+    expect(async () => parse('L(foo)', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
       'While parsing L() at index 1: Cannot find comma separating parameter 1 from the next one',
     );
-    expect(async () => parse('L(foo,bar', { errors: 'exception' })).rejects.toThrow(
+    expect(async () => parse('L(foo,bar', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
       'While parsing L() at index 1: Cannot find closing ")" after last parameter',
     );
-    expect(async () => parse('L(foo), bar', { errors: 'exception' })).rejects.toThrow(
+    expect(async () => parse('L(foo), bar', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
       'While parsing L() at index 1: Cannot find closing ")" after last parameter',
     );
-    expect(async () => parse('P(', { errors: 'exception' })).rejects.toThrow(
+    expect(async () => parse('P(', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
       'While parsing P() at index 1: Cannot find closing ")" after last parameter',
     );
-    expect(async () => parse('P(foo', { errors: 'exception' })).rejects.toThrow(
+    expect(async () => parse('P(foo', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
       'While parsing P() at index 1: Cannot find closing ")" after last parameter',
     );
   });
   it('bad module ref (throw error)', (): void => {
-    expect(async () => parse('M(foo)', { errors: 'exception' })).rejects.toThrow(
+    expect(async () => parse('M(foo)', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
       'While parsing M() at index 1: Module name "foo" is not a FQCN',
     );
-    expect(async () => parse(' M(foo.bar)', { errors: 'exception' })).rejects.toThrow(
+    expect(async () => parse(' M(foo.bar)', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
       'While parsing M() at index 2: Module name "foo.bar" is not a FQCN',
     );
-    expect(async () => parse('  M(foo. bar.baz)', { errors: 'exception' })).rejects.toThrow(
+    expect(async () => parse('  M(foo. bar.baz)', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
       'While parsing M() at index 3: Module name "foo. bar.baz" is not a FQCN',
     );
-    expect(async () => parse('   M(foo)', { errors: 'exception' })).rejects.toThrow(
+    expect(async () => parse('   M(foo)', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
       'While parsing M() at index 4: Module name "foo" is not a FQCN',
     );
   });
   it('bad plugin ref (throw error)', (): void => {
-    expect(async () => parse('P(foo)', { errors: 'exception' })).rejects.toThrow(
+    expect(async () => parse('P(foo)', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
       'While parsing P() at index 1: Parameter "foo" is not of the form FQCN#type',
     );
-    expect(async () => parse('P(f o.b r.b z#bar)', { errors: 'exception' })).rejects.toThrow(
+    expect(async () => parse('P(f o.b r.b z#bar)', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
       'While parsing P() at index 1: Plugin name "f o.b r.b z" is not a FQCN',
     );
-    expect(async () => parse('P(foo.bar.baz#b m)', { errors: 'exception' })).rejects.toThrow(
+    expect(async () => parse('P(foo.bar.baz#b m)', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
       'While parsing P() at index 1: Plugin type "b m" is not valid',
     );
   });
   it('bad option name/return value (throw error)', (): void => {
-    expect(async () => parse('O(f o.b r.b z#bam:foobar)', { errors: 'exception' })).rejects.toThrow(
-      'While parsing O() at index 1: Plugin name "f o.b r.b z" is not a FQCN',
-    );
-    expect(async () => parse('O(foo.bar.baz#b m:foobar)', { errors: 'exception' })).rejects.toThrow(
-      'While parsing O() at index 1: Plugin type "b m" is not valid',
-    );
-    expect(async () => parse('O(foo:bar:baz)', { errors: 'exception' })).rejects.toThrow(
+    expect(async () =>
+      parse('O(f o.b r.b z#bam:foobar)', { errors: 'exception', helpfulErrors: false }),
+    ).rejects.toThrow('While parsing O() at index 1: Plugin name "f o.b r.b z" is not a FQCN');
+    expect(async () =>
+      parse('O(foo.bar.baz#b m:foobar)', { errors: 'exception', helpfulErrors: false }),
+    ).rejects.toThrow('While parsing O() at index 1: Plugin type "b m" is not valid');
+    expect(async () => parse('O(foo:bar:baz)', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
       'While parsing O() at index 1: Invalid option/return value name "foo:bar:baz"',
     );
-    expect(async () => parse('O(foo.bar.baz#role:bam)', { errors: 'exception' })).rejects.toThrow(
+    expect(async () => parse('O(foo.bar.baz#role:bam)', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
       'While parsing O() at index 1: Role reference is missing entrypoint',
     );
   });
   it('bad parameter parsing (no escaping, error message)', (): void => {
-    expect(parse('M(')).toEqual([
+    expect(parse('M(', { helpfulErrors: false })).toEqual([
       [{ type: PartType.ERROR, message: 'While parsing M() at index 1: Cannot find closing ")" after last parameter' }],
     ]);
-    expect(parse('M(foo', { errors: 'message' })).toEqual([
+    expect(parse('M(foo', { errors: 'message', helpfulErrors: false })).toEqual([
       [{ type: PartType.ERROR, message: 'While parsing M() at index 1: Cannot find closing ")" after last parameter' }],
     ]);
-    expect(parse('L(foo)', { errors: 'message' })).toEqual([
+    expect(parse('L(foo)', { errors: 'message', helpfulErrors: false })).toEqual([
       [
         {
           type: PartType.ERROR,
@@ -437,30 +437,30 @@ describe('parser', (): void => {
         },
       ],
     ]);
-    expect(parse('L(foo,bar', { errors: 'message' })).toEqual([
+    expect(parse('L(foo,bar', { errors: 'message', helpfulErrors: false })).toEqual([
       [{ type: PartType.ERROR, message: 'While parsing L() at index 1: Cannot find closing ")" after last parameter' }],
     ]);
-    expect(parse('L(foo), bar', { errors: 'message' })).toEqual([
+    expect(parse('L(foo), bar', { errors: 'message', helpfulErrors: false })).toEqual([
       [{ type: PartType.ERROR, message: 'While parsing L() at index 1: Cannot find closing ")" after last parameter' }],
     ]);
-    expect(parse('P(')).toEqual([
+    expect(parse('P(', { helpfulErrors: false })).toEqual([
       [{ type: PartType.ERROR, message: 'While parsing P() at index 1: Cannot find closing ")" after last parameter' }],
     ]);
-    expect(parse('P(foo', { errors: 'message' })).toEqual([
+    expect(parse('P(foo', { errors: 'message', helpfulErrors: false })).toEqual([
       [{ type: PartType.ERROR, message: 'While parsing P() at index 1: Cannot find closing ")" after last parameter' }],
     ]);
   });
   it('bad module ref (error message)', (): void => {
-    expect(parse('M(foo)')).toEqual([
+    expect(parse('M(foo)', { helpfulErrors: false })).toEqual([
       [{ type: PartType.ERROR, message: 'While parsing M() at index 1: Module name "foo" is not a FQCN' }],
     ]);
-    expect(parse(' M(foo.bar)', { errors: 'message' })).toEqual([
+    expect(parse(' M(foo.bar)', { errors: 'message', helpfulErrors: false })).toEqual([
       [
         { type: PartType.TEXT, text: ' ' },
         { type: PartType.ERROR, message: 'While parsing M() at index 2: Module name "foo.bar" is not a FQCN' },
       ],
     ]);
-    expect(parse('  M(foo. bar.baz)', { errors: 'message' })).toEqual([
+    expect(parse('  M(foo. bar.baz)', { errors: 'message', helpfulErrors: false })).toEqual([
       [
         { type: PartType.TEXT, text: '  ' },
         {
@@ -469,7 +469,7 @@ describe('parser', (): void => {
         },
       ],
     ]);
-    expect(parse('   M(foo) baz', { errors: 'message' })).toEqual([
+    expect(parse('   M(foo) baz', { errors: 'message', helpfulErrors: false })).toEqual([
       [
         { type: PartType.TEXT, text: '   ' },
         { type: PartType.ERROR, message: 'While parsing M() at index 4: Module name "foo" is not a FQCN' },
@@ -478,7 +478,7 @@ describe('parser', (): void => {
     ]);
   });
   it('bad plugin ref (error message)', (): void => {
-    expect(parse('P(foo)')).toEqual([
+    expect(parse('P(foo)', { helpfulErrors: false })).toEqual([
       [
         {
           type: PartType.ERROR,
@@ -486,7 +486,7 @@ describe('parser', (): void => {
         },
       ],
     ]);
-    expect(parse('P(f o.b r.b z#bar)', { errors: 'message' })).toEqual([
+    expect(parse('P(f o.b r.b z#bar)', { errors: 'message', helpfulErrors: false })).toEqual([
       [
         {
           type: PartType.ERROR,
@@ -494,7 +494,7 @@ describe('parser', (): void => {
         },
       ],
     ]);
-    expect(parse('P(foo.bar.baz#b m)', { errors: 'message' })).toEqual([
+    expect(parse('P(foo.bar.baz#b m)', { errors: 'message', helpfulErrors: false })).toEqual([
       [
         {
           type: PartType.ERROR,
@@ -504,7 +504,7 @@ describe('parser', (): void => {
     ]);
   });
   it('bad option name/return value (error message)', (): void => {
-    expect(parse('O(f o.b r.b z#bam:foobar)')).toEqual([
+    expect(parse('O(f o.b r.b z#bam:foobar)', { helpfulErrors: false })).toEqual([
       [
         {
           type: PartType.ERROR,
@@ -512,7 +512,7 @@ describe('parser', (): void => {
         },
       ],
     ]);
-    expect(parse('O(foo.bar.baz#b m:foobar)', { errors: 'message' })).toEqual([
+    expect(parse('O(foo.bar.baz#b m:foobar)', { errors: 'message', helpfulErrors: false })).toEqual([
       [
         {
           type: PartType.ERROR,
@@ -520,7 +520,7 @@ describe('parser', (): void => {
         },
       ],
     ]);
-    expect(parse('O(foo:bar:baz)', { errors: 'message' })).toEqual([
+    expect(parse('O(foo:bar:baz)', { errors: 'message', helpfulErrors: false })).toEqual([
       [
         {
           type: PartType.ERROR,
@@ -528,7 +528,7 @@ describe('parser', (): void => {
         },
       ],
     ]);
-    expect(parse('O(foo.bar.baz#role:bam)', { errors: 'message' })).toEqual([
+    expect(parse('O(foo.bar.baz#role:bam)', { errors: 'message', helpfulErrors: false })).toEqual([
       [
         {
           type: PartType.ERROR,
@@ -603,8 +603,12 @@ describe('parser engine', (): void => {
     );
   });
   it('combine wrong regexp with command map', (): void => {
-    expect(parseString('A B()', commandsReA, commandsMapA, {}, '')).toEqual([
+    expect(parseString('A B()', commandsReA, commandsMapA, { helpfulErrors: false }, '')).toEqual([
       { message: 'While parsing A at index 1: boo!', type: PartType.ERROR },
+      { text: ' B()', type: PartType.TEXT },
+    ]);
+    expect(parseString('A B()', commandsReA, commandsMapA, {}, '')).toEqual([
+      { message: 'While parsing "A" at index 1: boo!', type: PartType.ERROR },
       { text: ' B()', type: PartType.TEXT },
     ]);
   });

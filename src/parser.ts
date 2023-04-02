@@ -316,7 +316,11 @@ export function parseString(
       }
     }
     if (error !== undefined) {
-      error = `While parsing ${cmd}${command.parameters > 0 ? '()' : ''} at index ${match.index + 1}${where}: ${error}`;
+      const errorSource =
+        opts.helpfulErrors ?? true
+          ? `"${input.slice(index, endIndex)}"`
+          : `${cmd}${command.parameters > 0 ? '()' : ''}`;
+      error = `While parsing ${errorSource} at index ${match.index + 1}${where}: ${error}`;
       switch (opts.errors || 'message') {
         case 'ignore':
           break;
