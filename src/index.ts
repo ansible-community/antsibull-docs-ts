@@ -9,6 +9,7 @@ export { parse } from './parser';
 export * as dom from './dom';
 
 // Output
+export { toAnsibleDocText } from './ansible-doc-text';
 export { quoteHTML, toHTML } from './html';
 export { quoteMD, toMD } from './md';
 export { quoteRST, toRST } from './rst';

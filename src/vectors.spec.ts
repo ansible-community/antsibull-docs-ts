@@ -12,6 +12,7 @@ import { parse } from './parser';
 import { toHTML } from './html';
 import { toMD } from './md';
 import { toRST } from './rst';
+import { toAnsibleDocText } from './ansible-doc-text';
 
 describe('vectors', (): void => {
   const data = readFileSync('test-vectors.yaml', 'utf8');
@@ -54,6 +55,13 @@ describe('vectors', (): void => {
     if (test_data.source !== undefined && test_data.rst !== undefined) {
       it(`${test_name} (Ansible doc => RST)`, (): void => {
         expect(toRST(parse(test_data.source, test_data.parse_opts), test_data.rst_opts)).toEqual(test_data.rst);
+      });
+    }
+    if (test_data.source !== undefined && test_data.ansible_doc_text !== undefined) {
+      it(`${test_name} (Ansible doc => ansible-doc text output)`, (): void => {
+        expect(
+          toAnsibleDocText(parse(test_data.source, test_data.parse_opts), test_data.ansible_doc_text_opts),
+        ).toEqual(test_data.ansible_doc_text);
       });
     }
   }
