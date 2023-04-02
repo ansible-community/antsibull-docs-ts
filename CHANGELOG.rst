@@ -5,6 +5,38 @@ antsibull-docs -- TypeScript library for processing Ansible documentation markup
 .. contents:: Topics
 
 
+v0.2.0
+======
+
+Release Summary
+---------------
+
+New major release that increases compatibility with the `Python code in antsibull-docs-parser <https://github.com/ansible-community/antsibull-docs-parser>`__.
+
+Minor Changes
+-------------
+
+- Add support for ansible-doc like text output (https://github.com/ansible-community/antsibull-docs-ts/pull/36).
+- Add support for semantic markup in roles (https://github.com/ansible-community/antsibull-docs-ts/pull/31).
+- Allow to add markup source to every paragraph part (https://github.com/ansible-community/antsibull-docs-ts/pull/37).
+- Can switch between error messages containing a shortened version of the faulty markup or the full faulty markup command (https://github.com/ansible-community/antsibull-docs-ts/pull/38).
+- Improve error messages by removing superfluous second ``Error:`` (https://github.com/ansible-community/antsibull-docs-ts/pull/22).
+- Make parsing of ``P(...)`` more similar to Python code with respect to error reporting (https://github.com/ansible-community/antsibull-docs-ts/pull/22).
+
+Breaking Changes / Porting Guide
+--------------------------------
+
+- All DOM parts have a new ``source`` property, which must be a string or ``undefined`` (https://github.com/ansible-community/antsibull-docs-ts/pull/37).
+- By default, the error messages now contain the full faulty markup command (https://github.com/ansible-community/antsibull-docs-ts/pull/38).
+- Extend ``OptionNamePart`` and ``ReturnValuePart`` interfaces by adding ``entrypoint`` (https://github.com/ansible-community/antsibull-docs-parser/pull/9).
+- Modify ``pluginOptionLikeLink`` signature to include a new argument ``entrypoint`` after ``plugin`` (https://github.com/ansible-community/antsibull-docs-ts/pull/31).
+- Rename ``only_classic_markup`` parser option to ``onlyClassicMarkup`` (https://github.com/ansible-community/antsibull-docs-ts/pull/22).
+
+Bugfixes
+--------
+
+- HTML and MarkDown code: quote HTML command arguments correctly; make sure URLs are correctly quoted (https://github.com/ansible-community/antsibull-docs-ts/pull/22).
+
 v0.1.0
 ======
 

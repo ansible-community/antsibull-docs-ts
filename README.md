@@ -105,7 +105,7 @@ to re-format the source files.
 
 1. Update package version in `package.json`.
 2. Create `changelogs/fragments/<version>.yml` with a `release_summary` section.
-3. Run `rm -rf build && npm run build`.
+3. Run `rm -rf dist && npm run build`.
 4. Run `npm publish --dry-run` and check the output.
 5. Run `antsibull-changelog release` and add the updated files to git.
 6. Commit with message `Release <version>.` and run `git tag <version>`.

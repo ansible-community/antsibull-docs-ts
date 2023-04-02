@@ -1,5 +1,0 @@
-minor_changes:
-  - "Add support for semantic markup in roles (https://github.com/ansible-community/antsibull-docs-ts/pull/31)."
-breaking_changes:
-  - "Modify ``pluginOptionLikeLink`` signature to include a new argument ``entrypoint`` after ``plugin`` (https://github.com/ansible-community/antsibull-docs-ts/pull/31)."
-  - "Extend ``OptionNamePart`` and ``ReturnValuePart`` interfaces by adding ``entrypoint`` (https://github.com/ansible-community/antsibull-docs-parser/pull/9)."

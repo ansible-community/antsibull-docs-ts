@@ -39,3 +39,37 @@ releases:
     - 8-fixes.yml
     - rename.yml
     release_date: '2023-03-13'
+  0.2.0:
+    changes:
+      breaking_changes:
+      - All DOM parts have a new ``source`` property, which must be a string or ``undefined``
+        (https://github.com/ansible-community/antsibull-docs-ts/pull/37).
+      - By default, the error messages now contain the full faulty markup command
+        (https://github.com/ansible-community/antsibull-docs-ts/pull/38).
+      - Extend ``OptionNamePart`` and ``ReturnValuePart`` interfaces by adding ``entrypoint``
+        (https://github.com/ansible-community/antsibull-docs-parser/pull/9).
+      - Modify ``pluginOptionLikeLink`` signature to include a new argument ``entrypoint``
+        after ``plugin`` (https://github.com/ansible-community/antsibull-docs-ts/pull/31).
+      - Rename ``only_classic_markup`` parser option to ``onlyClassicMarkup`` (https://github.com/ansible-community/antsibull-docs-ts/pull/22).
+      bugfixes:
+      - 'HTML and MarkDown code: quote HTML command arguments correctly; make sure
+        URLs are correctly quoted (https://github.com/ansible-community/antsibull-docs-ts/pull/22).'
+      minor_changes:
+      - Add support for ansible-doc like text output (https://github.com/ansible-community/antsibull-docs-ts/pull/36).
+      - Add support for semantic markup in roles (https://github.com/ansible-community/antsibull-docs-ts/pull/31).
+      - Allow to add markup source to every paragraph part (https://github.com/ansible-community/antsibull-docs-ts/pull/37).
+      - Can switch between error messages containing a shortened version of the faulty
+        markup or the full faulty markup command (https://github.com/ansible-community/antsibull-docs-ts/pull/38).
+      - Improve error messages by removing superfluous second ``Error:`` (https://github.com/ansible-community/antsibull-docs-ts/pull/22).
+      - Make parsing of ``P(...)`` more similar to Python code with respect to error
+        reporting (https://github.com/ansible-community/antsibull-docs-ts/pull/22).
+      release_summary: New major release that increases compatibility with the `Python
+        code in antsibull-docs-parser <https://github.com/ansible-community/antsibull-docs-parser>`__.
+    fragments:
+    - 0.2.0.yml
+    - 22-python.yml
+    - 31-semantic-markup-roles.yml
+    - 36-ansible-doc-text.yml
+    - 37-source.yml
+    - 38-helpful-errors.yml
+    release_date: '2023-04-02'
