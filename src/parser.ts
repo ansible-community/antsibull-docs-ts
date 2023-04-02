@@ -34,6 +34,7 @@ function parseOptionLike(
   text: string,
   opts: ParsingOptions,
   type: PartType.OPTION_NAME | PartType.RETURN_VALUE,
+  source: string | undefined,
 ): OptionNamePart | ReturnValuePart {
   let value: string | undefined;
   const eq = text.indexOf('=');
@@ -82,6 +83,7 @@ function parseOptionLike(
     link: text.replace(/\[([^\]]*)\]/g, '').split('.'),
     name: text,
     value: value,
+    source: source,
   };
 }
 
@@ -89,7 +91,7 @@ export interface CommandParser {
   command: string;
   parameters: number;
   escapedArguments?: boolean;
-  process: (args: string[], opts: ParsingOptions) => AnyPart;
+  process: (args: string[], opts: ParsingOptions, source: string | undefined) => AnyPart;
 }
 
 interface CommandParserEx extends CommandParser {
@@ -102,76 +104,76 @@ const PARSER: CommandParserEx[] = [
     command: 'I',
     parameters: 1,
     old_markup: true,
-    process: (args) => {
+    process: (args, _, source) => {
       const text = args[0] as string;
-      return <ItalicPart>{ type: PartType.ITALIC, text: text };
+      return <ItalicPart>{ type: PartType.ITALIC, text: text, source: source };
     },
   },
   {
     command: 'B',
     parameters: 1,
     old_markup: true,
-    process: (args) => {
+    process: (args, _, source) => {
       const text = args[0] as string;
-      return <BoldPart>{ type: PartType.BOLD, text: text };
+      return <BoldPart>{ type: PartType.BOLD, text: text, source: source };
     },
   },
   {
     command: 'M',
     parameters: 1,
     old_markup: true,
-    process: (args) => {
+    process: (args, _, source) => {
       const fqcn = args[0] as string;
       if (!isFQCN(fqcn)) {
         throw Error(`Module name "${fqcn}" is not a FQCN`);
       }
-      return <ModulePart>{ type: PartType.MODULE, fqcn: fqcn };
+      return <ModulePart>{ type: PartType.MODULE, fqcn: fqcn, source: source };
     },
   },
   {
     command: 'U',
     parameters: 1,
     old_markup: true,
-    process: (args) => {
+    process: (args, _, source) => {
       const url = args[0] as string;
-      return <URLPart>{ type: PartType.URL, url: url };
+      return <URLPart>{ type: PartType.URL, url: url, source: source };
     },
   },
   {
     command: 'L',
     parameters: 2,
     old_markup: true,
-    process: (args) => {
+    process: (args, _, source) => {
       const text = args[0] as string;
       const url = args[1] as string;
-      return <LinkPart>{ type: PartType.LINK, text: text, url: url };
+      return <LinkPart>{ type: PartType.LINK, text: text, url: url, source: source };
     },
   },
   {
     command: 'R',
     parameters: 2,
     old_markup: true,
-    process: (args) => {
+    process: (args, _, source) => {
       const text = args[0] as string;
       const ref = args[1] as string;
-      return <RSTRefPart>{ type: PartType.RST_REF, text: text, ref: ref };
+      return <RSTRefPart>{ type: PartType.RST_REF, text: text, ref: ref, source: source };
     },
   },
   {
     command: 'C',
     parameters: 1,
     old_markup: true,
-    process: (args) => {
+    process: (args, _, source) => {
       const text = args[0] as string;
-      return <CodePart>{ type: PartType.CODE, text: text };
+      return <CodePart>{ type: PartType.CODE, text: text, source: source };
     },
   },
   {
     command: 'HORIZONTALLINE',
     parameters: 0,
     old_markup: true,
-    process: () => {
-      return <HorizontalLinePart>{ type: PartType.HORIZONTAL_LINE };
+    process: (_, __, source) => {
+      return <HorizontalLinePart>{ type: PartType.HORIZONTAL_LINE, source: source };
     },
   },
   // Semantic Ansible docs markup:
@@ -179,7 +181,7 @@ const PARSER: CommandParserEx[] = [
     command: 'P',
     parameters: 1,
     escapedArguments: true,
-    process: (args) => {
+    process: (args, _, source) => {
       const m = /^([^#]*)#(.*)$/.exec(args[0] as string);
       if (!m) {
         throw Error(`Parameter "${args[0]}" is not of the form FQCN#type`);
@@ -192,43 +194,43 @@ const PARSER: CommandParserEx[] = [
       if (!isPluginType(type)) {
         throw Error(`Plugin type "${type}" is not valid`);
       }
-      return <PluginPart>{ type: PartType.PLUGIN, plugin: { fqcn: fqcn, type: type } };
+      return <PluginPart>{ type: PartType.PLUGIN, plugin: { fqcn: fqcn, type: type }, source: source };
     },
   },
   {
     command: 'E',
     parameters: 1,
     escapedArguments: true,
-    process: (args) => {
+    process: (args, _, source) => {
       const env = args[0] as string;
-      return <EnvVariablePart>{ type: PartType.ENV_VARIABLE, name: env };
+      return <EnvVariablePart>{ type: PartType.ENV_VARIABLE, name: env, source: source };
     },
   },
   {
     command: 'V',
     parameters: 1,
     escapedArguments: true,
-    process: (args) => {
+    process: (args, _, source) => {
       const value = args[0] as string;
-      return <OptionValuePart>{ type: PartType.OPTION_VALUE, value: value };
+      return <OptionValuePart>{ type: PartType.OPTION_VALUE, value: value, source: source };
     },
   },
   {
     command: 'O',
     parameters: 1,
     escapedArguments: true,
-    process: (args, opts) => {
+    process: (args, opts, source) => {
       const value = args[0] as string;
-      return parseOptionLike(value, opts, PartType.OPTION_NAME);
+      return parseOptionLike(value, opts, PartType.OPTION_NAME, source);
     },
   },
   {
     command: 'RV',
     parameters: 1,
     escapedArguments: true,
-    process: (args, opts) => {
+    process: (args, opts, source) => {
       const value = args[0] as string;
-      return parseOptionLike(value, opts, PartType.RETURN_VALUE);
+      return parseOptionLike(value, opts, PartType.RETURN_VALUE, source);
     },
   },
 ];
@@ -266,17 +268,21 @@ export function parseString(
     const match = commandRE.exec(input);
     if (!match) {
       if (index < length) {
+        const text = input.slice(index);
         result.push(<TextPart>{
           type: PartType.TEXT,
-          text: input.slice(index),
+          text: text,
+          source: opts.addSource ? text : undefined,
         });
       }
       break;
     }
     if (match.index > index) {
+      const text = input.slice(index, match.index);
       result.push(<TextPart>{
         type: PartType.TEXT,
-        text: input.slice(index, match.index),
+        text: text,
+        source: opts.addSource ? text : undefined,
       });
     }
     index = match.index;
@@ -298,9 +304,10 @@ export function parseString(
     } else {
       [args, endIndex, error] = parseUnescapedArgs(input, endIndex, command.parameters);
     }
+    const source = opts.addSource ? input.slice(index, endIndex) : undefined;
     if (error === undefined) {
       try {
-        result.push(command.process(args, opts));
+        result.push(command.process(args, opts, source));
       } catch (exc: any) {
         error = `${exc}`;
         if (exc?.message !== undefined) {
@@ -317,6 +324,7 @@ export function parseString(
           result.push(<ErrorPart>{
             type: PartType.ERROR,
             message: error,
+            source: source,
           });
           break;
         case 'exception':

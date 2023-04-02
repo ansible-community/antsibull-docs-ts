@@ -26,6 +26,7 @@ export enum PartType {
 
 export interface Part {
   type: PartType;
+  source: string | undefined;
 }
 
 export interface TextPart extends Part {
