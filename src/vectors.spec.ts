@@ -59,7 +59,9 @@ describe('vectors', (): void => {
     }
     if (test_data.source !== undefined && test_data.ansible_doc_text !== undefined) {
       it(`${test_name} (Ansible doc => ansible-doc text output)`, (): void => {
-        expect(toAnsibleDocText(parse(test_data.source, test_data.parse_opts), test_data.ansible_doc_text_opts)).toEqual(test_data.ansible_doc_text);
+        expect(
+          toAnsibleDocText(parse(test_data.source, test_data.parse_opts), test_data.ansible_doc_text_opts),
+        ).toEqual(test_data.ansible_doc_text);
       });
     }
   }
