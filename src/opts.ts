@@ -124,7 +124,11 @@ export interface HTMLOptions extends CommonExportOptions, CommonFormatOptions, L
 
 export interface MDOptions extends CommonExportOptions, CommonFormatOptions, LinkProviders {}
 
-export interface RSTOptions extends CommonExportOptions, CommonFormatOptions {}
+export interface RSTOptions extends CommonExportOptions, CommonFormatOptions {
+  /** Whether the RST should be formatted as in antsibull-docs (for use with Sphinx and the
+      sphinx_antsibull_ext extension) or with plain RST. Default: 'antsibull-docs'. */
+  style?: 'antsibull-docs' | 'plain';
+}
 
 export interface AnsibleDocTextOptions extends CommonExportOptions, CommonFormatOptions {}
 
