@@ -57,6 +57,13 @@ describe('vectors', (): void => {
         expect(toRST(parse(test_data.source, test_data.parse_opts), test_data.rst_opts)).toEqual(test_data.rst);
       });
     }
+    if (test_data.source !== undefined && test_data.rst_plain !== undefined) {
+      it(`${test_name} (Ansible doc => plain RST)`, (): void => {
+        expect(
+          toRST(parse(test_data.source, test_data.parse_opts), Object.assign({ style: 'plain' }, test_data.rst_opts)),
+        ).toEqual(test_data.rst_plain);
+      });
+    }
     if (test_data.source !== undefined && test_data.ansible_doc_text !== undefined) {
       it(`${test_name} (Ansible doc => ansible-doc text output)`, (): void => {
         expect(
