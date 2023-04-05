@@ -308,6 +308,7 @@ export function parseString(
     if (error === undefined) {
       try {
         result.push(command.process(args, opts, source));
+        /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
       } catch (exc: any) {
         error = `${exc}`;
         if (exc?.message !== undefined) {

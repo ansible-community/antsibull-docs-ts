@@ -41,7 +41,7 @@ function formatAntsibullOptionLike(part: OptionNamePart | ReturnValuePart, role:
 }
 
 function formatPlainOptionLike(part: OptionNamePart | ReturnValuePart): string {
-  let plugin: string[] = [];
+  const plugin: string[] = [];
   if (part.plugin) {
     plugin.push(part.plugin.type);
     if (!['module', 'role', 'playbook'].includes(part.plugin.type)) {
