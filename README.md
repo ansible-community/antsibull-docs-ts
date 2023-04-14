@@ -108,9 +108,9 @@ to re-format the source files.
 3. Run `rm -rf dist && npm ci && npm run build`.
 4. Run `npm publish --dry-run` and check the output.
 5. Add modified files to git (if they are OK) and commit with message `Prepare <version>.`.
-5. Run `antsibull-changelog release` and add the updated files to git.
-6. Commit with message `Release <version>.` and run `git tag <version>`.
-7. Run `git push upstream main && git push`.
-8. Once CI passes on GitHub, run `npm publish`.
-9. On success, do `git push upstream --tags` and create a GitHub release.
-10. Add `.post0` to the version in `package.json`, commit as `Post-release version bump.`, and push to GitHub.
+6. Run `antsibull-changelog release` and add the updated files to git.
+7. Commit with message `Release <version>.` and run `git tag <version>`.
+8. Run `git push upstream main && git push`.
+9. Once CI passes on GitHub, run `npm publish`.
+10. On success, do `git push upstream --tags` and create a GitHub release.
+11. Add `.post0` to the version in `package.json`, commit as `Post-release version bump.`, and push to GitHub.
