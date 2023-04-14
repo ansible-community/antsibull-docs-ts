@@ -73,3 +73,12 @@ releases:
     - 37-source.yml
     - 38-helpful-errors.yml
     release_date: '2023-04-02'
+  0.3.0:
+    changes:
+      minor_changes:
+      - Add support for plain RST rendering (https://github.com/ansible-community/antsibull-docs-ts/pull/42).
+      release_summary: Feature release.
+    fragments:
+    - 0.3.0.yml
+    - 42-rst-plain.yml
+    release_date: '2023-04-14'
