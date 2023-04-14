@@ -103,14 +103,15 @@ to re-format the source files.
 
 ### Release
 
-1. Update package version in `package.json`.
+1. Update package version in `package.json` (and remove things like `-post0`).
 2. Create `changelogs/fragments/<version>.yml` with a `release_summary` section.
-3. Run `rm -rf dist && npm ci && npm run build`.
+3. Run `rm -rf dist && npm install && npm run build`.
 4. Run `npm publish --dry-run` and check the output.
-5. Add modified files to git (if they are OK) and commit with message `Prepare <version>.`.
-6. Run `antsibull-changelog release` and add the updated files to git.
-7. Commit with message `Release <version>.` and run `git tag <version>`.
-8. Run `git push upstream main && git push`.
-9. Once CI passes on GitHub, run `npm publish`.
-10. On success, do `git push upstream --tags` and create a GitHub release.
-11. Add `.post0` to the version in `package.json`, commit as `Post-release version bump.`, and push to GitHub.
+5. Make sure to run `npm run format:write`, especially if you updated this README.
+6. Add modified files to git (if they are OK) and commit with message `Prepare <version>.`.
+7. Run `antsibull-changelog release` and add the updated files to git.
+8. Commit with message `Release <version>.` and run `git tag <version>`.
+9. Run `git push upstream main && git push`.
+10. Once CI passes on GitHub, run `npm publish`.
+11. On success, do `git push upstream --tags` and create a GitHub release.
+12. Add `-post0` to the version in `package.json`, run `npm install`, commit as `Post-release version bump.`, and push to GitHub.
