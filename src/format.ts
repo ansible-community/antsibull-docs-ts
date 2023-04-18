@@ -60,7 +60,7 @@ export function addToDestination(
             part.entrypoint,
             'option',
             part.link,
-            part.plugin === opts.current_plugin,
+            part.plugin === opts.currentPlugin,
           );
         }
         destination.push(opts.formatOptionName(part, url));
@@ -85,7 +85,7 @@ export function addToDestination(
             part.entrypoint,
             'retval',
             part.link,
-            part.plugin === opts.current_plugin,
+            part.plugin === opts.currentPlugin,
           );
         }
         destination.push(opts.formatReturnValue(part, url));

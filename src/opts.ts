@@ -41,10 +41,10 @@ export interface PluginIdentifier {
 
 export interface ParsingOptions extends ErrorHandlingOptions {
   /** Should be provided if parsing documentation of a plugin/module/role. */
-  current_plugin?: PluginIdentifier;
+  currentPlugin?: PluginIdentifier;
 
   /** Should be provided if parsing documentation of a specific role's entrypoint. */
-  role_entrypoint?: string;
+  roleEntrypoint?: string;
 
   /** If set to 'true', only 'classic' Ansible docs markup is accepted. */
   onlyClassicMarkup?: boolean;
@@ -58,7 +58,7 @@ export interface ParsingOptions extends ErrorHandlingOptions {
 
 export interface CommonExportOptions extends ErrorHandlingOptions {
   /** Should be provided if rendering documentation for a plugin/module/role. */
-  current_plugin?: PluginIdentifier;
+  currentPlugin?: PluginIdentifier;
 }
 
 interface CommonFormatOptions {
@@ -107,7 +107,7 @@ export interface LinkProviders {
     entrypoint: string | undefined,
     what: 'option' | 'retval',
     name: string[],
-    current_plugin: boolean,
+    currentPlugin: boolean,
   ) => string | undefined;
 }
 

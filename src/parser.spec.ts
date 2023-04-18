@@ -162,7 +162,7 @@ describe('parser', (): void => {
         },
       ],
     ]);
-    expect(parse('O(ignore:foo)', { current_plugin: { fqcn: 'foo.bar.baz', type: 'bam' } })).toEqual([
+    expect(parse('O(ignore:foo)', { currentPlugin: { fqcn: 'foo.bar.baz', type: 'bam' } })).toEqual([
       [
         {
           type: PartType.OPTION_NAME,
@@ -175,7 +175,7 @@ describe('parser', (): void => {
         },
       ],
     ]);
-    expect(parse('O(foo)', { current_plugin: { fqcn: 'foo.bar.baz', type: 'bam' } })).toEqual([
+    expect(parse('O(foo)', { currentPlugin: { fqcn: 'foo.bar.baz', type: 'bam' } })).toEqual([
       [
         {
           type: PartType.OPTION_NAME,
@@ -268,7 +268,7 @@ describe('parser', (): void => {
         },
       ],
     ]);
-    expect(parse('RV(ignore:foo)', { current_plugin: { fqcn: 'foo.bar.baz', type: 'bam' } })).toEqual([
+    expect(parse('RV(ignore:foo)', { currentPlugin: { fqcn: 'foo.bar.baz', type: 'bam' } })).toEqual([
       [
         {
           type: PartType.RETURN_VALUE,
@@ -281,7 +281,7 @@ describe('parser', (): void => {
         },
       ],
     ]);
-    expect(parse('RV(foo)', { current_plugin: { fqcn: 'foo.bar.baz', type: 'bam' } })).toEqual([
+    expect(parse('RV(foo)', { currentPlugin: { fqcn: 'foo.bar.baz', type: 'bam' } })).toEqual([
       [
         {
           type: PartType.RETURN_VALUE,
