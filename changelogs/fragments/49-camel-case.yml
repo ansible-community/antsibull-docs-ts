@@ -1,0 +1,2 @@
+breaking_changes:
+  - "Rename ``current_plugin`` options of various functions to ``currentPlugin``, and the ``role_entrypoint`` option of ``parse`` to ``roleEntrypoint`` (https://github.com/ansible-community/antsibull-docs-ts/pull/49)."

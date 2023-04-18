@@ -60,8 +60,8 @@ function parseOptionLike(
     plugin = undefined;
     text = text.substring(IGNORE_MARKER.length, text.length);
   } else {
-    plugin = opts.current_plugin;
-    entrypoint = opts.role_entrypoint;
+    plugin = opts.currentPlugin;
+    entrypoint = opts.roleEntrypoint;
   }
   if (plugin?.type === 'role') {
     const idx = text.indexOf(':');
