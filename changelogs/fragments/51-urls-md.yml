@@ -1,0 +1,4 @@
+minor_changes:
+  - "Also escape ``.`` in MarkDown (https://github.com/ansible-community/antsibull-docs-ts/pull/51)."
+bugfixes:
+  - "Fix URL escaping in MarkDown (https://github.com/ansible-community/antsibull-docs-ts/pull/51)."
