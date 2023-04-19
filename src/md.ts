@@ -12,7 +12,7 @@ import { quoteHTMLArg } from './html';
 import { addToDestination } from './format';
 
 export function quoteMD(text: string): string {
-  return text.replace(/([!"#$%&'()*+,:;<=>?@[\\\]^_`{|}~-])/g, '\\$1');
+  return text.replace(/([!"#$%&'()*+,:;<=>?@[\\\]^_`{|}~.-])/g, '\\$1');
 }
 
 function formatOptionLike(
