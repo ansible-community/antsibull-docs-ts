@@ -23,7 +23,7 @@ function formatOptionLike(
   let link_start = '';
   let link_end = '';
   if (url) {
-    link_start = `<a href="${quoteMD(quoteHTMLArg(encodeURI(url)))}">`;
+    link_start = `<a href="${quoteHTMLArg(encodeURI(url))}">`;
     link_end = '</a>';
   }
   let strong_start = '';
@@ -49,10 +49,10 @@ const DEFAULT_FORMATTER: AllFormatOptions = {
   formatCode: (part) => `<code>${quoteMD(part.text)}</code>`,
   formatHorizontalLine: () => '<hr>',
   formatItalic: (part) => `<em>${quoteMD(part.text)}</em>`,
-  formatLink: (part) => `[${quoteMD(part.text)}](${quoteMD(encodeURI(part.url))})`,
+  formatLink: (part) => `[${quoteMD(part.text)}](${encodeURI(part.url)})`,
   formatModule: (part, url) => (url ? `[${quoteMD(part.fqcn)}](${quoteMD(encodeURI(url))})` : `${quoteMD(part.fqcn)}`),
   formatRSTRef: (part) => `${quoteMD(part.text)}`,
-  formatURL: (part) => `[${quoteMD(encodeURI(part.url))}](${quoteMD(encodeURI(part.url))})`,
+  formatURL: (part) => `[${quoteMD(encodeURI(part.url))}](${encodeURI(part.url)})`,
   formatText: (part) => quoteMD(part.text),
   formatEnvVariable: (part) => `<code>${quoteMD(part.name)}</code>`,
   formatOptionName: (part, url) => formatOptionLike(part, url, 'option'),
