@@ -82,3 +82,19 @@ releases:
     - 0.3.0.yml
     - 42-rst-plain.yml
     release_date: '2023-04-14'
+  0.4.0:
+    changes:
+      breaking_changes:
+      - Rename ``current_plugin`` options of various functions to ``currentPlugin``,
+        and the ``role_entrypoint`` option of ``parse`` to ``roleEntrypoint`` (https://github.com/ansible-community/antsibull-docs-ts/pull/49).
+      bugfixes:
+      - Fix URL escaping in MarkDown (https://github.com/ansible-community/antsibull-docs-ts/pull/51).
+      minor_changes:
+      - Also escape ``.`` in MarkDown (https://github.com/ansible-community/antsibull-docs-ts/pull/51).
+      release_summary: New major release that increases compatibility with the `Python
+        code in antsibull-docs-parser <https://github.com/ansible-community/antsibull-docs-parser>`__.
+    fragments:
+    - 0.4.0.yml
+    - 49-camel-case.yml
+    - 51-urls-md.yml
+    release_date: '2023-04-23'

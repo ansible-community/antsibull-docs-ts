@@ -5,6 +5,29 @@ antsibull-docs -- TypeScript library for processing Ansible documentation markup
 .. contents:: Topics
 
 
+v0.4.0
+======
+
+Release Summary
+---------------
+
+New major release that increases compatibility with the `Python code in antsibull-docs-parser <https://github.com/ansible-community/antsibull-docs-parser>`__.
+
+Minor Changes
+-------------
+
+- Also escape ``.`` in MarkDown (https://github.com/ansible-community/antsibull-docs-ts/pull/51).
+
+Breaking Changes / Porting Guide
+--------------------------------
+
+- Rename ``current_plugin`` options of various functions to ``currentPlugin``, and the ``role_entrypoint`` option of ``parse`` to ``roleEntrypoint`` (https://github.com/ansible-community/antsibull-docs-ts/pull/49).
+
+Bugfixes
+--------
+
+- Fix URL escaping in MarkDown (https://github.com/ansible-community/antsibull-docs-ts/pull/51).
+
 v0.3.0
 ======
 
