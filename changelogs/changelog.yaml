@@ -98,3 +98,10 @@ releases:
     - 49-camel-case.yml
     - 51-urls-md.yml
     release_date: '2023-04-23'
+  1.0.0:
+    changes:
+      release_summary: First stable release. This package is using semantic versioning,
+        so there will be no more breaking changes until the release of 2.0.0.
+    fragments:
+    - 1.0.0.yml
+    release_date: '2023-04-27'
