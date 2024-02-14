@@ -14,6 +14,7 @@
     "src",
     "test-vectors.yaml",
     "tsconfig.json",
+    "CHANGELOG.md",
     "CHANGELOG.rst",
     "LICENSE",
     "LICENSES/*",
