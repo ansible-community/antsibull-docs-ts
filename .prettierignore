@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: Ansible Project
 # SPDX-License-Identifier: BSD-2-Clause
 
+/CHANGELOG.md
 /CHANGELOG.rst
 /changelogs/changelog.yaml
 /changelogs/fragments/*
