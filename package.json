@@ -38,9 +38,15 @@
     "ansible",
     "antsibull-docs"
   ],
-  "author": "Felix Fontein (@felixfontein)",
+  "author": {
+    "name": "Felix Fontein",
+    "email": "felix@fontein.de"
+  },
   "license": "BSD-2-Clause",
   "repository": "https://github.com/ansible-community/antsibull-docs-ts",
+  "bugs": {
+    "url": "https://github.com/ansible-community/antsibull-docs-ts/issues"
+  },
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "@typescript-eslint/eslint-plugin": "^7.0.1",
