@@ -6,6 +6,7 @@ SPDX-License-Identifier: BSD-2-Clause
 
 # antsibull-docs - TypeScript library for processing Ansible documentation markup
 
+[![Discuss on Matrix at #antsibull:ansible.com](https://img.shields.io/matrix/antsibull:ansible.com.svg?server_fqdn=ansible-accounts.ems.host&label=Discuss%20on%20Matrix%20at%20%23antsibull:ansible.com&logo=matrix)](https://matrix.to/#/#antsibull:ansible.com)
 [![REUSE badge](https://github.com/ansible-community/antsibull-docs-ts/actions/workflows/reuse.yml/badge.svg)](https://github.com/ansible-community/antsibull-docs-ts/actions/workflows/reuse.yml)
 [![TypeScript badge](https://github.com/ansible-community/antsibull-docs-ts/actions/workflows/typescript.yml/badge.svg)](https://github.com/ansible-community/antsibull-docs-ts/actions/workflows/typescript.yml)
 [![Codecov badge](https://img.shields.io/codecov/c/github/ansible-community/antsibull-docs-ts)](https://codecov.io/gh/ansible-community/antsibull-docs-ts)
