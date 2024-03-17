@@ -1,6 +1,6 @@
 {
   "name": "antsibull-docs",
-  "version": "1.0.0-post0",
+  "version": "1.0.1",
   "description": "TypeScript library for processing Ansible documentation markup",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -43,7 +43,10 @@
     "email": "felix@fontein.de"
   },
   "license": "BSD-2-Clause",
-  "repository": "https://github.com/ansible-community/antsibull-docs-ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ansible-community/antsibull-docs-ts.git"
+  },
   "bugs": {
     "url": "https://github.com/ansible-community/antsibull-docs-ts/issues"
   },
