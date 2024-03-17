@@ -105,3 +105,12 @@ releases:
     fragments:
     - 1.0.0.yml
     release_date: '2023-04-27'
+  1.0.1:
+    changes:
+      bugfixes:
+      - Properly escape MarkDown link targets (https://github.com/ansible-community/antsibull-docs-ts/pull/197).
+      release_summary: Maintenance release.
+    fragments:
+    - 1.0.1.yml
+    - 197-md-link-escape.yml
+    release_date: '2024-03-17'
