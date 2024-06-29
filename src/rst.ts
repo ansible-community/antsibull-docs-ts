@@ -8,7 +8,12 @@ import { RSTOptions, AllFormatOptions, mergeOpts } from './opts';
 import { OptionNamePart, Paragraph, ReturnValuePart } from './dom';
 import { addToDestination } from './format';
 
-export function quoteRST(text: string, escape_starting_whitespace = false, escape_ending_whitespace = false): string {
+export function quoteRST(
+  text: string,
+  escape_starting_whitespace = false,
+  escape_ending_whitespace = false,
+  must_not_be_empty = false,
+): string {
   text = text.replace(/([\\<>_*`])/g, '\\$1');
 
   if (escape_ending_whitespace && text.endsWith(' ')) {
@@ -16,6 +21,9 @@ export function quoteRST(text: string, escape_starting_whitespace = false, escap
   }
   if (escape_starting_whitespace && text.startsWith(' ')) {
     text = '\\ ' + text;
+  }
+  if (must_not_be_empty && text === '') {
+    text = '\\ ';
   }
   return text;
 }
@@ -37,7 +45,7 @@ function formatAntsibullOptionLike(part: OptionNamePart | ReturnValuePart, role:
     result.push('=');
     result.push(part.value);
   }
-  return `\\ :${role}:\`${quoteRST(result.join(''), true, true)}\`\\ `;
+  return `\\ :${role}:\`${quoteRST(result.join(''), true, true, true)}\`\\ `;
 }
 
 function formatPlainOptionLike(part: OptionNamePart | ReturnValuePart): string {
@@ -63,43 +71,45 @@ function formatPlainOptionLike(part: OptionNamePart | ReturnValuePart): string {
     value = `${value}=${part.value}`;
   }
   const pluginText = plugin.length ? ` (of ${plugin.join('')})` : '';
-  const mainText = `:literal:\`${quoteRST(value, true, true)}\``;
+  const mainText = `:literal:\`${quoteRST(value, true, true, true)}\``;
   return `\\ ${mainText}${pluginText}\\ `;
 }
 
 const DEFAULT_FORMATTER: AllFormatOptions = {
-  formatError: (part) => `\\ :strong:\`ERROR while parsing\`\\ : ${quoteRST(part.message, true, true)}\\ `,
-  formatBold: (part) => `\\ :strong:\`${quoteRST(part.text, true, true)}\`\\ `,
-  formatCode: (part) => `\\ :literal:\`${quoteRST(part.text, true, true)}\`\\ `,
+  formatError: (part) => `\\ :strong:\`ERROR while parsing\`\\ : ${quoteRST(part.message, true, true, true)}\\ `,
+  formatBold: (part) => `\\ :strong:\`${quoteRST(part.text, true, true, true)}\`\\ `,
+  formatCode: (part) => `\\ :literal:\`${quoteRST(part.text, true, true, true)}\`\\ `,
   formatHorizontalLine: () => '\n\n.. raw:: html\n\n  <hr>\n\n',
-  formatItalic: (part) => `\\ :emphasis:\`${quoteRST(part.text, true, true)}\`\\ `,
-  formatLink: (part) => `\\ \`${quoteRST(part.text)} <${encodeURI(part.url)}>\`__\\ `,
-  formatModule: (part) => `\\ :ref:\`${quoteRST(part.fqcn)} <ansible_collections.${part.fqcn}_module>\`\\ `,
-  formatRSTRef: (part) => `\\ :ref:\`${quoteRST(part.text)} <${part.ref}>\`\\ `,
+  formatItalic: (part) => `\\ :emphasis:\`${quoteRST(part.text, true, true, true)}\`\\ `,
+  formatLink: (part) => (part.text === '' ? '' : `\\ \`${quoteRST(part.text)} <${encodeURI(part.url)}>\`__\\ `),
+  formatModule: (part) =>
+    `\\ :ref:\`${quoteRST(part.fqcn, true, true, true)} <ansible_collections.${part.fqcn}_module>\`\\ `,
+  formatRSTRef: (part) => `\\ :ref:\`${quoteRST(part.text, true, true, true)} <${part.ref}>\`\\ `,
   formatURL: (part) => `\\ ${encodeURI(part.url)}\\ `,
   formatText: (part) => quoteRST(part.text),
-  formatEnvVariable: (part) => `\\ :envvar:\`${quoteRST(part.name, true, true)}\`\\ `,
+  formatEnvVariable: (part) => `\\ :envvar:\`${quoteRST(part.name, true, true, true)}\`\\ `,
   formatOptionName: (part) => formatAntsibullOptionLike(part, 'ansopt'),
-  formatOptionValue: (part) => `\\ :ansval:\`${quoteRST(part.value, true, true)}\`\\ `,
+  formatOptionValue: (part) => `\\ :ansval:\`${quoteRST(part.value, true, true, true)}\`\\ `,
   formatPlugin: (part) =>
     `\\ :ref:\`${quoteRST(part.plugin.fqcn)} <ansible_collections.${part.plugin.fqcn}_${part.plugin.type}>\`\\ `,
   formatReturnValue: (part) => formatAntsibullOptionLike(part, 'ansretval'),
 };
 
 const PLAIN_FORMATTER: AllFormatOptions = {
-  formatError: (part) => `\\ :strong:\`ERROR while parsing\`\\ : ${quoteRST(part.message, true, true)}\\ `,
-  formatBold: (part) => `\\ :strong:\`${quoteRST(part.text, true, true)}\`\\ `,
-  formatCode: (part) => `\\ :literal:\`${quoteRST(part.text, true, true)}\`\\ `,
+  formatError: (part) => `\\ :strong:\`ERROR while parsing\`\\ : ${quoteRST(part.message, true, true, true)}\\ `,
+  formatBold: (part) => `\\ :strong:\`${quoteRST(part.text, true, true, true)}\`\\ `,
+  formatCode: (part) => `\\ :literal:\`${quoteRST(part.text, true, true, true)}\`\\ `,
   formatHorizontalLine: () => '\n\n------------\n\n',
-  formatItalic: (part) => `\\ :emphasis:\`${quoteRST(part.text, true, true)}\`\\ `,
-  formatLink: (part) => `\\ \`${quoteRST(part.text)} <${encodeURI(part.url)}>\`__\\ `,
-  formatModule: (part) => `\\ :ref:\`${quoteRST(part.fqcn)} <ansible_collections.${part.fqcn}_module>\`\\ `,
-  formatRSTRef: (part) => `\\ :ref:\`${quoteRST(part.text)} <${part.ref}>\`\\ `,
+  formatItalic: (part) => `\\ :emphasis:\`${quoteRST(part.text, true, true, true)}\`\\ `,
+  formatLink: (part) => (part.text === '' ? '' : `\\ \`${quoteRST(part.text)} <${encodeURI(part.url)}>\`__\\ `),
+  formatModule: (part) =>
+    `\\ :ref:\`${quoteRST(part.fqcn, true, true, true)} <ansible_collections.${part.fqcn}_module>\`\\ `,
+  formatRSTRef: (part) => `\\ :ref:\`${quoteRST(part.text, true, true, true)} <${part.ref}>\`\\ `,
   formatURL: (part) => `\\ ${encodeURI(part.url)}\\ `,
   formatText: (part) => quoteRST(part.text),
-  formatEnvVariable: (part) => `\\ :envvar:\`${quoteRST(part.name, true, true)}\`\\ `,
+  formatEnvVariable: (part) => `\\ :envvar:\`${quoteRST(part.name, true, true, true)}\`\\ `,
   formatOptionName: (part) => formatPlainOptionLike(part),
-  formatOptionValue: (part) => `\\ :literal:\`${quoteRST(part.value, true, true)}\`\\ `,
+  formatOptionValue: (part) => `\\ :literal:\`${quoteRST(part.value, true, true, true)}\`\\ `,
   formatPlugin: (part) =>
     `\\ :ref:\`${quoteRST(part.plugin.fqcn)} <ansible_collections.${part.plugin.fqcn}_${part.plugin.type}>\`\\ `,
   formatReturnValue: (part) => formatPlainOptionLike(part),
