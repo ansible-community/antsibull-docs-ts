@@ -21,7 +21,10 @@ describe('quoteRST tests', (): void => {
     expect(quoteRST('  foo  ', false, true)).toBe('  foo  \\ ');
   });
   it('simple string, escape spacing', (): void => {
-    expect(quoteRST('  foo  ', true, true)).toBe('\\   foo  \\ ');
+    expect(quoteRST('  foo  ', true, true, true)).toBe('\\   foo  \\ ');
+  });
+  it('simple string, escape empty', (): void => {
+    expect(quoteRST('', true, true, true)).toBe('\\ ');
   });
   it('more complex', (): void => {
     expect(quoteRST('\\<_>`*<_>*`\\')).toBe('\\\\\\<\\_\\>\\`\\*\\<\\_\\>\\*\\`\\\\');
