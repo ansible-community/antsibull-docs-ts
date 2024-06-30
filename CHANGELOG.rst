@@ -4,6 +4,19 @@ antsibull-docs -- TypeScript library for processing Ansible documentation markup
 
 .. contents:: Topics
 
+v1.0.2
+======
+
+Release Summary
+---------------
+
+Bugfix release.
+
+Bugfixes
+--------
+
+- Fix handling of empty markup parameters for RST (https://github.com/ansible-community/antsibull-docs-ts/pull/262).
+
 v1.0.1
 ======
 
