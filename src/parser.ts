@@ -318,7 +318,7 @@ export function parseString(
     }
     if (error !== undefined) {
       const errorSource =
-        opts.helpfulErrors ?? true
+        (opts.helpfulErrors ?? true)
           ? `"${input.slice(index, endIndex)}"`
           : `${cmd}${command.parameters > 0 ? '()' : ''}`;
       error = `While parsing ${errorSource} at index ${match.index + 1}${where}: ${error}`;
