@@ -29,7 +29,6 @@ export function parseEscapedArgs(input: string, index: number, count: number): [
   while (parameter_count > 1) {
     parameter_count -= 1;
     const value: string[] = [];
-    /* eslint-disable-next-line no-constant-condition */
     while (true) {
       escapeOrComma.lastIndex = index;
       const match = escapeOrComma.exec(input);
@@ -54,7 +53,6 @@ export function parseEscapedArgs(input: string, index: number, count: number): [
   }
   const escapeOrClosing = /\\(.)|([)])/g;
   const value: string[] = [];
-  /* eslint-disable-next-line no-constant-condition */
   while (true) {
     escapeOrClosing.lastIndex = index;
     const match = escapeOrClosing.exec(input);
