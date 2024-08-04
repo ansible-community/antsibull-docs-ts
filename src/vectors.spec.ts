@@ -25,6 +25,7 @@ function parseLinkProvider(opts) {
   }
   if (opts['pluginOptionLikeLinkTemplate']) {
     const template = opts['pluginOptionLikeLinkTemplate'];
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     opts.pluginOptionLikeLink = (plugin, entrypoint, what, name, current_plugin) =>
       template
         .replace(/{plugin_fqcn}/g, plugin.fqcn)
