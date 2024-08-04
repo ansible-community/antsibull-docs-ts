@@ -81,7 +81,12 @@ const DEFAULT_FORMATTER: AllFormatOptions = {
   formatCode: (part) => `\\ :literal:\`${quoteRST(part.text, true, true, true)}\`\\ `,
   formatHorizontalLine: () => '\n\n.. raw:: html\n\n  <hr>\n\n',
   formatItalic: (part) => `\\ :emphasis:\`${quoteRST(part.text, true, true, true)}\`\\ `,
-  formatLink: (part) => (part.text === '' ? '' : `\\ \`${quoteRST(part.text)} <${encodeURI(part.url)}>\`__\\ `),
+  formatLink: (part) =>
+    part.text === ''
+      ? ''
+      : part.url === ''
+        ? quoteRST(part.text)
+        : `\\ \`${quoteRST(part.text)} <${encodeURI(part.url)}>\`__\\ `,
   formatModule: (part) =>
     `\\ :ref:\`${quoteRST(part.fqcn, true, true, true)} <ansible_collections.${part.fqcn}_module>\`\\ `,
   formatRSTRef: (part) => `\\ :ref:\`${quoteRST(part.text, true, true, true)} <${part.ref}>\`\\ `,
@@ -101,7 +106,12 @@ const PLAIN_FORMATTER: AllFormatOptions = {
   formatCode: (part) => `\\ :literal:\`${quoteRST(part.text, true, true, true)}\`\\ `,
   formatHorizontalLine: () => '\n\n------------\n\n',
   formatItalic: (part) => `\\ :emphasis:\`${quoteRST(part.text, true, true, true)}\`\\ `,
-  formatLink: (part) => (part.text === '' ? '' : `\\ \`${quoteRST(part.text)} <${encodeURI(part.url)}>\`__\\ `),
+  formatLink: (part) =>
+    part.text === ''
+      ? ''
+      : part.url === ''
+        ? quoteRST(part.text)
+        : `\\ \`${quoteRST(part.text)} <${encodeURI(part.url)}>\`__\\ `,
   formatModule: (part) =>
     `\\ :ref:\`${quoteRST(part.fqcn, true, true, true)} <ansible_collections.${part.fqcn}_module>\`\\ `,
   formatRSTRef: (part) => `\\ :ref:\`${quoteRST(part.text, true, true, true)} <${part.ref}>\`\\ `,
