@@ -1,0 +1,2 @@
+bugfixes:
+  - "Do not apply URI encoding to visible URL (https://github.com/ansible-community/antsibull-docs-ts/pull/286)."

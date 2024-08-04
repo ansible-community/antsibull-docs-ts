@@ -49,7 +49,7 @@ const PLAIN_FORMATTER: AllFormatOptions = {
       ? `<a href='${quoteHTMLArg(encodeURI(url))}'>${quoteHTML(part.fqcn)}</a>`
       : `<span>${quoteHTML(part.fqcn)}</span>`,
   formatRSTRef: (part) => `<span>${quoteHTML(part.text)}</span>`,
-  formatURL: (part) => `<a href='${quoteHTMLArg(encodeURI(part.url))}'>${quoteHTML(encodeURI(part.url))}</a>`,
+  formatURL: (part) => `<a href='${quoteHTMLArg(encodeURI(part.url))}'>${quoteHTML(part.url)}</a>`,
   formatText: (part) => quoteHTML(part.text),
   formatEnvVariable: (part) => `<code>${quoteHTML(part.name)}</code>`,
   formatOptionName: (part, url) => formatOptionLikePlain(part, url, 'option'),
@@ -111,7 +111,7 @@ const ANTSIBULL_DOCS_FORMATTER: AllFormatOptions = {
       ? `<a href='${quoteHTMLArg(encodeURI(url))}' class='module'>${quoteHTML(part.fqcn)}</a>`
       : `<span class='module'>${quoteHTML(part.fqcn)}</span>`,
   formatRSTRef: (part) => `<span class='module'>${quoteHTML(part.text)}</span>`,
-  formatURL: (part) => `<a href='${quoteHTMLArg(encodeURI(part.url))}'>${quoteHTML(encodeURI(part.url))}</a>`,
+  formatURL: (part) => `<a href='${quoteHTMLArg(encodeURI(part.url))}'>${quoteHTML(part.url)}</a>`,
   formatText: (part) => quoteHTML(part.text),
   formatEnvVariable: (part) => `<code class="xref std std-envvar literal notranslate">${quoteHTML(part.name)}</code>`,
   formatOptionName: (part, url) => formatOptionLikeAntsibullDocs(part, url, 'option'),

@@ -85,7 +85,7 @@ const DEFAULT_FORMATTER: AllFormatOptions = {
   formatModule: (part) =>
     `\\ :ref:\`${quoteRST(part.fqcn, true, true, true)} <ansible_collections.${part.fqcn}_module>\`\\ `,
   formatRSTRef: (part) => `\\ :ref:\`${quoteRST(part.text, true, true, true)} <${part.ref}>\`\\ `,
-  formatURL: (part) => `\\ ${encodeURI(part.url)}\\ `,
+  formatURL: (part) => (part.url === '' ? '' : `\\ \`${quoteRST(part.url)} <${encodeURI(part.url)}>\`__\\ `),
   formatText: (part) => quoteRST(part.text),
   formatEnvVariable: (part) => `\\ :envvar:\`${quoteRST(part.name, true, true, true)}\`\\ `,
   formatOptionName: (part) => formatAntsibullOptionLike(part, 'ansopt'),
@@ -105,7 +105,7 @@ const PLAIN_FORMATTER: AllFormatOptions = {
   formatModule: (part) =>
     `\\ :ref:\`${quoteRST(part.fqcn, true, true, true)} <ansible_collections.${part.fqcn}_module>\`\\ `,
   formatRSTRef: (part) => `\\ :ref:\`${quoteRST(part.text, true, true, true)} <${part.ref}>\`\\ `,
-  formatURL: (part) => `\\ ${encodeURI(part.url)}\\ `,
+  formatURL: (part) => (part.url === '' ? '' : `\\ \`${quoteRST(part.url)} <${encodeURI(part.url)}>\`__\\ `),
   formatText: (part) => quoteRST(part.text),
   formatEnvVariable: (part) => `\\ :envvar:\`${quoteRST(part.name, true, true, true)}\`\\ `,
   formatOptionName: (part) => formatPlainOptionLike(part),
