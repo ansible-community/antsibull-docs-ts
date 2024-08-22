@@ -110,8 +110,12 @@ export function processWhitespace(
   }
   const length = text.length;
   let index = 0;
-  let result: string[] = [];
+  const result: string[] = [];
   const whitespaces = /([\s]+)/g;
+  // The 'no-misleading-character-class' warning reported by eslint below can be safely
+  // ignored since we have a list of distinct Unicode codepoints, and we don't rely on
+  // them being part of the adjacent codepoints.
+  /* eslint-disable-next-line no-misleading-character-class */
   const spacesToKeep = /([\u00A0\u202F\u2007\u2060\u200B\u200C\u200D\uFEFF]+)/g;
   while (index < length) {
     whitespaces.lastIndex = index;
@@ -235,7 +239,7 @@ const PARSER: CommandParserEx[] = [
     parameters: 0,
     stripSurroundingWhitespace: true,
     old_markup: true,
-    process: (_, __, source, ___) => {
+    process: (_, __, source) => {
       return <HorizontalLinePart>{ type: PartType.HORIZONTAL_LINE, source: source };
     },
   },
