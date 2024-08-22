@@ -4,7 +4,7 @@
   SPDX-License-Identifier: BSD-2-Clause
 */
 
-import { ParsingOptions, PluginIdentifier } from './opts';
+import { ParsingOptions, PluginIdentifier, Whitespace } from './opts';
 import { isFQCN, isPluginType } from './ansible';
 import { parseEscapedArgs, parseUnescapedArgs } from './parser-impl';
 import {
@@ -28,6 +28,10 @@ import {
   Paragraph,
 } from './dom';
 
+function repr(text: string): string {
+  return JSON.stringify(text);
+}
+
 const IGNORE_MARKER = 'ignore:';
 
 function parseOptionLike(
@@ -49,10 +53,10 @@ function parseOptionLike(
     const pluginFqcn = m[1] as string;
     const pluginType = m[2] as string;
     if (!isFQCN(pluginFqcn)) {
-      throw Error(`Plugin name "${pluginFqcn}" is not a FQCN`);
+      throw Error(`Plugin name ${repr(pluginFqcn)} is not a FQCN`);
     }
     if (!isPluginType(pluginType)) {
-      throw Error(`Plugin type "${pluginType}" is not valid`);
+      throw Error(`Plugin type ${repr(pluginType)} is not valid`);
     }
     plugin = { fqcn: pluginFqcn, type: pluginType };
     text = m[3] as string;
@@ -74,7 +78,7 @@ function parseOptionLike(
     }
   }
   if (/[:#]/.test(text)) {
-    throw Error(`Invalid option/return value name "${text}"`);
+    throw Error(`Invalid option/return value name ${repr(text)}`);
   }
   return {
     type: type,
@@ -87,11 +91,68 @@ function parseOptionLike(
   };
 }
 
+function addWhitespace(result: string[], ws: string, whitespace: Whitespace, noNewlines: boolean): void {
+  if (whitespace === 'keep_single_newlines' && !noNewlines && ws.search(/[\n\r]/) >= 0) {
+    result.push('\n');
+  } else {
+    result.push(' ');
+  }
+}
+
+export function processWhitespace(
+  text: string,
+  whitespace: Whitespace,
+  codeEnvironment: boolean,
+  noNewlines: boolean,
+): string {
+  if (whitespace === 'ignore') {
+    return text;
+  }
+  const length = text.length;
+  let index = 0;
+  let result: string[] = [];
+  const whitespaces = /([\s]+)/g;
+  const spacesToKeep = /([\u00A0\u202F\u2007\u2060\u200B\u200C\u200D\uFEFF]+)/g;
+  while (index < length) {
+    whitespaces.lastIndex = index;
+    const m = whitespaces.exec(text);
+    if (!m) {
+      result.push(text.slice(index));
+      break;
+    }
+    if (m.index > index) {
+      result.push(text.slice(index, m.index));
+    }
+    const ws = m[0];
+    const ws_length = ws.length;
+    if (codeEnvironment) {
+      result.push(ws.replace(/[\t\n\r]/g, ' '));
+    } else {
+      let ws_index = 0;
+      while (ws_index < ws_length) {
+        spacesToKeep.lastIndex = ws_index;
+        const wsm = spacesToKeep.exec(ws);
+        if (!wsm) {
+          addWhitespace(result, ws.slice(ws_index), whitespace, noNewlines);
+          break;
+        }
+        if (wsm.index > ws_index) {
+          addWhitespace(result, ws.slice(ws_index, wsm.index), whitespace, noNewlines);
+        }
+        result.push(wsm[0]);
+        ws_index = wsm.index + wsm[0].length;
+      }
+    }
+    index = m.index + ws_length;
+  }
+  return result.join('');
+}
+
 export interface CommandParser {
   command: string;
   parameters: number;
   escapedArguments?: boolean;
-  process: (args: string[], opts: ParsingOptions, source: string | undefined) => AnyPart;
+  process: (args: string[], opts: ParsingOptions, source: string | undefined, whitespace: Whitespace) => AnyPart;
 }
 
 interface CommandParserEx extends CommandParser {
@@ -104,8 +165,8 @@ const PARSER: CommandParserEx[] = [
     command: 'I',
     parameters: 1,
     old_markup: true,
-    process: (args, _, source) => {
-      const text = args[0] as string;
+    process: (args, _, source, whitespace) => {
+      const text = processWhitespace(args[0] as string, whitespace, false, true);
       return <ItalicPart>{ type: PartType.ITALIC, text: text, source: source };
     },
   },
@@ -113,8 +174,8 @@ const PARSER: CommandParserEx[] = [
     command: 'B',
     parameters: 1,
     old_markup: true,
-    process: (args, _, source) => {
-      const text = args[0] as string;
+    process: (args, _, source, whitespace) => {
+      const text = processWhitespace(args[0] as string, whitespace, false, true);
       return <BoldPart>{ type: PartType.BOLD, text: text, source: source };
     },
   },
@@ -122,10 +183,10 @@ const PARSER: CommandParserEx[] = [
     command: 'M',
     parameters: 1,
     old_markup: true,
-    process: (args, _, source) => {
-      const fqcn = args[0] as string;
+    process: (args, _, source, whitespace) => {
+      const fqcn = processWhitespace(args[0] as string, whitespace, false, true);
       if (!isFQCN(fqcn)) {
-        throw Error(`Module name "${fqcn}" is not a FQCN`);
+        throw Error(`Module name ${repr(fqcn)} is not a FQCN`);
       }
       return <ModulePart>{ type: PartType.MODULE, fqcn: fqcn, source: source };
     },
@@ -134,8 +195,8 @@ const PARSER: CommandParserEx[] = [
     command: 'U',
     parameters: 1,
     old_markup: true,
-    process: (args, _, source) => {
-      const url = args[0] as string;
+    process: (args, _, source, whitespace) => {
+      const url = processWhitespace(args[0] as string, whitespace, false, true);
       return <URLPart>{ type: PartType.URL, url: url, source: source };
     },
   },
@@ -143,9 +204,9 @@ const PARSER: CommandParserEx[] = [
     command: 'L',
     parameters: 2,
     old_markup: true,
-    process: (args, _, source) => {
-      const text = args[0] as string;
-      const url = args[1] as string;
+    process: (args, _, source, whitespace) => {
+      const text = processWhitespace(args[0] as string, whitespace, false, true);
+      const url = processWhitespace(args[1] as string, whitespace, false, true);
       return <LinkPart>{ type: PartType.LINK, text: text, url: url, source: source };
     },
   },
@@ -153,9 +214,9 @@ const PARSER: CommandParserEx[] = [
     command: 'R',
     parameters: 2,
     old_markup: true,
-    process: (args, _, source) => {
-      const text = args[0] as string;
-      const ref = args[1] as string;
+    process: (args, _, source, whitespace) => {
+      const text = processWhitespace(args[0] as string, whitespace, false, true);
+      const ref = processWhitespace(args[1] as string, whitespace, false, true);
       return <RSTRefPart>{ type: PartType.RST_REF, text: text, ref: ref, source: source };
     },
   },
@@ -163,8 +224,8 @@ const PARSER: CommandParserEx[] = [
     command: 'C',
     parameters: 1,
     old_markup: true,
-    process: (args, _, source) => {
-      const text = args[0] as string;
+    process: (args, _, source, whitespace) => {
+      const text = processWhitespace(args[0] as string, whitespace, true, true);
       return <CodePart>{ type: PartType.CODE, text: text, source: source };
     },
   },
@@ -172,7 +233,7 @@ const PARSER: CommandParserEx[] = [
     command: 'HORIZONTALLINE',
     parameters: 0,
     old_markup: true,
-    process: (_, __, source) => {
+    process: (_, __, source, ___) => {
       return <HorizontalLinePart>{ type: PartType.HORIZONTAL_LINE, source: source };
     },
   },
@@ -181,18 +242,19 @@ const PARSER: CommandParserEx[] = [
     command: 'P',
     parameters: 1,
     escapedArguments: true,
-    process: (args, _, source) => {
-      const m = /^([^#]*)#(.*)$/.exec(args[0] as string);
+    process: (args, _, source, whitespace) => {
+      const plugin = processWhitespace(args[0] as string, whitespace, false, true);
+      const m = /^([^#]*)#(.*)$/.exec(plugin);
       if (!m) {
-        throw Error(`Parameter "${args[0]}" is not of the form FQCN#type`);
+        throw Error(`Parameter ${repr(args[0])} is not of the form FQCN#type`);
       }
       const fqcn = m[1] as string;
       if (!isFQCN(fqcn)) {
-        throw Error(`Plugin name "${fqcn}" is not a FQCN`);
+        throw Error(`Plugin name ${repr(fqcn)} is not a FQCN`);
       }
       const type = m[2] as string;
       if (!isPluginType(type)) {
-        throw Error(`Plugin type "${type}" is not valid`);
+        throw Error(`Plugin type ${repr(type)} is not valid`);
       }
       return <PluginPart>{ type: PartType.PLUGIN, plugin: { fqcn: fqcn, type: type }, source: source };
     },
@@ -201,8 +263,8 @@ const PARSER: CommandParserEx[] = [
     command: 'E',
     parameters: 1,
     escapedArguments: true,
-    process: (args, _, source) => {
-      const env = args[0] as string;
+    process: (args, _, source, whitespace) => {
+      const env = processWhitespace(args[0] as string, whitespace, true, true);
       return <EnvVariablePart>{ type: PartType.ENV_VARIABLE, name: env, source: source };
     },
   },
@@ -210,8 +272,8 @@ const PARSER: CommandParserEx[] = [
     command: 'V',
     parameters: 1,
     escapedArguments: true,
-    process: (args, _, source) => {
-      const value = args[0] as string;
+    process: (args, _, source, whitespace) => {
+      const value = processWhitespace(args[0] as string, whitespace, true, true);
       return <OptionValuePart>{ type: PartType.OPTION_VALUE, value: value, source: source };
     },
   },
@@ -219,8 +281,8 @@ const PARSER: CommandParserEx[] = [
     command: 'O',
     parameters: 1,
     escapedArguments: true,
-    process: (args, opts, source) => {
-      const value = args[0] as string;
+    process: (args, opts, source, whitespace) => {
+      const value = processWhitespace(args[0] as string, whitespace, true, true);
       return parseOptionLike(value, opts, PartType.OPTION_NAME, source);
     },
   },
@@ -228,8 +290,8 @@ const PARSER: CommandParserEx[] = [
     command: 'RV',
     parameters: 1,
     escapedArguments: true,
-    process: (args, opts, source) => {
-      const value = args[0] as string;
+    process: (args, opts, source, whitespace) => {
+      const value = processWhitespace(args[0] as string, whitespace, true, true);
       return parseOptionLike(value, opts, PartType.RETURN_VALUE, source);
     },
   },
@@ -260,7 +322,9 @@ export function parseString(
   opts: ParsingOptions,
   where: string,
 ): Paragraph {
+  // TODO: handle opts.whitespace!
   const result: AnyPart[] = [];
+  const whitespace = opts.whitespace || 'ignore';
   const length = input.length;
   let index = 0;
   while (index < length) {
@@ -271,7 +335,7 @@ export function parseString(
         const text = input.slice(index);
         result.push(<TextPart>{
           type: PartType.TEXT,
-          text: text,
+          text: processWhitespace(text, whitespace, false, false),
           source: opts.addSource ? text : undefined,
         });
       }
@@ -281,7 +345,7 @@ export function parseString(
       const text = input.slice(index, match.index);
       result.push(<TextPart>{
         type: PartType.TEXT,
-        text: text,
+        text: processWhitespace(text, whitespace, false, false),
         source: opts.addSource ? text : undefined,
       });
     }
@@ -293,7 +357,7 @@ export function parseString(
     }
     const command = commands.get(cmd);
     if (!command) {
-      throw Error(`Internal error: unknown command "${cmd}"`);
+      throw Error(`Internal error: unknown command ${repr(cmd)}`);
     }
     let args: string[];
     let error: string | undefined;
@@ -307,7 +371,7 @@ export function parseString(
     const source = opts.addSource ? input.slice(index, endIndex) : undefined;
     if (error === undefined) {
       try {
-        result.push(command.process(args, opts, source));
+        result.push(command.process(args, opts, source, whitespace));
         /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
       } catch (exc: any) {
         error = `${exc}`;
@@ -319,7 +383,7 @@ export function parseString(
     if (error !== undefined) {
       const errorSource =
         (opts.helpfulErrors ?? true)
-          ? `"${input.slice(index, endIndex)}"`
+          ? repr(input.slice(index, endIndex))
           : `${cmd}${command.parameters > 0 ? '()' : ''}`;
       error = `While parsing ${errorSource} at index ${match.index + 1}${where}: ${error}`;
       switch (opts.errors || 'message') {
