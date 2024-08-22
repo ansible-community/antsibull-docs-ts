@@ -4,8 +4,36 @@
   SPDX-License-Identifier: BSD-2-Clause
 */
 
-import { parse, composeCommandMap, composeCommandRE, CommandParser, parseString } from './parser';
+import { processWhitespace, parse, composeCommandMap, composeCommandRE, CommandParser, parseString } from './parser';
 import { PartType } from './dom';
+
+describe('processWhitespace', (): void => {
+  it('empty', (): void => {
+    expect(processWhitespace('', 'strip', false, false)).toEqual('');
+    expect(processWhitespace('', 'keep_single_newlines', false, false)).toEqual('');
+  });
+  it('one space', (): void => {
+    expect(processWhitespace(' ', 'strip', false, false)).toEqual(' ');
+    expect(processWhitespace(' ', 'keep_single_newlines', false, false)).toEqual(' ');
+  });
+  it('two spaces', (): void => {
+    expect(processWhitespace('  ', 'strip', false, false)).toEqual(' ');
+    expect(processWhitespace('  ', 'keep_single_newlines', false, false)).toEqual(' ');
+  });
+  it('newline', (): void => {
+    expect(processWhitespace('\n', 'strip', false, false)).toEqual(' ');
+    expect(processWhitespace('\n', 'keep_single_newlines', false, false)).toEqual('\n');
+  });
+  it('newline, no newlines allowed', (): void => {
+    expect(processWhitespace('\n', 'strip', false, true)).toEqual(' ');
+    expect(processWhitespace('\n', 'keep_single_newlines', false, true)).toEqual(' ');
+  });
+  it('complex', (): void => {
+    const input = 'Foo \n\r\t\n\r Bar';
+    expect(processWhitespace(input, 'strip', false, false)).toEqual('Foo Bar');
+    expect(processWhitespace(input, 'keep_single_newlines', false, false)).toEqual('Foo\nBar');
+  });
+});
 
 describe('parser', (): void => {
   it('empty string', (): void => {
@@ -36,7 +64,6 @@ describe('parser', (): void => {
         { type: PartType.TEXT, text: ' ) ', source: undefined },
         { type: PartType.URL, url: 'https://example.com/?foo=bar', source: undefined },
         { type: PartType.HORIZONTAL_LINE, source: undefined },
-        { type: PartType.TEXT, text: ' ', source: undefined },
         { type: PartType.LINK, text: 'foo', url: 'https://bar.com', source: undefined },
         { type: PartType.TEXT, text: ' ', source: undefined },
         { type: PartType.RST_REF, text: ' a', ref: 'b ', source: undefined },
@@ -63,7 +90,6 @@ describe('parser', (): void => {
         { type: PartType.TEXT, text: ' ) ', source: ' ) ' },
         { type: PartType.URL, url: 'https://example.com/?foo=bar', source: 'U(https://example.com/?foo=bar)' },
         { type: PartType.HORIZONTAL_LINE, source: 'HORIZONTALLINE' },
-        { type: PartType.TEXT, text: ' ', source: ' ' },
         { type: PartType.LINK, text: 'foo', url: 'https://bar.com', source: 'L(foo ,  https://bar.com)' },
         { type: PartType.TEXT, text: ' ', source: ' ' },
         { type: PartType.RST_REF, text: ' a', ref: 'b ', source: 'R( a , b )' },
@@ -90,7 +116,6 @@ describe('parser', (): void => {
         { type: PartType.TEXT, text: ' ) ', source: undefined },
         { type: PartType.URL, url: 'https://example.com/?foo=bar', source: undefined },
         { type: PartType.HORIZONTAL_LINE, source: undefined },
-        { type: PartType.TEXT, text: ' ', source: undefined },
         { type: PartType.LINK, text: 'foo', url: 'https://bar.com', source: undefined },
         { type: PartType.TEXT, text: ' ', source: undefined },
         { type: PartType.RST_REF, text: ' a', ref: 'b ', source: undefined },

@@ -39,6 +39,8 @@ export interface PluginIdentifier {
   type: string;
 }
 
+export type Whitespace = 'ignore' | 'strip' | 'keep_single_newlines';
+
 export interface ParsingOptions extends ErrorHandlingOptions {
   /** Should be provided if parsing documentation of a plugin/module/role. */
   currentPlugin?: PluginIdentifier;
@@ -54,6 +56,19 @@ export interface ParsingOptions extends ErrorHandlingOptions {
 
   /** If set to 'true' (default is 'true'), include the faulty markup in error messages. */
   helpfulErrors?: boolean;
+
+  /**
+    How to handle whitespace (default is 'ignore').
+
+    'ignore': Keep all whitespace as-is.
+
+    'strip': Reduce all whitespace (space, tabs, newlines, ...) to regular breakable or
+    non-breakable spaces. Multiple spaces are kept in everything that's often rendered
+    code-style, like C(), O(), V(), RV(), E().
+
+    'keep_single_newlines': Similar to 'strip', but keep single newlines intact.
+  */
+  whitespace?: Whitespace;
 }
 
 export interface CommonExportOptions extends ErrorHandlingOptions {
