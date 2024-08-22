@@ -152,6 +152,7 @@ export interface CommandParser {
   command: string;
   parameters: number;
   escapedArguments?: boolean;
+  stripSurroundingWhitespace?: boolean;
   process: (args: string[], opts: ParsingOptions, source: string | undefined, whitespace: Whitespace) => AnyPart;
 }
 
@@ -232,6 +233,7 @@ const PARSER: CommandParserEx[] = [
   {
     command: 'HORIZONTALLINE',
     parameters: 0,
+    stripSurroundingWhitespace: true,
     old_markup: true,
     process: (_, __, source, ___) => {
       return <HorizontalLinePart>{ type: PartType.HORIZONTAL_LINE, source: source };
@@ -341,14 +343,7 @@ export function parseString(
       }
       break;
     }
-    if (match.index > index) {
-      const text = input.slice(index, match.index);
-      result.push(<TextPart>{
-        type: PartType.TEXT,
-        text: processWhitespace(text, whitespace, false, false),
-        source: opts.addSource ? text : undefined,
-      });
-    }
+    const prevIndex = index;
     index = match.index;
     let cmd = match[0];
     let endIndex = index + cmd.length;
@@ -358,6 +353,23 @@ export function parseString(
     const command = commands.get(cmd);
     if (!command) {
       throw Error(`Internal error: unknown command ${repr(cmd)}`);
+    }
+    if (match.index > prevIndex) {
+      let text = input.slice(prevIndex, match.index);
+      if (command.stripSurroundingWhitespace) {
+        let end = text.length;
+        while (end > 0 && /[ \t]/.test(text[end - 1])) {
+          end -= 1;
+        }
+        if (end < text.length) {
+          text = text.slice(0, end);
+        }
+      }
+      result.push(<TextPart>{
+        type: PartType.TEXT,
+        text: processWhitespace(text, whitespace, false, false),
+        source: opts.addSource ? text : undefined,
+      });
     }
     let args: string[];
     let error: string | undefined;
@@ -401,6 +413,11 @@ export function parseString(
       }
     }
     index = endIndex;
+    if (command.stripSurroundingWhitespace) {
+      while (index < length && /[ \t]/.test(input[index])) {
+        index += 1;
+      }
+    }
   }
   return result;
 }
