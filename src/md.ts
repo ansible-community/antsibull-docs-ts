@@ -10,9 +10,17 @@ import { MDOptions, AllFormatOptions, mergeOpts } from './opts';
 import { OptionNamePart, Paragraph, ReturnValuePart } from './dom';
 import { quoteHTMLArg } from './html';
 import { addToDestination } from './format';
+import { splitLines } from './util';
 
 export function quoteMD(text: string): string {
   return text.replace(/([!"#$%&'()*+,:;<=>?@[\\\]^_`{|}~.-])/g, '\\$1');
+}
+
+export function postprocessMDParagraph(par: string): string {
+  return splitLines(par.trim())
+    .map((line) => line.trim().replace('\t', ' '))
+    .filter(Boolean)
+    .join('\n');
 }
 
 function formatOptionLike(
@@ -68,10 +76,8 @@ export function toMD(paragraphs: Paragraph[], opts?: MDOptions): string {
   for (const paragraph of paragraphs) {
     const line: string[] = [];
     addToDestination(line, paragraph, mergedOpts);
-    if (!line.length) {
-      line.push(' ');
-    }
-    result.push(line.join(''));
+    const lineStr = postprocessMDParagraph(line.join(''));
+    result.push(lineStr || ' ');
   }
   return result.join('\n\n');
 }
