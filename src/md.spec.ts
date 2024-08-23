@@ -4,7 +4,7 @@
   SPDX-License-Identifier: BSD-2-Clause
 */
 
-import { quoteMD, toMD } from './md';
+import { quoteMD, toMD, postprocessMDParagraph } from './md';
 import { PartType } from './dom';
 
 describe('quoteMD tests', (): void => {
@@ -18,6 +18,15 @@ describe('quoteMD tests', (): void => {
     expect(quoteMD('[]!.()-\\@<>?[]!.()-\\@<>?&')).toBe(
       '\\[\\]\\!\\.\\(\\)\\-\\\\\\@\\<\\>\\?\\[\\]\\!\\.\\(\\)\\-\\\\\\@\\<\\>\\?\\&',
     );
+  });
+});
+
+describe('postprocessMDParagraph tests', (): void => {
+  it('empty string', (): void => {
+    expect(postprocessMDParagraph('')).toBe('');
+  });
+  it('string with some whitespace', (): void => {
+    expect(postprocessMDParagraph(' \n foo \n\r\n \n\tbar \n ')).toBe('foo\nbar');
   });
 });
 
