@@ -1,6 +1,6 @@
 {
   "name": "antsibull-docs",
-  "version": "1.1.0",
+  "version": "1.1.0-post0",
   "description": "TypeScript library for processing Ansible documentation markup",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
