@@ -1,3 +1,0 @@
-bugfixes:
-  - "Do not apply URI encoding to visible URL (https://github.com/ansible-community/antsibull-docs-ts/pull/286)."
-  - "Improve handling of empty URL for links (https://github.com/ansible-community/antsibull-docs-ts/pull/286)."
