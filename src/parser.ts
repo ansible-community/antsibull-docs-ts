@@ -252,7 +252,7 @@ const PARSER: CommandParserEx[] = [
       const plugin = processWhitespace(args[0] as string, whitespace, false, true);
       const m = /^([^#]*)#(.*)$/.exec(plugin);
       if (!m) {
-        throw Error(`Parameter ${repr(args[0])} is not of the form FQCN#type`);
+        throw Error(`Parameter ${repr(args[0] as string)} is not of the form FQCN#type`);
       }
       const fqcn = m[1] as string;
       if (!isFQCN(fqcn)) {
@@ -362,7 +362,7 @@ export function parseString(
       let text = input.slice(prevIndex, match.index);
       if (command.stripSurroundingWhitespace) {
         let end = text.length;
-        while (end > 0 && /[ \t]/.test(text[end - 1])) {
+        while (end > 0 && /[ \t]/.test(text[end - 1] as string)) {
           end -= 1;
         }
         if (end < text.length) {
@@ -418,7 +418,7 @@ export function parseString(
     }
     index = endIndex;
     if (command.stripSurroundingWhitespace) {
-      while (index < length && /[ \t]/.test(input[index])) {
+      while (index < length && /[ \t]/.test(input[index] as string)) {
         index += 1;
       }
     }
