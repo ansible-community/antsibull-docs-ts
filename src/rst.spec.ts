@@ -27,7 +27,7 @@ describe('quoteRST tests', (): void => {
     expect(quoteRST('', true, true, true)).toBe('\\ ');
   });
   it('more complex', (): void => {
-    expect(quoteRST('\\<_>`*<_>*`\\|')).toBe('\\\\\\<\\_\\>\\`\\*\\<\\_\\>\\*\\`\\\\|');
+    expect(quoteRST('\\<_>`*<_>*`\\|')).toBe('\\\\\\<\\_\\>\\`\\*\\<\\_\\>\\*\\`\\\\\\|');
   });
 });
 
