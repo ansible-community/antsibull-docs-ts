@@ -15,7 +15,7 @@ export function quoteRST(
   escape_ending_whitespace = false,
   must_not_be_empty = false,
 ): string {
-  text = text.replace(/([\\<>_*`\|])/g, '\\$1');
+  text = text.replace(/([\\<>_*`|])/g, '\\$1');
 
   if (escape_ending_whitespace && /\s$/.test(text.substring(text.length - 1))) {
     text = text + '\\ ';
