@@ -4,6 +4,19 @@ antsibull-docs -- TypeScript library for processing Ansible documentation markup
 
 .. contents:: Topics
 
+v1.1.1
+======
+
+Release Summary
+---------------
+
+Bugfix release.
+
+Bugfixes
+--------
+
+- Make sure to also escape pipes (``\|``) in reStructured Text (https://github.com/ansible-community/antsibull-docs-ts/pull/381).
+
 v1.1.0
 ======
 
