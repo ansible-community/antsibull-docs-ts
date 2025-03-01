@@ -9,7 +9,15 @@ updates:
     directory: '/'
     schedule:
       interval: 'weekly'
+    groups:
+      ci:
+        patterns:
+          - "*"
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
       interval: 'daily'
+    groups:
+      npm:
+        patterns:
+          - "*"
