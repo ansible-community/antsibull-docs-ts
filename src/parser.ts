@@ -275,9 +275,14 @@ const PARSER: CommandParserEx[] = [
         throw Error(`Plugin type ${repr(type)} is not valid`);
       }
       if (entrypoint && type !== 'role') {
-        throw Error('Only role references can have entrypoints')
+        throw Error('Only role references can have entrypoints');
       }
-      return <PluginPart>{ type: PartType.PLUGIN, plugin: { fqcn: fqcn, type: type }, entrypoint: entrypoint, source: source };
+      return <PluginPart>{
+        type: PartType.PLUGIN,
+        plugin: { fqcn: fqcn, type: type },
+        entrypoint: entrypoint,
+        source: source,
+      };
     },
   },
   {
