@@ -5,7 +5,7 @@
 */
 
 export function isFQCN(input: string): boolean {
-  return input.match(/^[a-z0-9_]+\.[a-z0-9_]+(?:\.[a-z0-9_]+)+$/) !== null;
+  return input.match(/^[A-Za-z0-9_]+\.[A-Za-z0-9_]+(?:\.[A-Za-z0-9_]+)+$/) !== null;
 }
 
 export function isPluginType(input: string): boolean {
