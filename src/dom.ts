@@ -94,6 +94,7 @@ export interface OptionValuePart extends Part {
 export interface EnvVariablePart extends Part {
   type: PartType.ENV_VARIABLE;
   name: string;
+  value: string | undefined;
 }
 
 export interface ReturnValuePart extends Part {
