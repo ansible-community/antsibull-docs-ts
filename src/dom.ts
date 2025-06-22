@@ -52,6 +52,7 @@ export interface ModulePart extends Part {
 export interface PluginPart extends Part {
   type: PartType.PLUGIN;
   plugin: PluginIdentifier;
+  entrypoint: string | undefined; // can be present if plugin.type == 'role'
 }
 
 export interface URLPart extends Part {
