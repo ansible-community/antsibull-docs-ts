@@ -290,8 +290,14 @@ const PARSER: CommandParserEx[] = [
     parameters: 1,
     escapedArguments: true,
     process: (args, _, source, whitespace) => {
-      const env = processWhitespace(args[0] as string, whitespace, true, true);
-      return <EnvVariablePart>{ type: PartType.ENV_VARIABLE, name: env, source: source };
+      let env = processWhitespace(args[0] as string, whitespace, true, true);
+      let value: string | undefined;
+      const eq = env.indexOf('=');
+      if (eq >= 0) {
+        value = env.substring(eq + 1, env.length);
+        env = env.substring(0, eq);
+      }
+      return <EnvVariablePart>{ type: PartType.ENV_VARIABLE, name: env, value: value, source: source };
     },
   },
   {
