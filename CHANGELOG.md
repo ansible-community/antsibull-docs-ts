@@ -2,44 +2,47 @@
 
 **Topics**
 
-- <a href="#v1-1-1">v1\.1\.1</a>
+- <a href="#v1-1-2">v1\.1\.2</a>
     - <a href="#release-summary">Release Summary</a>
     - <a href="#bugfixes">Bugfixes</a>
-- <a href="#v1-1-0">v1\.1\.0</a>
+- <a href="#v1-1-1">v1\.1\.1</a>
     - <a href="#release-summary-1">Release Summary</a>
-    - <a href="#minor-changes">Minor Changes</a>
     - <a href="#bugfixes-1">Bugfixes</a>
-- <a href="#v1-0-2">v1\.0\.2</a>
+- <a href="#v1-1-0">v1\.1\.0</a>
     - <a href="#release-summary-2">Release Summary</a>
+    - <a href="#minor-changes">Minor Changes</a>
     - <a href="#bugfixes-2">Bugfixes</a>
-- <a href="#v1-0-1">v1\.0\.1</a>
+- <a href="#v1-0-2">v1\.0\.2</a>
     - <a href="#release-summary-3">Release Summary</a>
     - <a href="#bugfixes-3">Bugfixes</a>
-- <a href="#v1-0-0">v1\.0\.0</a>
+- <a href="#v1-0-1">v1\.0\.1</a>
     - <a href="#release-summary-4">Release Summary</a>
-- <a href="#v0-4-0">v0\.4\.0</a>
+    - <a href="#bugfixes-4">Bugfixes</a>
+- <a href="#v1-0-0">v1\.0\.0</a>
     - <a href="#release-summary-5">Release Summary</a>
+- <a href="#v0-4-0">v0\.4\.0</a>
+    - <a href="#release-summary-6">Release Summary</a>
     - <a href="#minor-changes-1">Minor Changes</a>
     - <a href="#breaking-changes--porting-guide">Breaking Changes / Porting Guide</a>
-    - <a href="#bugfixes-4">Bugfixes</a>
+    - <a href="#bugfixes-5">Bugfixes</a>
 - <a href="#v0-3-0">v0\.3\.0</a>
-    - <a href="#release-summary-6">Release Summary</a>
+    - <a href="#release-summary-7">Release Summary</a>
     - <a href="#minor-changes-2">Minor Changes</a>
 - <a href="#v0-2-0">v0\.2\.0</a>
-    - <a href="#release-summary-7">Release Summary</a>
+    - <a href="#release-summary-8">Release Summary</a>
     - <a href="#minor-changes-3">Minor Changes</a>
     - <a href="#breaking-changes--porting-guide-1">Breaking Changes / Porting Guide</a>
-    - <a href="#bugfixes-5">Bugfixes</a>
+    - <a href="#bugfixes-6">Bugfixes</a>
 - <a href="#v0-1-0">v0\.1\.0</a>
-    - <a href="#release-summary-8">Release Summary</a>
+    - <a href="#release-summary-9">Release Summary</a>
     - <a href="#minor-changes-4">Minor Changes</a>
     - <a href="#breaking-changes--porting-guide-2">Breaking Changes / Porting Guide</a>
-    - <a href="#bugfixes-6">Bugfixes</a>
+    - <a href="#bugfixes-7">Bugfixes</a>
 - <a href="#v0-0-1">v0\.0\.1</a>
-    - <a href="#release-summary-9">Release Summary</a>
+    - <a href="#release-summary-10">Release Summary</a>
 
-<a id="v1-1-1"></a>
-## v1\.1\.1
+<a id="v1-1-2"></a>
+## v1\.1\.2
 
 <a id="release-summary"></a>
 ### Release Summary
@@ -49,12 +52,25 @@ Bugfix release\.
 <a id="bugfixes"></a>
 ### Bugfixes
 
+* Accept upper\-case letters when validating FQCNs \([https\://github\.com/ansible\-community/antsibull\-docs\-ts/pull/441](https\://github\.com/ansible\-community/antsibull\-docs\-ts/pull/441)\)\.
+
+<a id="v1-1-1"></a>
+## v1\.1\.1
+
+<a id="release-summary-1"></a>
+### Release Summary
+
+Bugfix release\.
+
+<a id="bugfixes-1"></a>
+### Bugfixes
+
 * Make sure to also escape pipes \(<code>\\\|</code>\) in reStructured Text \([https\://github\.com/ansible\-community/antsibull\-docs\-ts/pull/381](https\://github\.com/ansible\-community/antsibull\-docs\-ts/pull/381)\)\.
 
 <a id="v1-1-0"></a>
 ## v1\.1\.0
 
-<a id="release-summary-1"></a>
+<a id="release-summary-2"></a>
 ### Release Summary
 
 Bugfix and feature release that improves markup parsing and generation with respect to whitespace handling and escaping\.
@@ -66,7 +82,7 @@ Bugfix and feature release that improves markup parsing and generation with resp
 * Always remove some whitespace around <code>HORIZONTALLINE</code> \([https\://github\.com/ansible\-community/antsibull\-docs\-ts/pull/295](https\://github\.com/ansible\-community/antsibull\-docs\-ts/pull/295)\)\.
 * Apply postprocessing to RST and MarkDown to avoid generating invalid markup when input contains whitespace at potentially dangerous places \([https\://github\.com/ansible\-community/antsibull\-docs\-ts/pull/296](https\://github\.com/ansible\-community/antsibull\-docs\-ts/pull/296)\)\.
 
-<a id="bugfixes-1"></a>
+<a id="bugfixes-2"></a>
 ### Bugfixes
 
 * Do not apply URI encoding to visible URL \([https\://github\.com/ansible\-community/antsibull\-docs\-ts/pull/286](https\://github\.com/ansible\-community/antsibull\-docs\-ts/pull/286)\)\.
@@ -76,12 +92,12 @@ Bugfix and feature release that improves markup parsing and generation with resp
 <a id="v1-0-2"></a>
 ## v1\.0\.2
 
-<a id="release-summary-2"></a>
+<a id="release-summary-3"></a>
 ### Release Summary
 
 Bugfix release\.
 
-<a id="bugfixes-2"></a>
+<a id="bugfixes-3"></a>
 ### Bugfixes
 
 * Fix handling of empty markup parameters for RST \([https\://github\.com/ansible\-community/antsibull\-docs\-ts/pull/262](https\://github\.com/ansible\-community/antsibull\-docs\-ts/pull/262)\)\.
@@ -89,12 +105,12 @@ Bugfix release\.
 <a id="v1-0-1"></a>
 ## v1\.0\.1
 
-<a id="release-summary-3"></a>
+<a id="release-summary-4"></a>
 ### Release Summary
 
 Maintenance release\.
 
-<a id="bugfixes-3"></a>
+<a id="bugfixes-4"></a>
 ### Bugfixes
 
 * Properly escape MarkDown link targets \([https\://github\.com/ansible\-community/antsibull\-docs\-ts/pull/197](https\://github\.com/ansible\-community/antsibull\-docs\-ts/pull/197)\)\.
@@ -102,7 +118,7 @@ Maintenance release\.
 <a id="v1-0-0"></a>
 ## v1\.0\.0
 
-<a id="release-summary-4"></a>
+<a id="release-summary-5"></a>
 ### Release Summary
 
 First stable release\. This package is using semantic versioning\, so there will be no more breaking changes until the release of 2\.0\.0\.
@@ -110,7 +126,7 @@ First stable release\. This package is using semantic versioning\, so there will
 <a id="v0-4-0"></a>
 ## v0\.4\.0
 
-<a id="release-summary-5"></a>
+<a id="release-summary-6"></a>
 ### Release Summary
 
 New major release that increases compatibility with the [Python code in antsibull\-docs\-parser](https\://github\.com/ansible\-community/antsibull\-docs\-parser)\.
@@ -125,7 +141,7 @@ New major release that increases compatibility with the [Python code in antsibul
 
 * Rename <code>current\_plugin</code> options of various functions to <code>currentPlugin</code>\, and the <code>role\_entrypoint</code> option of <code>parse</code> to <code>roleEntrypoint</code> \([https\://github\.com/ansible\-community/antsibull\-docs\-ts/pull/49](https\://github\.com/ansible\-community/antsibull\-docs\-ts/pull/49)\)\.
 
-<a id="bugfixes-4"></a>
+<a id="bugfixes-5"></a>
 ### Bugfixes
 
 * Fix URL escaping in MarkDown \([https\://github\.com/ansible\-community/antsibull\-docs\-ts/pull/51](https\://github\.com/ansible\-community/antsibull\-docs\-ts/pull/51)\)\.
@@ -133,7 +149,7 @@ New major release that increases compatibility with the [Python code in antsibul
 <a id="v0-3-0"></a>
 ## v0\.3\.0
 
-<a id="release-summary-6"></a>
+<a id="release-summary-7"></a>
 ### Release Summary
 
 Feature release\.
@@ -146,7 +162,7 @@ Feature release\.
 <a id="v0-2-0"></a>
 ## v0\.2\.0
 
-<a id="release-summary-7"></a>
+<a id="release-summary-8"></a>
 ### Release Summary
 
 New major release that increases compatibility with the [Python code in antsibull\-docs\-parser](https\://github\.com/ansible\-community/antsibull\-docs\-parser)\.
@@ -170,7 +186,7 @@ New major release that increases compatibility with the [Python code in antsibul
 * Modify <code>pluginOptionLikeLink</code> signature to include a new argument <code>entrypoint</code> after <code>plugin</code> \([https\://github\.com/ansible\-community/antsibull\-docs\-ts/pull/31](https\://github\.com/ansible\-community/antsibull\-docs\-ts/pull/31)\)\.
 * Rename <code>only\_classic\_markup</code> parser option to <code>onlyClassicMarkup</code> \([https\://github\.com/ansible\-community/antsibull\-docs\-ts/pull/22](https\://github\.com/ansible\-community/antsibull\-docs\-ts/pull/22)\)\.
 
-<a id="bugfixes-5"></a>
+<a id="bugfixes-6"></a>
 ### Bugfixes
 
 * HTML and MarkDown code\: quote HTML command arguments correctly\; make sure URLs are correctly quoted \([https\://github\.com/ansible\-community/antsibull\-docs\-ts/pull/22](https\://github\.com/ansible\-community/antsibull\-docs\-ts/pull/22)\)\.
@@ -178,7 +194,7 @@ New major release that increases compatibility with the [Python code in antsibul
 <a id="v0-1-0"></a>
 ## v0\.1\.0
 
-<a id="release-summary-8"></a>
+<a id="release-summary-9"></a>
 ### Release Summary
 
 First usable version\, including semantic markup support\.
@@ -198,7 +214,7 @@ First usable version\, including semantic markup support\.
 
 * The package was renamed on npmjs\.com from <code>antsibull\_docs</code> to <code>antsibull\-docs</code> \([https\://github\.com/ansible\-community/antsibull\-docs\-ts/pull/15](https\://github\.com/ansible\-community/antsibull\-docs\-ts/pull/15)\)\.
 
-<a id="bugfixes-6"></a>
+<a id="bugfixes-7"></a>
 ### Bugfixes
 
 * Fix error message output for MarkDown\. Make sure error message is escaped in RST\. Fix error messages when parsing escaped parameters \([https\://github\.com/ansible\-community/antsibull\-docs\-ts/pull/8](https\://github\.com/ansible\-community/antsibull\-docs\-ts/pull/8)\)\.
@@ -207,7 +223,7 @@ First usable version\, including semantic markup support\.
 <a id="v0-0-1"></a>
 ## v0\.0\.1
 
-<a id="release-summary-9"></a>
+<a id="release-summary-10"></a>
 ### Release Summary
 
 Initial release\.

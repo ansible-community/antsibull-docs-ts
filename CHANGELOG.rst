@@ -4,6 +4,19 @@ antsibull-docs -- TypeScript library for processing Ansible documentation markup
 
 .. contents:: Topics
 
+v1.1.2
+======
+
+Release Summary
+---------------
+
+Bugfix release.
+
+Bugfixes
+--------
+
+- Accept upper-case letters when validating FQCNs (https://github.com/ansible-community/antsibull-docs-ts/pull/441).
+
 v1.1.1
 ======
 
