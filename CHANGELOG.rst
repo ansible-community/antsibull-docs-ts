@@ -4,6 +4,14 @@ antsibull-docs -- TypeScript library for processing Ansible documentation markup
 
 .. contents:: Topics
 
+v1.1.3
+======
+
+Release Summary
+---------------
+
+The previous release, 1.1.2, accidentally included a feature commit. This release reverts that commit.
+
 v1.1.2
 ======
 
