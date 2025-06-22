@@ -5,7 +5,7 @@
 */
 
 import { ParsingOptions, PluginIdentifier, Whitespace } from './opts';
-import { isFQCN, isPluginType } from './ansible';
+import { isFQCN, isPluginType, isEntrypoint } from './ansible';
 import { parseEscapedArgs, parseUnescapedArgs } from './parser-impl';
 import {
   PartType,
@@ -72,6 +72,9 @@ function parseOptionLike(
     if (idx >= 0) {
       entrypoint = text.substr(0, idx);
       text = text.substr(idx + 1);
+      if (!isEntrypoint(entrypoint)) {
+        throw Error(`Entrypoint ${repr(entrypoint)} is not valid`);
+      }
     }
     if (entrypoint === undefined) {
       throw Error('Role reference is missing entrypoint');
@@ -258,11 +261,23 @@ const PARSER: CommandParserEx[] = [
       if (!isFQCN(fqcn)) {
         throw Error(`Plugin name ${repr(fqcn)} is not a FQCN`);
       }
-      const type = m[2] as string;
+      let type = m[2] as string;
+      let entrypoint: string | undefined;
+      const m2 = /^([^:]+):([^:]+)$/.exec(type);
+      if (m2) {
+        type = m2[1] as string;
+        entrypoint = m2[2] as string;
+        if (!isEntrypoint(entrypoint)) {
+          throw Error(`Entrypoint ${repr(entrypoint)} is not valid`);
+        }
+      }
       if (!isPluginType(type)) {
         throw Error(`Plugin type ${repr(type)} is not valid`);
       }
-      return <PluginPart>{ type: PartType.PLUGIN, plugin: { fqcn: fqcn, type: type }, source: source };
+      if (entrypoint && type !== 'role') {
+        throw Error('Only role references can have entrypoints')
+      }
+      return <PluginPart>{ type: PartType.PLUGIN, plugin: { fqcn: fqcn, type: type }, entrypoint: entrypoint, source: source };
     },
   },
   {
