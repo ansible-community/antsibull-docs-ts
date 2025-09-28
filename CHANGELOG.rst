@@ -4,6 +4,19 @@ antsibull-docs -- TypeScript library for processing Ansible documentation markup
 
 .. contents:: Topics
 
+v1.1.4
+======
+
+Release Summary
+---------------
+
+Bugfix release.
+
+Bugfixes
+--------
+
+- Make sure that ``-`` is escaped correctly (https://github.com/ansible-community/antsibull-docs-ts/pull/475).
+
 v1.1.3
 ======
 
