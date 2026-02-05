@@ -126,12 +126,19 @@ describe('parser', (): void => {
     ]);
   });
   it('semantic markup test', (): void => {
-    expect(parse('foo E(a\\),b) P(foo.bar.baz#bam) baz V( b\\,\\na\\)\\\\m\\, ) O(foo) ')).toEqual([
+    expect(parse('foo E(a\\),b) E(foo=bar=baz) P(foo.bar.baz#bam) baz V( b\\,\\na\\)\\\\m\\, ) O(foo) ')).toEqual([
       [
         { type: PartType.TEXT, text: 'foo ', source: undefined },
-        { type: PartType.ENV_VARIABLE, name: 'a),b', source: undefined },
+        { type: PartType.ENV_VARIABLE, name: 'a),b', value: undefined, source: undefined },
         { type: PartType.TEXT, text: ' ', source: undefined },
-        { type: PartType.PLUGIN, plugin: { fqcn: 'foo.bar.baz', type: 'bam' }, source: undefined },
+        { type: PartType.ENV_VARIABLE, name: 'foo', value: 'bar=baz', source: undefined },
+        { type: PartType.TEXT, text: ' ', source: undefined },
+        {
+          type: PartType.PLUGIN,
+          plugin: { fqcn: 'foo.bar.baz', type: 'bam' },
+          entrypoint: undefined,
+          source: undefined,
+        },
         { type: PartType.TEXT, text: ' baz ', source: undefined },
         { type: PartType.OPTION_VALUE, value: ' b,na)\\m, ', source: undefined },
         { type: PartType.TEXT, text: ' ', source: undefined },
@@ -147,31 +154,74 @@ describe('parser', (): void => {
         { type: PartType.TEXT, text: ' ', source: undefined },
       ],
     ]);
+    expect(parse('P(foo.bar.baz#role) P(foo.bar.baz#role:entrypoint)')).toEqual([
+      [
+        {
+          type: PartType.PLUGIN,
+          plugin: { fqcn: 'foo.bar.baz', type: 'role' },
+          entrypoint: undefined,
+          source: undefined,
+        },
+        { type: PartType.TEXT, text: ' ', source: undefined },
+        {
+          type: PartType.PLUGIN,
+          plugin: { fqcn: 'foo.bar.baz', type: 'role' },
+          entrypoint: 'entrypoint',
+          source: undefined,
+        },
+      ],
+    ]);
   });
   it('semantic markup test (with source)', (): void => {
-    expect(parse('foo E(a\\),b) P(foo.bar.baz#bam) baz V( b\\,\\na\\)\\\\m\\, ) O(foo) ', { addSource: true })).toEqual(
+    expect(
+      parse('foo E(a\\),b) E(foo=bar=baz) P(foo.bar.baz#bam) baz V( b\\,\\na\\)\\\\m\\, ) O(foo) ', {
+        addSource: true,
+      }),
+    ).toEqual([
       [
-        [
-          { type: PartType.TEXT, text: 'foo ', source: 'foo ' },
-          { type: PartType.ENV_VARIABLE, name: 'a),b', source: 'E(a\\),b)' },
-          { type: PartType.TEXT, text: ' ', source: ' ' },
-          { type: PartType.PLUGIN, plugin: { fqcn: 'foo.bar.baz', type: 'bam' }, source: 'P(foo.bar.baz#bam)' },
-          { type: PartType.TEXT, text: ' baz ', source: ' baz ' },
-          { type: PartType.OPTION_VALUE, value: ' b,na)\\m, ', source: 'V( b\\,\\na\\)\\\\m\\, )' },
-          { type: PartType.TEXT, text: ' ', source: ' ' },
-          {
-            type: PartType.OPTION_NAME,
-            plugin: undefined,
-            entrypoint: undefined,
-            link: ['foo'],
-            name: 'foo',
-            value: undefined,
-            source: 'O(foo)',
-          },
-          { type: PartType.TEXT, text: ' ', source: ' ' },
-        ],
+        { type: PartType.TEXT, text: 'foo ', source: 'foo ' },
+        { type: PartType.ENV_VARIABLE, name: 'a),b', value: undefined, source: 'E(a\\),b)' },
+        { type: PartType.TEXT, text: ' ', source: ' ' },
+        { type: PartType.ENV_VARIABLE, name: 'foo', value: 'bar=baz', source: 'E(foo=bar=baz)' },
+        { type: PartType.TEXT, text: ' ', source: ' ' },
+        {
+          type: PartType.PLUGIN,
+          plugin: { fqcn: 'foo.bar.baz', type: 'bam' },
+          entrypoint: undefined,
+          source: 'P(foo.bar.baz#bam)',
+        },
+        { type: PartType.TEXT, text: ' baz ', source: ' baz ' },
+        { type: PartType.OPTION_VALUE, value: ' b,na)\\m, ', source: 'V( b\\,\\na\\)\\\\m\\, )' },
+        { type: PartType.TEXT, text: ' ', source: ' ' },
+        {
+          type: PartType.OPTION_NAME,
+          plugin: undefined,
+          entrypoint: undefined,
+          link: ['foo'],
+          name: 'foo',
+          value: undefined,
+          source: 'O(foo)',
+        },
+        { type: PartType.TEXT, text: ' ', source: ' ' },
       ],
-    );
+    ]);
+    expect(parse('P(foo.bar.baz#role) P(foo.bar.baz#role:entrypoint)')).toEqual([
+      [
+        {
+          type: PartType.PLUGIN,
+          plugin: { fqcn: 'foo.bar.baz', type: 'role' },
+          entrypoint: undefined,
+          source: undefined,
+        },
+        { type: PartType.TEXT, text: ' ', source: undefined },
+        {
+          type: PartType.PLUGIN,
+          plugin: { fqcn: 'foo.bar.baz', type: 'role' },
+          entrypoint: 'entrypoint',
+          source: undefined,
+        },
+      ],
+    ]);
   });
   it('semantic markup option name', (): void => {
     expect(parse('O(foo)')).toEqual([
@@ -432,6 +482,12 @@ describe('parser', (): void => {
     expect(async () => parse('P(foo.bar.baz#b m)', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
       'While parsing P() at index 1: Plugin type "b m" is not valid',
     );
+    expect(async () =>
+      parse('P(foo.bar.baz#module:e p)', { errors: 'exception', helpfulErrors: false }),
+    ).rejects.toThrow('While parsing P() at index 1: Entrypoint "e p" is not valid');
+    expect(async () =>
+      parse('P(foo.bar.baz#module:entrypoint)', { errors: 'exception', helpfulErrors: false }),
+    ).rejects.toThrow('While parsing P() at index 1: Only role references can have entrypoints');
   });
   it('bad option name/return value (throw error)', (): void => {
     expect(async () =>
@@ -446,6 +502,9 @@ describe('parser', (): void => {
     expect(async () => parse('O(foo.bar.baz#role:bam)', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
       'While parsing O() at index 1: Role reference is missing entrypoint',
     );
+    expect(async () =>
+      parse('O(foo.bar.baz#role:e p:bam)', { errors: 'exception', helpfulErrors: false }),
+    ).rejects.toThrow('While parsing O() at index 1: Entrypoint "e p" is not valid');
   });
   it('bad parameter parsing (no escaping, error message)', (): void => {
     expect(parse('M(', { helpfulErrors: false })).toEqual([
