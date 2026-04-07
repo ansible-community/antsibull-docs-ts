@@ -8,6 +8,7 @@
     /* Modules */
     "rootDir": "src",
     "module": "esnext",
+    "isolatedModules": true,
 
     /* Emit */
     "declaration": true,
