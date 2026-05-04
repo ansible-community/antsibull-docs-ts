@@ -2,7 +2,10 @@
 // SPDX-FileCopyrightText: Ansible Project
 // SPDX-License-Identifier: BSD-2-Clause
 
-export default {
-  preset: 'ts-jest',
-  testEnvironment: 'node',
-};
+import { defineConfig } from 'vitest/config';
+
+export default defineConfig({
+  test: {
+    // globals: true,
+  },
+});

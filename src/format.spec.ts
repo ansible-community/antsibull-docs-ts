@@ -4,6 +4,8 @@
   SPDX-License-Identifier: BSD-2-Clause
 */
 
+import { describe, it, expect } from 'vitest';
+
 import { AllFormatOptions, LinkProviders, CommonExportOptions } from './opts';
 import { addToDestination } from './format';
 import { PartType } from './dom';

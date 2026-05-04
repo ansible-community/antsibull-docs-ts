@@ -10,10 +10,10 @@
     ".prettierignore",
     ".prettierrc.yml",
     "dist",
-    "jest.config.ts",
     "src",
     "test-vectors.yaml",
     "tsconfig.json",
+    "vitest.config.ts",
     "CHANGELOG.md",
     "CHANGELOG.rst",
     "LICENSE",
@@ -29,10 +29,10 @@
     "format:check": "npx prettier --check .",
     "format:write": "npx prettier --write .",
     "lint": "npx eslint \"src/**/*.ts\"",
-    "test": "npx jest",
-    "test:coverage": "npx jest --coverage",
-    "test:coverage:watch": "npx jest --coverage --watchAll",
-    "test:watch": "npx jest --watchAll"
+    "test": "npx vitest --no-watch",
+    "test:coverage": "npx vitest --coverage --no-watch",
+    "test:coverage:watch": "npx vitest --coverage --watch",
+    "test:watch": "npx vitest --watch"
   },
   "keywords": [
     "ansible",
@@ -53,16 +53,15 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.5",
     "@eslint/js": "^10.0.1",
-    "@types/jest": "^30.0.0",
     "@typescript-eslint/eslint-plugin": "^8.57.2",
     "@typescript-eslint/parser": "^8.57.2",
+    "@vitest/coverage-v8": "^4.1.5",
     "eslint": "^10.1.0",
     "globals": "^17.4.0",
-    "jest": "^30.3.0",
     "prettier": "^3.8.1",
-    "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
+    "vitest": "^4.1.5",
     "yaml": "^2.8.3"
   }
 }

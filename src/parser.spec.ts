@@ -4,6 +4,8 @@
   SPDX-License-Identifier: BSD-2-Clause
 */
 
+import { describe, it, expect } from 'vitest';
+
 import { processWhitespace, parse, composeCommandMap, composeCommandRE, CommandParser, parseString } from './parser';
 import { PartType } from './dom';
 
@@ -385,67 +387,67 @@ describe('parser', (): void => {
       ],
     ]);
   });
-  it('bad parameter parsing (no escaping, throw error)', (): void => {
-    expect(async () => parse('M(', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
+  it('bad parameter parsing (no escaping, throw error)', async (): void => {
+    await expect(async () => parse('M(', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
       'While parsing M() at index 1: Cannot find closing ")" after last parameter',
     );
-    expect(async () => parse('M(foo', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
+    await expect(async () => parse('M(foo', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
       'While parsing M() at index 1: Cannot find closing ")" after last parameter',
     );
-    expect(async () => parse('L(foo)', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
+    await expect(async () => parse('L(foo)', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
       'While parsing L() at index 1: Cannot find comma separating parameter 1 from the next one',
     );
-    expect(async () => parse('L(foo,bar', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
+    await expect(async () => parse('L(foo,bar', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
       'While parsing L() at index 1: Cannot find closing ")" after last parameter',
     );
-    expect(async () => parse('L(foo), bar', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
+    await expect(async () => parse('L(foo), bar', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
       'While parsing L() at index 1: Cannot find closing ")" after last parameter',
     );
-    expect(async () => parse('P(', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
+    await expect(async () => parse('P(', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
       'While parsing P() at index 1: Cannot find closing ")" after last parameter',
     );
-    expect(async () => parse('P(foo', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
+    await expect(async () => parse('P(foo', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
       'While parsing P() at index 1: Cannot find closing ")" after last parameter',
     );
   });
-  it('bad module ref (throw error)', (): void => {
-    expect(async () => parse('M(foo)', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
+  it('bad module ref (throw error)', async (): void => {
+    await expect(async () => parse('M(foo)', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
       'While parsing M() at index 1: Module name "foo" is not a FQCN',
     );
-    expect(async () => parse(' M(foo.bar)', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
+    await expect(async () => parse(' M(foo.bar)', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
       'While parsing M() at index 2: Module name "foo.bar" is not a FQCN',
     );
-    expect(async () => parse('  M(foo. bar.baz)', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
+    await expect(async () => parse('  M(foo. bar.baz)', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
       'While parsing M() at index 3: Module name "foo. bar.baz" is not a FQCN',
     );
-    expect(async () => parse('   M(foo)', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
+    await expect(async () => parse('   M(foo)', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
       'While parsing M() at index 4: Module name "foo" is not a FQCN',
     );
   });
-  it('bad plugin ref (throw error)', (): void => {
-    expect(async () => parse('P(foo)', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
+  it('bad plugin ref (throw error)', async (): void => {
+    await expect(async () => parse('P(foo)', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
       'While parsing P() at index 1: Parameter "foo" is not of the form FQCN#type',
     );
-    expect(async () => parse('P(f o.b r.b z#bar)', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
-      'While parsing P() at index 1: Plugin name "f o.b r.b z" is not a FQCN',
-    );
-    expect(async () => parse('P(foo.bar.baz#b m)', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
-      'While parsing P() at index 1: Plugin type "b m" is not valid',
-    );
+    await expect(async () =>
+      parse('P(f o.b r.b z#bar)', { errors: 'exception', helpfulErrors: false }),
+    ).rejects.toThrow('While parsing P() at index 1: Plugin name "f o.b r.b z" is not a FQCN');
+    await expect(async () =>
+      parse('P(foo.bar.baz#b m)', { errors: 'exception', helpfulErrors: false }),
+    ).rejects.toThrow('While parsing P() at index 1: Plugin type "b m" is not valid');
   });
-  it('bad option name/return value (throw error)', (): void => {
-    expect(async () =>
+  it('bad option name/return value (throw error)', async (): void => {
+    await expect(async () =>
       parse('O(f o.b r.b z#bam:foobar)', { errors: 'exception', helpfulErrors: false }),
     ).rejects.toThrow('While parsing O() at index 1: Plugin name "f o.b r.b z" is not a FQCN');
-    expect(async () =>
+    await expect(async () =>
       parse('O(foo.bar.baz#b m:foobar)', { errors: 'exception', helpfulErrors: false }),
     ).rejects.toThrow('While parsing O() at index 1: Plugin type "b m" is not valid');
-    expect(async () => parse('O(foo:bar:baz)', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
+    await expect(async () => parse('O(foo:bar:baz)', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
       'While parsing O() at index 1: Invalid option/return value name "foo:bar:baz"',
     );
-    expect(async () => parse('O(foo.bar.baz#role:bam)', { errors: 'exception', helpfulErrors: false })).rejects.toThrow(
-      'While parsing O() at index 1: Role reference is missing entrypoint',
-    );
+    await expect(async () =>
+      parse('O(foo.bar.baz#role:bam)', { errors: 'exception', helpfulErrors: false }),
+    ).rejects.toThrow('While parsing O() at index 1: Role reference is missing entrypoint');
   });
   it('bad parameter parsing (no escaping, error message)', (): void => {
     expect(parse('M(', { helpfulErrors: false })).toEqual([
@@ -622,8 +624,8 @@ describe('parser engine', (): void => {
   const commandsMapB = composeCommandMap(commandsB);
   const commandsReB = composeCommandRE(commandsB);
 
-  it('combine wrong regexp with command map', (): void => {
-    expect(async () => parseString('A B()', commandsReA, commandsMapB, {}, '')).rejects.toThrow(
+  it('combine wrong regexp with command map', async (): void => {
+    await expect(async () => parseString('A B()', commandsReA, commandsMapB, {}, '')).rejects.toThrow(
       'Internal error: unknown command "A"',
     );
   });

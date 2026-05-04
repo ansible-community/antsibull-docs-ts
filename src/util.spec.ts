@@ -4,6 +4,8 @@
   SPDX-License-Identifier: BSD-2-Clause
 */
 
+import { describe, it, expect } from 'vitest';
+
 import { splitLines, startsWith, endsWith } from './util';
 
 describe('splitLines tests', (): void => {

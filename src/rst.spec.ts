@@ -4,6 +4,8 @@
   SPDX-License-Identifier: BSD-2-Clause
 */
 
+import { describe, it, expect } from 'vitest';
+
 import { quoteRST, toRST, postprocessRSTParagraph } from './rst';
 import { PartType } from './dom';
 
