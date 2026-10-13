@@ -52,6 +52,7 @@ export interface ModulePart extends Part {
 export interface PluginPart extends Part {
   type: PartType.PLUGIN;
   plugin: PluginIdentifier;
+  entrypoint: string | undefined; // can be present if plugin.type == 'role'
 }
 
 export interface URLPart extends Part {
@@ -93,6 +94,7 @@ export interface OptionValuePart extends Part {
 export interface EnvVariablePart extends Part {
   type: PartType.ENV_VARIABLE;
   name: string;
+  value: string | undefined;
 }
 
 export interface ReturnValuePart extends Part {
