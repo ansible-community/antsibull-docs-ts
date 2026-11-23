@@ -15,7 +15,7 @@ on:
     - cron: '0 7 * * 5'
 
 permissions:
-  content: read
+  contents: read
 
 jobs:
   reuse:
